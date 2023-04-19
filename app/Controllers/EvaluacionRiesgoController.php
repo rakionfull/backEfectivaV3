@@ -147,7 +147,7 @@ class EvaluacionRiesgoController extends BaseController
             }
 
             $model = new EvaluacionRiesgo();
-            $found = $model->where('riesgo',$input['riesgo'])->where('idempresa',$input['idempresa'])->where('is_deleted',0)->findAll();
+            $found = $model->where('riesgo',$input['riesgo'])->where('idempresa',$input['id_empresa'])->where('is_deleted',0)->findAll();
             if(count($found) > 0){
                 return $this->getResponse(
                     [
@@ -160,16 +160,16 @@ class EvaluacionRiesgoController extends BaseController
             $result = $model->store($input);
             if($result){
                 $id = $model->get_last_id()[0];
-                // foreach ($input['controles'] as $control) {
-                //     # code...
-                //     $data = [
-                //         'id_evaluacion_riesgo' => $id,
-                //         'id_control' => $control,
-                //         'id_user_added' => $input['id_user_added'],
-                //         'date_add' => $input['date_add']
-                //     ];
-                //     $modelERC->store($data);
-                // }
+                foreach ($input['controles'] as $control) {
+                    # code...
+                    $data = [
+                        'id_evaluacion_riesgo' => $id,
+                        'id_control' => $control,
+                        'id_user_added' => $input['id_user_added'],
+                        'date_add' => $input['date_add']
+                    ];
+                    $modelERC->store($data);
+                }
                 return $this->getResponse(
                     [
                         'error' => false,
