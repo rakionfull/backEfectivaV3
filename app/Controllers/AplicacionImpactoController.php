@@ -43,11 +43,18 @@ class AplicacionImpactoController extends BaseController
         
             $valida = $model -> validaAplicacionImpacto($input[0]);
             if(!$valida){
-                $result = $model->saveAplicacionImpacto($input);
-                $msg = 'Registrado Correctamente';
-                $error = 1;
+                $valida2 = $model -> validaAplicacionImpacto2($input[0]);
+                if(!$valida2){
+                    $result = $model->saveAplicacionImpacto($input);
+                    $msg = 'Registrado Correctamente';
+                    $error = 1;
+                }else{
+                    $msg = 'La posición ya está registrada';
+                    $error = 0;
+                }
+              
             }else{
-                $msg = 'Ya registrada';
+                $msg = 'Aplicación de impacto ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -82,7 +89,20 @@ class AplicacionImpactoController extends BaseController
                     ],
                     ResponseInterface::HTTP_OK
                 );
+            }else{
+                $found2 = $model->validateApliImpacModify2($input);
+                if(count($found2) > 0){
+                    return $this->getResponse(
+                        [
+                            'error' =>true,
+                             'msg'=> 'La posición ya está registrada'
+                        ],
+                        ResponseInterface::HTTP_OK
+                    );
+                }
             }
+           
+
             $result = $model->updateAplicacionImpacto($input);
         
             return $this->getResponse(

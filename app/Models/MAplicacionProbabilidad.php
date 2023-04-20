@@ -27,14 +27,24 @@ class MAplicacionProbabilidad extends Model
     ];
     public function validaAplicacionProbabilidad($data){
         
-        // $query = $this->db->query("SELECT * FROM aplicacion_probailidad where idclasificacion= '{$data['disenio']}' and 
-        // posicion= '{$data['posicion']}' and escenario='{$data['escenario']}' and is_deleted=0");
-
-
         $sql = "CALL valida_AplicacionProbabilidad(?,?,?)";
 
         $query = $this->db->query($sql, [
             $data['disenio'],
+            $data['posicion'],
+            $data['escenario']
+        ]);
+
+        if( $query->getRow()) return true;
+        else return false;
+    }
+
+    public function validaAplicacionProbabilidad2($data){
+        
+        $sql = "CALL valida_AplicacionProbabilidad2(?,?)";
+
+        $query = $this->db->query($sql, [
+         
             $data['posicion'],
             $data['escenario']
         ]);
@@ -51,6 +61,20 @@ class MAplicacionProbabilidad extends Model
         
             $data[0]['id'],
             $data[0]['disenio'],
+            $data[0]['posicion'],
+            $data[0]['escenario'],
+        ]);
+        return $query->getResultArray();
+
+    }
+    public function validateApliProbaModify2($data){
+          
+       
+        $sql = "CALL sp_validate_apli_proba_modify2(?,?,?)";
+
+        $query = $this->db->query($sql, [
+        
+            $data[0]['id'],
             $data[0]['posicion'],
             $data[0]['escenario'],
         ]);

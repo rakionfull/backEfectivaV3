@@ -62,9 +62,23 @@ class CaractControlController extends BaseController
         
             $valida = $model -> validaCaractControl($input);
             if(!$valida){
-                $result = $model->saveCaractControl($input);
-                $msg = 'Registrado Correctamente';
-                $error = 1;
+                if( $input[0]['valor'] != "" && $input[0]['condicion'] != "" && $input[0]['calificacion'] == 1){
+                    $valida2 = $model -> validaCaractControl2($input);
+                    if(!$valida2){
+                        $result = $model->saveCaractControl($input);
+                        $msg = 'Registrado Correctamente';
+                        $error = 1;
+                    }else{
+                        $msg = 'La lógica ya esta registrada';
+                        $error = 0;
+                    }
+                   
+                }else{
+                    $result = $model->saveCaractControl($input);
+                    $msg = 'Registrado Correctamente';
+                    $error = 1;
+                }
+               
             }else{
                 $msg = 'Caracteristica de Control ya registrada';
                 $error = 0;
@@ -97,18 +111,36 @@ class CaractControlController extends BaseController
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Característica  ya registrada'
+                        'msg' =>'Característica ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
+            }else{
+                $found2 = $model->validateCaractControlModify2($input);
+                if( $input[0]['valor'] != "" && $input[0]['condicion'] != "" && $input[0]['calificacion'] == 1){
+                    if(count($found2) > 0){
+                        return $this->getResponse(
+                            [
+                                'error' =>true,
+                                 'msg'=> 'La lógica ya está registrada'
+                            ],
+                            ResponseInterface::HTTP_OK
+                        );
+                    }
+
+                }else{
+                    return $this->getResponse(
+                        [
+                            'error' =>false,
+                            'msg' =>  'Modificado correctamente'
+                        ]
+                    );
+                }
+               
             }
             $result = $model->updateCaractControl($input);
         
-            return $this->getResponse(
-                [
-                    'msg' =>  true
-                ]
-            );
+           
             
         } catch (Exception $ex) {
             return $this->getResponse(

@@ -372,6 +372,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
      $routes->delete('deleteEvaluacionControl', 'EvaluacionControlController::deleteEvaluacionControl',['filter' => 'authFilter']);
      $routes->get('getDetalleEvaluacionControl/(:num)','EvaluacionControlController::getDetalleEvaluacionControl/$1',['filter' => 'authFilter']);
      $routes->get('getDisenioCalificacion', 'EvaluacionControlController::getDisenioCalificacion',['filter' => 'authFilter']);
+     $routes->get('getCalificacionTotal', 'EvaluacionControlController::getCalificacionTotal',['filter' => 'authFilter']);
      $routes->get('getOperatividadCalificacion', 'EvaluacionControlController::getOperatividadCalificacion',['filter' => 'authFilter']);
 
      $routes->get('getCalificacionSubMenu', 'EvaluacionControlController::getCalificacionSubMenu',['filter' => 'authFilter']);

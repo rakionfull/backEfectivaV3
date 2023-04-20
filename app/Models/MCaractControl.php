@@ -39,6 +39,21 @@ class MCaractControl extends Model
         if( $query->getRow()) return true;
         else return false;
     }
+    public function validaCaractControl2($data){
+        
+
+
+        $sql = "CALL valida_caractControl2(?,?,?)";
+
+        $query = $this->db->query($sql, [
+            $data[0]['valor'],
+            $data[0]['id'],
+            $data[0]['condicion'],
+        ]);
+
+        if( $query->getRow()) return true;
+        else return false;
+    }
     public function validateCaractControlModify($data){
           
        
@@ -54,19 +69,33 @@ class MCaractControl extends Model
         return $query->getResultArray();
 
     }
+    public function validateCaractControlModify2($data){
+          
+       
+        $sql = "CALL sp_validate_caract_control_modify2(?,?,?,?)";
+
+        $query = $this->db->query($sql, [
+        
+            $data[0]['id_op'],
+            $data[0]['valor'],
+            $data[0]['condicion'],
+            $data[0]['id'],
+           
+        ]);
+        return $query->getResultArray();
+
+    }
     public function getCaractControl($id,$tipo,$calificacion){
         
-        // $query = $this->db->query("EXEC listar_caractControl");
+     
         if($id == 0){
-            // $query = $this->db->query("SELECT * FROM caracteristica_control where tipo='menu' and estado=1 and is_deleted=0 ");
             $sql = "CALL getCaractControl()";
 
             $query = $this->db->query($sql, [
               
             ]);
         }else{
-                    // $query = $this->db->query("SELECT * FROM caracteristica_control 
-                    // where estado=1 and is_deleted=0  and idOpcion={$id}");
+                
                      $sql = "CALL getCaractControlById(?)";
 
                      $query = $this->db->query($sql, [
@@ -78,15 +107,10 @@ class MCaractControl extends Model
         return $query->getResultArray();
     }
 
-    // public function getOpcionesCaracteristica(){
-        
-    //     $query = $this->db->query("SELECT * from caracteristica_control where is_deleted=0 and estado=1 order by caracteristica");
-    //     return $query->getResultArray();
-    // }
+  
     public function getOpcionesCaracteristica($tipo){
         
-        // $query = $this->db->query("SELECT * from caracteristica_control where is_deleted=0 and estado=1 and tipo='{$tipo}' order by date_add ");
-        
+      
         $sql = "CALL getOpcionesCaracteristica(?)";
 
                      $query = $this->db->query($sql, [

@@ -109,18 +109,10 @@ class EvaluacionControlController extends BaseController
                     $msg = 'Registrado Correctamente';
                     $error = 1;
             }else{
-                $msg = 'Ya registrado';
+                $msg = 'Evaluacion de control ya registrado';
                 $error = 0;
             }
-            // $valida = $model -> validaEvaluacionControl($input[0]);
-            // if(!$valida){
-          
-            //     }
-              
-            // }else{
-            //     $msg = 'Ya registrada';
-            //     $error = 0;
-            // }
+           
             return $this->getResponse(
                 [
                     'result' => $datos,
@@ -144,26 +136,55 @@ class EvaluacionControlController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new MEvaluacionControl();
-            $result = $model->updateEvaluacionControl($input);
-            if($result){
+           // $result = $model->updateEvaluacionControl($input);
+            // if($result){
                 
-                $delete=$model->deleteDetalleEvaluacionControl($input);
-                if($delete){
-                    foreach ($input[0]['valores'] as $key => $value) {
-                        $array = [
-                            'id' => $input[0]['id'],
-                            'valor' => $value
-                        ];
-                        $model->saveDetalleEvaluacionControl($array);
+            //     $delete=$model->deleteDetalleEvaluacionControl($input);
+            //     if($delete){
+            //         foreach ($input[0]['valores'] as $key => $value) {
+            //             $array = [
+            //                 'id' => $input[0]['id'],
+            //                 'valor' => $value
+            //             ];
+            //             $model->saveDetalleEvaluacionControl($array);
+            //         }
+            //     }
+            // }
+            // return $this->getResponse(
+            //     [
+            //         'msg' =>  $delete
+            //     ]
+            // );
+            $datos = validar_evaluacion_control2($input[0]['valores'],$input[0]['id']);
+            if(!$datos){
+                    $result = $model->updateEvaluacionControl($input);
+                    if($result){
+                        
+                        $delete=$model->deleteDetalleEvaluacionControl($input);
+                        if($delete){
+                            foreach ($input[0]['valores'] as $key => $value) {
+                                $array = [
+                                    'id' => $input[0]['id'],
+                                    'valor' => $value
+                                ];
+                                $model->saveDetalleEvaluacionControl($array);
+                            }
+                        }
+                        $msg = 'Modificado correctamente';
+                        $error = false;
+                       
                     }
-                }
+            }else{
+                $msg = 'Evaluación de control ya registrado';
+                $error = true;
             }
             return $this->getResponse(
                 [
-                    'msg' =>  $delete
+                    'result' => $datos,
+                    'msg' =>  $msg,
+                    'error' =>  $error
                 ]
             );
-            
         } catch (Exception $ex) {
             return $this->getResponse(
                 [
@@ -257,6 +278,26 @@ class EvaluacionControlController extends BaseController
             $model = new MEvaluacionControl();
                 $response = [
                     'data' =>  $model->getDisenioCalificacion()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+
+           
+    }
+    public function getCalificacionTotal(){
+
+        try {
+            $model = new MEvaluacionControl();
+                $response = [
+                    'data' =>  $model->getCalificacionTotal()
                 ];
                 return $this->respond($response, ResponseInterface::HTTP_OK);
         

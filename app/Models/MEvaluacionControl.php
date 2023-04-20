@@ -168,11 +168,7 @@ class MEvaluacionControl extends Model
             return 0;
         }
         
-       
-       
 
-
-      
     }
     public function getOperatividadCalificacion(){
         
@@ -195,5 +191,15 @@ class MEvaluacionControl extends Model
         $result = $this->db->query($sql,[$escenario]);
         return $result->getResultArray();
     }
+    public function getCalificacionTotal(){
+                   $query=$this->db->query("SELECT DISTINCT calificacion,id FROM evaluacion_control2 where is_deleted=0 GROUP by calificacion order by id ASC;") ;
+
+                    return $query->getResultArray();
+           
+        
+       
+        }
+        
+
     
 }

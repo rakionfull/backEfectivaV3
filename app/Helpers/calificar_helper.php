@@ -166,3 +166,44 @@ function validar_evaluacion_control($array){
     
     return $resultado_final;
 }
+function validar_evaluacion_control2($array,$id){
+    $model = new MRegistroControles();
+    //traigo los datos de la evluacion de control
+    $detalle_EC = $model->getEvaluacionControl();
+    $resultado_final = false;
+    $cont=0;
+    foreach ($detalle_EC as $key => $value) {
+       
+            
+                //traigo el dato de la caligicacion segun el array enviado
+            
+                // $id_calificacion = $model->getById($value2['idCC']);
+                
+                    //traigo el dato respectivo segun clasificaicon e Id de la evlauacion de control
+                    if($value['id'] != $id){
+                        $valores = $model->getDetalleEvaluacionControl($value['id']);
+                        // //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
+                        if($cont < count($valores)){
+                        
+                                for ($i=0; $i < count($valores) ; $i++) { 
+                                    //$resultado_final = $array[$i];
+                                    if(($array[$i]) == ($valores[$i]['ID_CC'])){
+                                        $resultado_final = true;
+                                    
+                                        $cont++;
+                                    
+            
+                                    }else{
+                                        $resultado_final = "";
+                                        $resultado = [];
+                                        $cont=0;
+                                    }
+                                }
+                        }
+                    }
+              
+                    
+    }
+    
+    return $resultado_final;
+}
