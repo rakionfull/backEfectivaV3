@@ -368,23 +368,29 @@ class RegistroControlesController extends BaseController
 
       
             $model = new MRegistroControles();
-        
-           
-           $result = $model->updateControles($input);
+            $found = $model->validateRegitroControlModify($input);
+            if(count($found) > 0){
+                        $msg = 'Control ya registrado';
+                        $error = 0;     
+             }else{
+                $result = $model->updateControles($input);
          
-            if($result){
-                foreach ($input[0]['valores'] as $key => $value) {
-                    $data = [
-                        'idControl' => $input[0]['id'],
-                        'idCC' => $value['idCC'],
-                        'valor' => $value['valor'],
-                       
-                    ];
-                    $model->updateDtealle_Control($data);
+                if($result){
+                    foreach ($input[0]['valores'] as $key => $value) {
+                        $data = [
+                            'idControl' => $input[0]['id'],
+                            'idCC' => $value['idCC'],
+                            'valor' => $value['valor'],
+                           
+                        ];
+                        $model->updateDtealle_Control($data);
+                    }
+                    $msg = 'Modificado Correctamente';
+                    $error = 1;
                 }
-                $msg = 'Modificado Correctamente';
-                $error = 1;
-            }
+             }
+
+           
             return $this->getResponse(
                 [
                     'msg' =>  $msg,

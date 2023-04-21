@@ -290,6 +290,17 @@ class MRegistroControles extends Model
         if( $query->getRow()) return true;
         else return false;
     }
+    public function validateRegitroControlModify($data){
+       
+        $sql = "CALL sp_validate_registro_control_modify(?,?)";
+
+	    $query = $this->db->query($sql, [
+            $data[0]['id'],
+            $data[0]['control'],
+           
+        ]);
+        return $query->getResultArray();
+    }
     public function getPlanControl(){
       
 

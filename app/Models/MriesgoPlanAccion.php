@@ -113,7 +113,20 @@ class MriesgoPlanAccion extends Model
         else return false;
     }
 
-  
+    public function validaPlanAccionModify($data){
+        
+      
+
+        $sql = "CALL sp_validate_plan_accion_modify(?,?)";
+
+        $query = $this->db->query($sql, [ 
+            $data[0]['id']  ,
+            $data[0]['plan_accion']  
+        ]);
+
+        
+        return $query->getResultArray();
+    }
     public function getPlanAccion(){
 
      

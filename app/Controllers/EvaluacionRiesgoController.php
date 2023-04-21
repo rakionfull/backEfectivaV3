@@ -475,6 +475,34 @@ class EvaluacionRiesgoController extends BaseController
             );
         }
     }
+
+    // //editar los planes deaccion
+    // public function updatePlanAccion(){
+    
+    //     try {
+            
+    //         $input = $this->getRequestInput($this->request);
+        
+    //         $model = new MriesgoPlanAccion();
+    //         $model->updatePlanAccion($input);
+        
+    //         return $this->getResponse([
+    //             'msg' => 'Actualizado correctamente',
+    //             'error' => 1
+    //         ]);
+        
+    //     } catch (Exception $ex) {
+            
+    //         return $this->getResponse(
+    //             [
+    //                  //'error' => $ex->getMessage(),
+    //                 'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+    //             ]
+    //         , ResponseInterface::HTTP_OK);
+    //     }
+        
+    // }
+    
     //preguntar tengo que elegir el control mas fuerte?
     public function updateRiesgosControlados($id_riesgo){
         try {

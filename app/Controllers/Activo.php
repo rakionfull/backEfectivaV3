@@ -3391,6 +3391,17 @@ public function updatePlanAccion(){
         $input = $this->getRequestInput($this->request);
     
         $model = new MriesgoPlanAccion();
+        $found = $model->validaPlanAccionModify($input);
+
+        if(count($found) > 0){
+            return $this->getResponse(
+                [
+                    'error' =>0,
+                    'msg' =>'Plan de accion ya registrado'
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
         $model->updatePlanAccion($input);
     
         return $this->getResponse([
