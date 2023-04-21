@@ -2176,26 +2176,26 @@ class Activo extends BaseController
     }
 
     //valoracion de activo
-    // public function getValActivo(){
+    public function getValActivo(){
 
-    //     try {
-    //         $model = new MValoracionActivo();
-    //             $response = [
-    //                 'data' =>  $model->getValActivo()
-    //             ];
-    //             return $this->respond($response, ResponseInterface::HTTP_OK);
+        try {
+            $model = new MValoracionActivo();
+                $response = [
+                    'data' =>  $model->getValActivo()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
         
-    //     } catch (Exception $ex) {
-    //         return $this->getResponse(
-    //                 [
-    //                     'error' => $ex->getMessage(),
-    //                 ],
-    //                 ResponseInterface::HTTP_OK
-    //             );
-    //     }
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
 
            
-    // }
+     }
     public function getValoracionActivo(){
 
         try {
