@@ -1,21 +1,35 @@
 <?php
 
 namespace App\Validation;
-
 use App\Models\Muser;
 use Exception;
-
+use Config\Encryption;
+use Config\Services;
 class UserRules
 {
  
     public function validateUser(string $str, string $fields, array $data): bool
     {
         try {
+			$config         = new Encryption();
+			$config->key    = KEY;
+			$config->driver = 'OpenSSL';
+			$config->cipher = CIPER;
+			$config ->digest = DIGEST;
+		
+			$encrypter = Services::encrypter($config);
             $model = new Muser();
+			$valor=false;
             $user = $model->getUser($data['username']);
-            return password_verify($data['password'], $user->pass_cl);
+           //sreturn password_verify($data['password'], $user->pass_cl);
+			if($data['password'] == $encrypter->decrypt(hex2bin($user->pass_cl))){
+				$valor = true;
+			}else{
+				$valor = false;
+			}
+			return $valor;
         } catch (Exception $ex) {
-            return false;
+            return $ex->getMessage();
         }
     }
     public function validatePass(string $str, string $fields, array $data): bool

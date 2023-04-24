@@ -144,7 +144,8 @@ class Muser extends Model
         // estado_us= '{$data['estado_us']}'
         // where id_us = {$data['id_us']} ") ;
            $query=$this->db->query("UPDATE tb_users SET 
-           bloqueo_us= '{$data['estado_us']}'
+           bloqueo_us= '{$data['estado_us']}',
+           intentos_us = 1
            where id_us = {$data['id_us']} ") ;
         return $query;
     }

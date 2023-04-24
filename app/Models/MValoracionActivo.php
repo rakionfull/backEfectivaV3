@@ -18,9 +18,7 @@ class MValoracionActivo extends Model
     protected $allowedFields    = [
         'id',
         'estado',
-        'idaspecto1',
-        'idaspecto2',
-        'idaspecto3',
+        'idvalor',
         'date_add',
         'date_modify',
         'date_deleted',
@@ -29,31 +27,7 @@ class MValoracionActivo extends Model
         'id_user_deleted',
         'is_deleted'
     ];
-    public function validarValActivo($data){
-        
-            // $query = $this->db->query("SELECT * FROM valoracion_activo 
-            // where idaspecto1='{$data['id_aspecto1']}'
-            // and idaspecto2={$data['id_aspecto2']} 
-            // and idaspecto3={$data['id_aspecto3']} 
-            // and idvalor={$data['id_valor_val']}
-            // and valoracion1='{$data['nom_val1']}' 
-            // and valoracion2='{$data['nom_val2']}' 
-            // and valoracion3='{$data['nom_val3']}'");
-           
-           $query = $this->db->query("call validaValoracionActivo(?,?,?,?,?,?)",[
-            $data['id_aspecto1'],
-            $data['id_aspecto2'],
-            $data['id_aspecto3'],
-           
-            $data['nom_val1'],
-            $data['nom_val2'],
-            $data['nom_val3'],
-            // $data['id_valor_val'],
-           ]);
-
-            if( $query->getRow()) return true;
-            else return false;
-    }
+   
     public function getValActivo(){
 
    
@@ -99,13 +73,7 @@ class MValoracionActivo extends Model
         
        
 
-        $query = $this->db->query("call editar_valoracionactivo(?,?,?,?,?,?,?,?,?)",[
-            $data[0]['id_aspecto1'],
-            $data[0]['id_aspecto2'],
-            $data[0]['id_aspecto3'],
-            $data[0]['nom_val1'],
-            $data[0]['nom_val2'],
-            $data[0]['nom_val3'],
+        $query = $this->db->query("call editar_valoracionactivo(?,?,?)",[
             $data[0]['id_valor_val'],
             $data[0]['id'],
             $data['user']
@@ -119,45 +87,63 @@ class MValoracionActivo extends Model
         // //primero consigo las columnas de los aspectos de seguridad
        
 
-
-        $cabeceras="SELECT aspecto from aspectos_seguridad where estado=1 and is_deleted=0;";
-        $query= $this->db->query($cabeceras); 
+        $query = $this->db->query("call aspectosByEstado()");
+        //$cabeceras="SELECT id,aspecto from aspectos_seguridad where estado=1 and is_deleted=0;";
+        //$query= $this->db->query($cabeceras); 
         $calificacion = $query -> getResultArray();
         //     //construimos la consulta
-         $parte1="SELECT DVA.id,SA.id,VA.id,DVA.valoracion as valor ,";
+         $parte1="SELECT DVA.id as id_dva,SA.id as id_as,VA.id  as id_val,VA.idvalor as valor_activo, ";
         
 
         $parte2= "";
         for ($i=0; $i < count($calificacion) ; $i++) { 
             if($i == count($calificacion) - 1){ 
                 $parte2= $parte2." MAX(CASE when (select aspecto from aspectos_seguridad where estado=1 and is_deleted=0 and id=SA.id) = '{$calificacion[$i]['aspecto'] }' THEN SA.aspecto  ELSE 0 END) 
-                as '{$calificacion[$i]['aspecto'] }' ";
+                as Aspecto_".($i+1).",
+                MAX(CASE when (select aspecto from aspectos_seguridad where estado=1 and is_deleted=0 and id=SA.id) = '{$calificacion[$i]['aspecto'] }' THEN DVA.valoracion ELSE 0 END) 
+                 as Valoración_".($i+1)." ";
                 
             }else{
                 $parte2= $parte2." MAX(CASE when (select aspecto from aspectos_seguridad where estado=1 and is_deleted=0 and id=SA.id) = '{$calificacion[$i]['aspecto'] }'
-                 THEN SA.aspecto ELSE 0 END) as  '{$calificacion[$i]['aspecto'] }' , ";
+                 THEN SA.aspecto ELSE 0 END) as  Aspecto_".($i+1)." , 
+                 MAX(CASE when (select aspecto from aspectos_seguridad where estado=1 and is_deleted=0 and id=SA.id) = '{$calificacion[$i]['aspecto'] }' THEN DVA.valoracion ELSE 0 END) 
+                 as Valoración_".($i+1)." , ";
             }
            
           
         }
         
-        $parte3=", DVA.valoracion as Valoracion,VAC.id as valor_activo FROM detalle_valoracion_activo as DVA inner join aspectos_seguridad as
+        $parte3=",VAC.id as valor_activo,VAC.valor as valor FROM detalle_valoracion_activo as DVA inner join aspectos_seguridad as
         SA
         on DVA.idaspectos_seguridad=SA.id inner join valoracion_activo as VA on DVA.idvaloracion_activo=VA.id inner join valor_activo as VAC
         on  VAC.id=VA.idvalor where VA.is_deleted=0 and 
-        DVA.is_deleted=0  GROUP BY VA.id; ";
+        DVA.is_deleted=0  GROUP BY VA.id;";
      
 
        // luego 
-        $query2 = $this->db->query($parte1.$parte2.$parte3);
+       $query2 = $this->db->query($parte1.$parte2.$parte3);
         
-      
+        //return ($parte1.$parte2.$parte3);
          return  $query2 -> getResultArray();
       
     }
     public function getAspectoSeguridad(){
         $query = $this->db->query("call listarAspectoSeguridadByActivo()",[
           
+        ]);
+        return $query->getResultArray();
+    }
+    public function updateDetalleAspecto($data){
+        $query = $this->db->query("call updateDetalleAspecto(?)",[
+          $data,
+        ]);
+        return $query->getResultArray();
+    }
+    public function getDetalleEvaluacionActivo($id){
+        $sql = "CALL getDetalleEvaluacionActivo(?)";
+
+        $query = $this->db->query($sql, [
+           $id
         ]);
         return $query->getResultArray();
     }
@@ -177,6 +163,11 @@ class MValoracionActivo extends Model
         $sql = "call sp_get_valoracion_activo_by_id(?)";
         $query = $this->db->query($sql,[$id]);
         return $query->getResultArray();
+        $query = $this->db->query($sql, [
+           $id
+        ]);
+        return $query->getResultArray();
+       
     }
 
 }

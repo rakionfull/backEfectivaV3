@@ -180,6 +180,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     //CRUD Valoracion de activo
     $routes->post('validarValActivo', 'Activo::validarValActivo',['filter' => 'authFilter']);
     $routes->get('getValActivo', 'Activo::getValActivo',['filter' => 'authFilter']);
+    $routes->get('getDetalleEvaluacionActivo/(:num)', 'Activo::getDetalleEvaluacionActivo/$1',['filter' => 'authFilter']);
     $routes->post('addValActivo', 'Activo::addValActivo',['filter' => 'authFilter']);
     $routes->post('updateValActivo', 'Activo::updateValActivo',['filter' => 'authFilter']);
     $routes->delete('deleteValActivo', 'Activo::deleteValActivo',['filter' => 'authFilter']);

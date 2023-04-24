@@ -787,35 +787,35 @@ class Home extends BaseController
     public function updateCreate()
     {
    
-    try {
-        $input = $this->getRequestInput($this->request);
+        try {
+            $input = $this->getRequestInput($this->request);
 
-      
-        $model = new Mperfil();
-       
-        $detalle = $model->getDetPerById($input['data']['id_op']);
+        
+            $model = new Mperfil();
+        
+            $detalle = $model->getDetPerById($input['data']['id_op']);
 
-        $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
+            $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
 
-        $result = $model->updateDetPer($input['data'],'create_det');
-        $estado = 'Desactivo';
-        if($input['data']['estado']==1){$estado = 'Activo';}
-        //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
-        log_acciones(
-            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Crear en opcion '.$opcion->opcion
-            ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
-        return $this->getResponse(
-            [
-                'msg' =>  $result
-            ]
-        );
-    } catch (Exception $ex) {
-        return $this->getResponse(
-            [
-                'error' => $ex->getMessage(),
-            ]
-        );
-    }
+            $result = $model->updateDetPer($input['data'],'create_det');
+            $estado = 'Desactivo';
+            if($input['data']['estado']==1){$estado = 'Activo';}
+            //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
+            log_acciones(
+                'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Crear en opcion '.$opcion->opcion
+                ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
+            return $this->getResponse(
+                [
+                    'msg' =>  $result
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ]
+            );
+        }
        
       
         

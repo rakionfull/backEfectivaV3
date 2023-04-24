@@ -94,4 +94,7 @@ define('EVENT_PRIORITY_NORMAL', 100);
 define('EVENT_PRIORITY_HIGH', 10);
 define("ENVIRONMENT","development");
 // define("JWT_SECRET","development");
+define("KEY","6aM6mfn9TGxPp6m5B4d4wf4G2v8BbHPF");
+define("CIPER","AES-256-CTR");
+define("DIGEST","SHA256");
 define("JWT_SECRET","21sds5adfjsdbfhbnbmvjyFDHFTERWEFDVcvcvpooiu879");
