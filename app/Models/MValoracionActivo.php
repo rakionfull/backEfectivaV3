@@ -162,5 +162,21 @@ class MValoracionActivo extends Model
         return $query->getResultArray();
     }
 
+    public function get_all_detalle_valoracion_activo(){
+        $sql = "call sp_get_all_detalle_valoracion_activo()";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
+    public function getDetalleValoracionActivo($aspecto){
+        $sql = "call sp_get_detalle_valoracion_activo(?)";
+        $query = $this->db->query($sql,[$aspecto]);
+        return $query->getResultArray();
+    }
+    public function getValoracionActivoById($id){
+        $sql = "call sp_get_valoracion_activo_by_id(?)";
+        $query = $this->db->query($sql,[$id]);
+        return $query->getResultArray();
+    }
 
 }

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\EvaluacionRiesgo;
 use App\Models\InventarioClasificacionActivo;
+use App\Models\MValoracionActivo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -13,6 +14,59 @@ class InventarioClasificacionActivoController extends BaseController
 {
     use ResponseTrait;
 
+    public function getValoracionActivoById(){
+        $input = $this->getRequestInput($this->request);
+
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getValoracionActivoById($input['id_valoracion_activo'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
+
+    public function getAllDetalleValoracionActivo(){
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->get_all_detalle_valoracion_activo()
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
+    public function getDetalleValoracionActivo(){
+        $input = $this->getRequestInput($this->request);
+
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getDetalleValoracionActivo($input['aspecto'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
     public function getAllHistoricos($id){
         try {
             $model = new InventarioClasificacionActivo();

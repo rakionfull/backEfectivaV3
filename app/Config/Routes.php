@@ -86,6 +86,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
     //reportes
     $routes->get('dataUser', 'Home::dataUser',['filter' => 'authFilter']);
+    $routes->get('detallePerfil', 'Home::detallePerfil',['filter' => 'authFilter']);
    
 
     $routes->post('updateView', 'Home::updateView',['filter' => 'authFilter']);
@@ -504,7 +505,11 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
       // update riesgos controlados
       $routes->get('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
-      });
+      
+      $routes->post('getDetalleValoracionActivo','InventarioClasificacionActivoController::getDetalleValoracionActivo');
+      $routes->get('getAllDetalleValoracionActivo','InventarioClasificacionActivoController::getAllDetalleValoracionActivo');
+      $routes->post('getValoracionActivoById','InventarioClasificacionActivoController::getValoracionActivoById');
+    });
 
 
 /*

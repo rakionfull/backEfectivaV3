@@ -896,6 +896,11 @@ class Home extends BaseController
                 
     }
 
-
+    public function detallePerfil(){
+        $model = new Mperfil();
+        return $this->getResponse([
+            'datos' => $model->getDetallePerfil()
+        ]);
+    }
 
 }

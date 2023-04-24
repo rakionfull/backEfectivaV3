@@ -55,7 +55,7 @@ class Database extends Config
         'hostname' => 'localhost',
         'username' => 'root',
         'password' => '',
-        'database' => 'bd_efectiva1',
+        'database' => 'bd_efectiva_3',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,

@@ -186,5 +186,11 @@ class Mperfil extends Model
         return $query->getResultArray();
 
     }
+
+    public function getDetallePerfil(){
+        $sql = "call sp_get_detalle_perfil_to_reporte()";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
 }
 
