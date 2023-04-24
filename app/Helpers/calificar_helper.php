@@ -2,6 +2,7 @@
 
 use App\Models\MRegistroControles;
 use App\Models\MEvaluacionControl;
+use App\Models\MValoracionActivo;
 
 function calificar($array,$idCC)
 {
@@ -207,3 +208,94 @@ function validar_evaluacion_control2($array,$id){
     
     return $resultado_final;
 }
+
+//validaciones de valoracion de activo
+function validar_valoracion_activo($array,$idvalor){
+    $model = new MValoracionActivo();
+    //traigo los datos de la valoracion de activo
+    $detalle_EC = $model->getValActivo();
+    $resultado_final = false;
+    $cont=0;
+    foreach ($detalle_EC as $key => $value) {
+       
+            
+                //traigo el dato de la caligicacion segun el array enviado
+            
+                // $id_calificacion = $model->getById($value2['idCC']);
+                
+                    //traigo el dato respectivo segun clasificaicon e Id de la evlauacion de control
+                $valores = $model->getDetalleEvaluacionActivo($value['id']);
+                    // //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
+               if($cont < count($valores)){
+              
+                    for ($i=0; $i < count($valores) ; $i++) { 
+                        //$resultado_final = $array[$i];
+                        if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
+                            ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
+                            $idvalor == $valores[$i]['idvalor']){
+                            $resultado_final = true;
+                      
+                         $cont++;
+                        
+
+                        }else{
+                            $resultado_final = "";
+                            $resultado = [];
+                            $cont=0;
+                        }
+                    }
+               }
+
+    }
+    
+    return $resultado_final;
+}
+function validar_valoracion_activo2($array,$idvalor,$id){
+    $model = new MValoracionActivo();
+    //traigo los datos de la valoracion de activo
+    $detalle_EC = $model->getValActivo();
+    $resultado_final = false;
+    $cont=0;
+    foreach ($detalle_EC as $key => $value) {
+       
+            
+                //traigo el dato de la caligicacion segun el array enviado
+            
+                // $id_calificacion = $model->getById($value2['idCC']);
+                if($value['id'] != $id){     
+                    //traigo el dato respectivo segun clasificaicon e Id de la evlauacion de control
+                    $valores = $model->getDetalleEvaluacionActivo($value['id']);
+                        // //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
+                    if($cont < count($valores)){
+                    
+                            for ($i=0; $i < count($valores) ; $i++) { 
+                                //$resultado_final = $array[$i];
+                                if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
+                                    ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
+                                    $idvalor == $valores[$i]['idvalor']){
+                                    $resultado_final = true;
+                            
+                                $cont++;
+                                
+
+                                }else{
+                                    $resultado_final = "";
+                                    $resultado = [];
+                                    $cont=0;
+                                }
+                            }
+                    }
+                }
+                    
+                                            
+                        
+                        
+                          
+                    
+                
+
+    }
+    
+    return $resultado_final;
+}
+

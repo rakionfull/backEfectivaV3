@@ -1,15 +1,20 @@
 <?php
 use App\Models\MconfigPass;
 use App\Models\Muser;
+use Config\Encryption;
+use Config\Services;
 
-if(!function_exists('hashPass')){
-  function hashPass($password){
-    return password_hash($password, PASSWORD_DEFAULT);
-  }
-}
 
 if(!function_exists('veriPass')){
+ 
   function veriPass($passPost,$idPost){
+    $config         = new Encryption();
+    $config->key    = KEY;
+    $config->driver = 'OpenSSL';
+    $config->cipher = CIPER;
+    $config ->digest = DIGEST;
+    $encrypter = Services::encrypter($config);
+
     $modelUser = new Muser();
     $model = new MconfigPass();
     $configuracion =  $model->getConfigPass();
@@ -18,9 +23,10 @@ if(!function_exists('veriPass')){
     foreach ($array_claves as $key => $value) {
      
       if(!$valor){
-        // $valor = $value["pass_cl"];
-        $valor = password_verify($passPost, $value["pass_cl"]);
-        
+          
+        if($passPost == $encrypter->decrypt(hex2bin($value["pass_cl"]))){
+          $valor = true;
+        }
         
       }
     }

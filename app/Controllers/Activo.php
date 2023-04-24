@@ -2270,11 +2270,11 @@ class Activo extends BaseController
            try{
                 $input = $this->getRequestInput($this->request);
 
-            
                 $model = new MValoracionActivo();
-                // $valida = $model->validarValActivo($input[0]);
+
+                $valida = validar_valoracion_activo($input[0]['valores'],  $input[0]['id_valor_val']);
         
-                // if(!$valida){
+                if(!$valida){
                     
                     $result = $model->saveValActivo($input);
                     $lastid = $model->lastIdValoracionActivo();
@@ -2291,10 +2291,10 @@ class Activo extends BaseController
                     }
                     $msg = 'Registrado Correctamente';
                     $error = 1;
-                // }else{
-                //     $msg = 'Valoracion ya registrada';
-                //     $error = 0;
-                // }
+                }else{
+                    $msg = 'Valoracion ya registrada';
+                    $error = 0;
+                }
                 return $this->getResponse(
                     [
                         'msg' =>  $msg,
@@ -2305,8 +2305,8 @@ class Activo extends BaseController
             } catch (Exception $ex) {
                 return $this->getResponse(
                     [
-                        //'error' => $ex->getMessage(),
-                        'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+                        'error' => $ex->getMessage(),
+                        //'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
                     ],
                     ResponseInterface::HTTP_OK
                 );
@@ -2320,29 +2320,48 @@ class Activo extends BaseController
 
         
             $model = new MValoracionActivo();
-            $found = $model->validateValActivoModify($input);
+           $found = validar_valoracion_activo2($input[0]['valores'],$input[0]['id_valor_val'],$input[0]['id']);
 
-            if(count($found) > 0){
+            if($found){
                 return $this->getResponse(
                     [
-                        'error' =>true,
+                        'error' => 0,
                         'msg' =>'Valoración de activo ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
+             }else{
+                      
+                        $result = $model->updateValActivo($input);
+                        $result2 = $model->updateDetalleAspecto($input[0]['id']);
+                            //    $lastid = $model->lastIdValoracionActivo();
+                                foreach ($input[0]['valores'] as $key => $value) {
+
+
+                                    $array = [
+                                        'idaspecto' => $value['idaspecto'],
+                                        'idvaloracionactivo' =>  $input[0]['id'],
+                                        'valoracion'=>$value['valoracion']
+                                    ];
+
+                                    $model->saveDetalleValActivo($array);
+                                }
+
+                        $msg = 'Modificado Correctamente';           
+
+                        return $this->getResponse(
+                            [
+                                'msg' => $msg,
+                                'error' => 1,
+                            ]
+                        );
              }
-            $result = $model->updateValActivo($input);
-        
-            return $this->getResponse(
-                [
-                    'msg' =>  'Modificado Correctamente'
-                ]
-            );
+          
         } catch (Exception $ex) {
             return $this->getResponse(
                 [
-                    // 'error' => $ex->getMessage(),
-                    'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+                    'error' => $ex->getMessage(),
+                    //'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
                 ],
                 ResponseInterface::HTTP_OK
             );
@@ -2367,6 +2386,7 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+                        $model->updateDetalleAspecto($input[0]['id']);
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -2406,6 +2426,27 @@ class Activo extends BaseController
                 ]
             );
         }
+    }
+    public function getDetalleEvaluacionActivo($dato){
+
+        try {
+            $model = new MValoracionActivo();
+                $response = [
+                    'data' =>  $model->getDetalleEvaluacionActivo($dato),
+                    
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+
+           
     }
     //categoria de activo
     public function getCatActivo(){

@@ -53,6 +53,16 @@ class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
         $this->db = \Config\Database::connect();
+        //asignar el aloritmo para encriptar contraseñas
+        $config         = new \Config\Encryption();
+        //https://pinetools.com/es/generador-cadenas-aleatorias
+        //$key = Encryption::createKey(32);
+        $config->key    = '6aM6mfn9TGxPp6m5B4d4wf4G2v8BbHPF';
+        $config->driver = 'OpenSSL';
+        $config->cipher = 'AES-256-CTR';
+        $config ->digest = 'SHA256';
+
+        $this->encrypter = \Config\Services::encrypter($config);
 
     }
 

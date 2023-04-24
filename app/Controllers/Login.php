@@ -122,40 +122,9 @@ class Login extends BaseController
     
    
     public function change_pass(){
-        // $rules = [
-        //     'passw' => 'required|min_length[8]|validatePass[passw]',
-        //     'repassw' => 'required|min_length[8]|validatePass[repassw]'
-        // ];
 
-        // $errors = [
-        //     // 'username' => [
-        //     //     'validateUser' => 'Usuario Incorrecto'
-        //     // ],
-        //     'passw' => [
-        //         'required' => 'Debe ingresar Contraseña',     
-        //         'min_length' => 'La clave debe tener como minimo 8 carácteres',  
-        //         'validatePass' => 'La clave debe contener 1 May, 1 Min , 1 Núm y 1 Caract. especial',  
-        
-        //     ],
-        //     'repassw' => [
-        //         'required' => 'Debe confirmar Contraseña',     
-        //         'min_length' => 'La clave debe tener como minimo 8 carácteres',  
-        //         'validatePass' => 'La clave debe contener 1 May, 1 Min , 1 Núm y 1 Caract. especial',  
-        
-        //     ]
-        // ];
-
+    try {
         $input = $this->getRequestInput($this->request);
-        // if (!$this->validateRequest($input, $rules, $errors)) {
-
-        //     $error = [
-        //         'error' => 'valida',
-        //         'datos' => $this->validator->getErrors()
-        //     ];
-        //     return ($this->getResponse($error,ResponseInterface::HTTP_OK));
-          
-        // }
-        // creo un helper de validacion de claves
       
         $resultado =  validacionPassword($input);
         if($resultado == 1){
@@ -164,9 +133,11 @@ class Login extends BaseController
             $userModel = new Muser();
             if(isset($input['id_us'])){
                 $existe_pass = veriPass($input['passw'],$input['id_us']);
+              
                 if(!$existe_pass){
                     $datos = array(
-                        'pass_cl' =>password_hash($input['passw'], PASSWORD_DEFAULT),
+                        //'pass_cl' =>password_hash($input['passw'], PASSWORD_DEFAULT),
+                        'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
                         'id_us' =>$input['id_us'],
                     );
                     $userModel->savePass($datos);
@@ -185,7 +156,8 @@ class Login extends BaseController
                 $existe_pass = veriPass($input['passw'],$input['id']);
                 if(!$existe_pass){
                     $datos = array(
-                        'pass_cl' => hashPass($input['passw']),
+                        //'pass_cl' => hashPass($input['passw']),
+                        'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
                         'id_us' =>$input['id'],
                     );
                     $userModel->savePass($datos);
@@ -218,6 +190,15 @@ class Login extends BaseController
         
        
         return $this->respond($response, ResponseInterface::HTTP_OK);
+    } catch (\Throwable $ex) {
+        return $this->getResponse(
+            [
+                'error' => $ex->getMessage(),
+            ],
+            ResponseInterface::HTTP_OK
+        );
+    }
+       
     }
     private function getJWTForUser(string $username,string $ip,string $terminal ,int $responseCode = ResponseInterface::HTTP_OK) 
     {
