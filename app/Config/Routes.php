@@ -56,6 +56,7 @@ $routes->post('/register', 'Register::register', ['filter' => 'authFilter']);
 // $routes->post('addInventarioClasificacionActivo','InventarioClasificacionActivoController::store');
 // http://localhost:8080/api/
 // $routes->post('updateStatus/(:num)','InventarioClasificacionActivoController::updateStatus/$1');
+// $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
 
 $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('logout/(:num)', 'Login::logout/$1',['filter' => 'authFilter']);
@@ -447,10 +448,10 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
   
 
       // CRUD EVALUACION RIESGO
-      $routes->get('listEvaluacionRiesgosExtra/(:num)','EvaluacionRiesgoController::index/$1',['filter' => 'authFilter']);
+      $routes->get('listEvaluacionRiesgos/(:num)','EvaluacionRiesgoController::index/$1',['filter' => 'authFilter']);
       $routes->get('getListHistorial/(:num)','EvaluacionRiesgoController::getListHistorial/$1',['filter' => 'authFilter']);
       $routes->get('getEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::show/$1',['filter' => 'authFilter']);
-      $routes->get('countByValor','EvaluacionRiesgoController::countByValor',['filter' => 'authFilter']);
+      $routes->get('countvalores','EvaluacionRiesgoController::countvalores',['filter' => 'authFilter']);
       $routes->post('addEvaluacionRiesgo','EvaluacionRiesgoController::store',['filter' => 'authFilter']);
       $routes->post('addEvaluacionRiesgoHistorial','EvaluacionRiesgoController::store_historial',['filter' => 'authFilter']);
       $routes->post('updateEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::update/$1',['filter' => 'authFilter']);
@@ -510,6 +511,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('getDetalleValoracionActivo','InventarioClasificacionActivoController::getDetalleValoracionActivo');
       $routes->get('getAllDetalleValoracionActivo','InventarioClasificacionActivoController::getAllDetalleValoracionActivo');
       $routes->post('getValoracionActivoById','InventarioClasificacionActivoController::getValoracionActivoById');
+      $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
     });
 
 

@@ -170,4 +170,38 @@ class MValoracionActivo extends Model
        
     }
 
+    public function getValorActivoByValoraciones($array){
+        $model = new MValoracionActivo();
+        //traigo los datos de la valoracion de activo
+        $detalle_EC = $model->getValActivo();
+        foreach ($detalle_EC as $key => $value) {
+            $cont=0;
+            //traigo el dato de la calificacion segun el array enviado
+        
+            // $id_calificacion = $model->getById($value2['idCC']);
+            
+            //traigo el dato respectivo segun clasificaicon e Id de la evlauacion de control
+            $valores = $model->getDetalleEvaluacionActivo($value['id']);
+            // return $valores;
+            //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
+            if($cont < count($valores)){
+            
+                for ($i=0; $i < count($valores); $i++) { 
+                    //$resultado_final = $array[$i];
+                    if(($array[$i]['idaspecto'] == $valores[$i]['idaspectos_seguridad']) && 
+                        ($array[$i]['valoracion'] == $valores[$i]['valoracion'])){
+                        $resultado = $valores[$i]['idvaloracion_activo'];
+                        $cont++;
+                    }else{
+                        $resultado = "";
+                    }
+                }
+                if($cont == count($array)){
+                    return $resultado;
+                }
+            }
+        }
+        return false;
+    }
+
 }

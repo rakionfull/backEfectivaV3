@@ -49,6 +49,25 @@ class InventarioClasificacionActivoController extends BaseController
                 );
         } 
     }
+    public function getValorActivoByValoraciones(){
+        try {
+            $input = $this->getRequestInput($this->request);
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getValorActivoByValoraciones($input['valores'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                        'file' => $ex->getFile(),
+                        'line' => $ex->getLine()
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
     public function getDetalleValoracionActivo(){
         $input = $this->getRequestInput($this->request);
 
@@ -199,9 +218,6 @@ class InventarioClasificacionActivoController extends BaseController
                 'idubicacion' => 'required',
                 'idpropietario' => 'required',
                 'idcustodio' => 'required',
-                'val_c' => 'required',
-                'val_i' => 'required',
-                'val_d' => 'required',
                 'idvalor' => 'required',
                 'estado' => 'required',
                 'comentario' => 'required',
@@ -239,15 +255,6 @@ class InventarioClasificacionActivoController extends BaseController
                 ],
                 'idpropietario' => [
                     'required' => 'Debe ingresar el propietario',
-                ],
-                'val_c' => [
-                    'required' => 'Debe ingresar la valoracion de confidencialidad',
-                ],
-                'val_i' => [
-                    'required' => 'Debe ingresar la valoracion de integridad',
-                ],
-                'val_d' => [
-                    'required' => 'Debe ingresar la valoracion de disponibilidad',
                 ],
                 'idvalor' => [
                     'required' => 'Debe ingresar el valor',
