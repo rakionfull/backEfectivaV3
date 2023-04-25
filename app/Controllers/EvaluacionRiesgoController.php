@@ -55,11 +55,11 @@ class EvaluacionRiesgoController extends BaseController
                 );
         }
     }
-    public function countByValor(){
+    public function countvalores(){
         try {
             $model = new EvaluacionRiesgo();
             $response = [
-                'data' =>  $model->countByValor(),
+                'data' =>  $model->countvalores(),
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
@@ -160,6 +160,7 @@ class EvaluacionRiesgoController extends BaseController
             $result = $model->store($input);
             if($result){
                 $id = $model->get_last_id()[0];
+<<<<<<< HEAD
                 // foreach ($input['controles'] as $control) {
                 //     # code...
                 //     $data = [
@@ -170,6 +171,20 @@ class EvaluacionRiesgoController extends BaseController
                 //     ];
                 //     $modelERC->store($data);
                 // }
+=======
+                if(isset($input['controles'])){
+                    foreach ($input['controles'] as $control) {
+                        # code...
+                        $data = [
+                            'id_evaluacion_riesgo' => $id,
+                            'id_control' => $control,
+                            'id_user_added' => $input['id_user_added'],
+                            'date_add' => $input['date_add']
+                        ];
+                        $modelERC->store($data);
+                    }
+                }
+>>>>>>> df6595e36a9cc4c1630adcc36b9f98cc046f973b
                 return $this->getResponse(
                     [
                         'error' => false,

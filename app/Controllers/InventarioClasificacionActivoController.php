@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\EvaluacionRiesgo;
 use App\Models\InventarioClasificacionActivo;
+use App\Models\MValoracionActivo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -13,6 +14,78 @@ class InventarioClasificacionActivoController extends BaseController
 {
     use ResponseTrait;
 
+    public function getValoracionActivoById(){
+        $input = $this->getRequestInput($this->request);
+
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getValoracionActivoById($input['id_valoracion_activo'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
+
+    public function getAllDetalleValoracionActivo(){
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->get_all_detalle_valoracion_activo()
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
+    public function getValorActivoByValoraciones(){
+        try {
+            $input = $this->getRequestInput($this->request);
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getValorActivoByValoraciones($input['valores'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                        'file' => $ex->getFile(),
+                        'line' => $ex->getLine()
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
+    public function getDetalleValoracionActivo(){
+        $input = $this->getRequestInput($this->request);
+
+        try {
+            $model = new MValoracionActivo();
+            $response = [
+                'data' =>  $model->getDetalleValoracionActivo($input['aspecto'])
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
     public function getAllHistoricos($id){
         try {
             $model = new InventarioClasificacionActivo();
@@ -145,9 +218,6 @@ class InventarioClasificacionActivoController extends BaseController
                 'idubicacion' => 'required',
                 'idpropietario' => 'required',
                 'idcustodio' => 'required',
-                'val_c' => 'required',
-                'val_i' => 'required',
-                'val_d' => 'required',
                 'idvalor' => 'required',
                 'estado' => 'required',
                 'comentario' => 'required',
@@ -185,15 +255,6 @@ class InventarioClasificacionActivoController extends BaseController
                 ],
                 'idpropietario' => [
                     'required' => 'Debe ingresar el propietario',
-                ],
-                'val_c' => [
-                    'required' => 'Debe ingresar la valoracion de confidencialidad',
-                ],
-                'val_i' => [
-                    'required' => 'Debe ingresar la valoracion de integridad',
-                ],
-                'val_d' => [
-                    'required' => 'Debe ingresar la valoracion de disponibilidad',
                 ],
                 'idvalor' => [
                     'required' => 'Debe ingresar el valor',

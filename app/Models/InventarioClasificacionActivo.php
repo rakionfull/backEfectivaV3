@@ -68,7 +68,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function store($data){
-        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $data['idempresa'],
             $data['idarea'],
@@ -82,15 +82,13 @@ class InventarioClasificacionActivo extends Model
             $data['idubicacion'],
             $data['idpropietario'],
             $data['idcustodio'],
-            $data['val_c'],
-            $data['val_i'],
-            $data['val_d'],
             $data['idvalor'],
             $data['estado'],
             $data['comentario'],
             $data['id_user_added'],
             $data['date_add'],
-            $data['estado_2']
+            $data['estado_2'],
+            $data['valores'],
         ]);
         if($result){
             $sql = "call sp_get_last_id";
@@ -147,7 +145,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function edit($id,$data){
-        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $id,
             $data['idempresa'],
@@ -162,16 +160,14 @@ class InventarioClasificacionActivo extends Model
             $data['idubicacion'],
             $data['idpropietario'],
             $data['idcustodio'],
-            $data['val_c'],
-            $data['val_i'],
-            $data['val_d'],
             $data['idvalor'],
             $data['estado'],
             $data['comentario'],
             $data['id_user_updated'],
             $data['date_modify'],
             $data['observacion'],
-            $data['estado_2']
+            $data['estado_2'],
+            $data['valores']
         ]);
         if($result){
             $mUser = new Muser();
