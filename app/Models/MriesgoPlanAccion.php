@@ -135,7 +135,42 @@ class MriesgoPlanAccion extends Model
         $query = $this->db->query($sql, [ ]);
         return $query->getResultArray();
     }
-    
+    // public function sendMail($id,$mail,$bcc = array()){
+    //     try {
+    //         //traer los datos para el correo 
+    //         $sql = "call sp_get_info_to_email_plan(?)";
+    //         $result = $this->db->query($sql,[
+    //             $id
+    //         ])->getResult();
+    //         if(count($result)>0){
+    //             log_message('info','Aquie sta en pplan de accion');
+    //             $email = \Config\Services::email();
+    //             $email->setTo($mail);
+    //             if(count($bcc)>0){
+    //                 $email->setBCC($bcc);
+    //             }
+    //             $email->setFrom('jbazant@valtx.pe', 'Plan de acción');
+    //             $email->setSubject('Alerta de plan de acción');
+    //             $email->setMessage(
+    //                 view('mail/plan_accion',[
+                                                
+    //                     'fullname' => $result['nombres_us'].' '.$result['apepat_us'].' '.$result['apemat_us'],
+    //                     'plan' => $result['plan_accion'],
+    //                     'estado' => 'Plan regitrado correctamente',
+    //                     'alerta' => $result['alerta']
+                    
+    //                 ])
+    //             );
+    //             $valor = $email->send();
+    //             return $email;
+    //         }
+    //         return false;
+    //     } catch (\Throwable $th) {
+    //         log_message('error',$th->getMessage()." linea ".$th->getLine()." file ".$th->getFile());
+    //         return false;
+    //     }
+        
+    // }
 
     public function savePlanAccion($data){
 
@@ -159,6 +194,12 @@ class MriesgoPlanAccion extends Model
             $data[0]['idalerta'],
         
         ]);
+
+        //aqui deberiamos enviar la alerta al registrarlo.
+        // $mUser = new Muser();
+        // $user = $mUser->getUserbyId($data['user']);
+
+        // $this->sendMail($id,$user->email_us);
 
                
         $last_id = $this->db->query("SELECT  id as maxid FROM 

@@ -204,7 +204,8 @@ class Home extends BaseController
         $result = $model->saveUser($input['data']);
         $id=$model->lastid();
         $datos = array(
-            'pass_cl' => hashPass($input['data']['passw']),
+            // 'pass_cl' => hashPass($input['data']['passw']),
+            'pass_cl' => bin2hex($this->encrypter->encrypt($input['data']['passw'])),
             'id_us' =>$id,
         );
        
@@ -452,7 +453,7 @@ class Home extends BaseController
                 } catch (Exception $ex) {
                     return $this->getResponse(
                         [
-                            'error' => true,
+                            'error' => $ex->getMessage(),
                             'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                         ]
                     );

@@ -34,14 +34,14 @@ class Muser extends Model
       
         $query=$this->db->query("INSERT INTO tb_users 
         (docident_us,nombres_us,apepat_us,apemat_us,email_us,
-        usuario_us,creacion_us,estado_us,change_pass,perfil_us,idempresa,idposicion,idarea,idunidad) VALUES
+        usuario_us,creacion_us,estado_us,bloqueo_us,change_pass,perfil_us,idempresa,idposicion,idarea,idunidad) VALUES
         ('{$data['docident_us']}','{$data['nombres_us']}',
         '{$data['apepat_us']}','{$data['apemat_us']}',
         '{$data['email_us']}','{$data['usuario_us']}',
-        '{$creacion_us}','{$estado_us}','{$change_pass}','{$data['perfil_us']}',
+        '{$creacion_us}','{$estado_us}',0,'{$change_pass}','{$data['perfil_us']}',
         '{$data['id_empresa']}','{$data['id_puesto']}','{$data['id_area']}','{$data['id_unidad']}'); ") ;
          
-        return $query;
+        return true;
 
     }
     public function lastid(){
@@ -113,10 +113,11 @@ class Muser extends Model
         $consulta = "";
    
         if($data['estado'] == 'all') {
-            $consulta = "SELECT  *,TU.id_us as id,(select loged from tb_sesiones where id_us=TU.id_us  ORDER BY loged DESC LIMIT 1) as loged FROM tb_users as TU  ORDER BY TU.id_us;";
+            $consulta = "SELECT  *,TU.id_us as id,(select loged from tb_sesiones where id_us=TU.id_us  ORDER BY loged DESC LIMIT 1) as loged
+             FROM tb_users as TU where TU.is_deleted=0 ORDER BY TU.id_us;";
         }
         else { $consulta = "SELECT  *,TU.id_us as id,(select loged from tb_sesiones where id_us=TU.id_us  ORDER BY loged DESC LIMIT 1) as loged FROM tb_users as TU  
-            where TU.estado_us={$data['estado'] } ORDER BY TU.id_us;"; }
+            where TU.estado_us={$data['estado'] } and TU.is_deleted=0 ORDER BY TU.id_us;"; }
 
         $Usuario = $this->db->query($consulta);
         return $Usuario->getResultArray();
@@ -204,9 +205,9 @@ class Muser extends Model
         $query = $this->db->query("SELECT * FROM tb_users where estado_us='1'");
         return $query->getResultArray();
     }
-    public function getUserByEmpresa($data){
+    public function getUserByEmpresa($data,$data1){
 
-        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idempresa={$data}");
+        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idempresa={$data} and idarea={$data1}");
         return $query->getResultArray();
     }
     public function getUserByArea($id_area){

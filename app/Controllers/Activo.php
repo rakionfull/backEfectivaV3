@@ -3796,7 +3796,7 @@ public function getUserByEmpresa(){
         $input = $this->getRequestInput($this->request);      
         $model = new Muser();
             $response = [
-                'data' =>  $model->getUserByEmpresa($input['idempresa'])
+                'data' =>  $model->getUserByEmpresa($input['idempresa'],$input['idarea'])
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
     

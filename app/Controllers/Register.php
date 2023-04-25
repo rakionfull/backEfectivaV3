@@ -6,6 +6,8 @@ use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Controllers\BaseController;
 use App\Models\Muser;
+use Exception;
+use ReflectionException;
 
 class Register extends BaseController
 {
@@ -13,7 +15,7 @@ class Register extends BaseController
 
     public function register()
     {
-    
+    try {
         $rules = [
             'email' => [
                 'label' => 'email',
@@ -62,29 +64,45 @@ class Register extends BaseController
                 
             );
             $user = $Muser->saveUser($data);
-           if($user){
+        //    if($user){
         
-            $datos = array(
-                'creacion_cl' => date('Y-m-d H:i:s'),
-                
-                'pass_cl' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-                // 'pass_cl' => hashPass($this->request->getVar('password')),
-                'expiracion_cl' => time() + (24*3600*45),
-                'id_us' =>$Muser->lastid(),
-            );
-                $result = $Muser->savePass($datos);
-           }
-          
-           if($result){
-            return $this->respond(
+        //     $datos = array(
+        //         'creacion_cl' => date('Y-m-d H:i:s'),
+        //         //'pass_cl' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
+        //         'pass_cl' => bin2hex($this->encrypter->encrypt($this->request->getVar['password'])),
+        //         'expiracion_cl' => time() + (24*3600*45),
+        //         'id_us' =>$Muser->lastid(),
+        //     );
+        //         $result = $Muser->savePass($datos);
+        //    }
+              return $this->respond(
                 [
                     'message' => 'Regristro completado correctamente',
-                    'user' => $result
+                    'user' => $user,
+                    
                 ],
                 ResponseInterface::HTTP_OK // 200
             );
-           }
+        //    if($result){
+        //     return $this->respond(
+        //         [
+        //             'message' => 'Regristro completado correctamente',
+        //             'user' => $result,
+                    
+        //         ],
+        //         ResponseInterface::HTTP_OK // 200
+        //     );
+        //    }
            
         }
+    } catch (\Throwable $ex) {
+        return $this->getResponse(
+            [
+                'error' => $ex->getMessage(),
+            ],
+            ResponseInterface::HTTP_OK
+        );
+    }  
+      
     }
 }

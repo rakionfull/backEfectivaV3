@@ -160,16 +160,16 @@ class EvaluacionRiesgoController extends BaseController
             $result = $model->store($input);
             if($result){
                 $id = $model->get_last_id()[0];
-                foreach ($input['controles'] as $control) {
-                    # code...
-                    $data = [
-                        'id_evaluacion_riesgo' => $id,
-                        'id_control' => $control,
-                        'id_user_added' => $input['id_user_added'],
-                        'date_add' => $input['date_add']
-                    ];
-                    $modelERC->store($data);
-                }
+                // foreach ($input['controles'] as $control) {
+                //     # code...
+                //     $data = [
+                //         'id_evaluacion_riesgo' => $id,
+                //         'id_control' => $control,
+                //         'id_user_added' => $input['id_user_added'],
+                //         'date_add' => $input['date_add']
+                //     ];
+                //     $modelERC->store($data);
+                // }
                 return $this->getResponse(
                     [
                         'error' => false,
@@ -432,7 +432,8 @@ class EvaluacionRiesgoController extends BaseController
                 //sacamos todos los riesgos y controles asociados con split
                 $riesgos = explode(",", $input[0]['id_riesgo']);
                 $controles = explode(",", $input[0]['id_control']);
-                //recorremos y agregamos
+                //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
+                //todas las actividades
                 foreach ($riesgos as $key => $value) {
                     foreach ($controles as $key => $value2) {
                         $data = [
@@ -444,7 +445,7 @@ class EvaluacionRiesgoController extends BaseController
                         $riesgo->store($data);
                       
                     }
-                    $result = $this->updateRiesgosControlados($value);
+                 $controlado= $this->updateRiesgosControlados($value);
                 }
                 $msg = 'Plan Registrado Correctamente';
                 $error = 1;
@@ -452,6 +453,7 @@ class EvaluacionRiesgoController extends BaseController
                 $result = 0;
                 $msg = 'Plan ya registrado';
                 $error = 0;
+                //$error2 = $controlado;
             }
            
     
@@ -459,7 +461,8 @@ class EvaluacionRiesgoController extends BaseController
                 [
                     'id' => $result,   
                     'msg' =>  $msg,
-                    'error' =>  $error
+                    'error' =>  $error,
+                    // 'error2' =>  $error2,
                 ]
             );
         } catch (Exception $ex) {
