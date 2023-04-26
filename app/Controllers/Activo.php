@@ -1106,6 +1106,8 @@ class Activo extends BaseController
             if($found){
                 if($model->delete($input[0]['id'])){
                     $this->db->transRollback();
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
+                    $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
                     return $this->getResponse(
@@ -1279,6 +1281,8 @@ class Activo extends BaseController
             if($found){
                 if($model->delete($input[0]['id'])){
                     $this->db->transRollback();
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
+                    $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
                     return $this->getResponse(
@@ -1291,7 +1295,7 @@ class Activo extends BaseController
                     $data['is_deleted'] = 0;
                     $data['date_deleted'] = null;
                     $data['id_user_deleted'] = null;
-                    $model->update($input['id'],$data);
+                    $model->update($input[0]['id'],$data);
                     return $this->getResponse(
                         [
                             'error' => true,
@@ -3644,7 +3648,7 @@ public function deleteActividadPlan(){
         $input = $this->getRequestInput($this->request);       
         $model = new MriesgoPlanAccion();    
         
-        $result = $model->deleteActividadesPlan($input);
+       // $result = $model->deleteActividadesPlan($input);
        
             return $this->getResponse([
                 'msg' => 'Actividad Eliminado correctamente',

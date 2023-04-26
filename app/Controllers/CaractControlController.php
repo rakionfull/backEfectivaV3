@@ -129,6 +129,7 @@ class CaractControlController extends BaseController
                     }
 
                 }else{
+                    $result = $model->updateCaractControl($input);
                     return $this->getResponse(
                         [
                             'error' =>false,
@@ -138,7 +139,7 @@ class CaractControlController extends BaseController
                 }
                
             }
-            $result = $model->updateCaractControl($input);
+           
         
            
             
