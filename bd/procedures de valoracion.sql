@@ -1,3 +1,217 @@
+/*Fecha 25-04-23 faltantes*/
+alter table inventario_clasificacion_activo_historial add column vals text;
+/*Modificar*/
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_inventario_clasificacion_activo_historial`(IN `id_ica` INT, IN `idempresa` INT, IN `idarea` INT, IN `idunidad` INT, IN `idmacroproceso` INT, IN `idproceso` INT, IN `activo` VARCHAR(150), IN `desc_activo` VARCHAR(500), IN `idtipo_activo` INT, IN `idcategoria_activo` INT, IN `idubicacion` INT, IN `idpropietario` INT, IN `idcustodio` INT, IN `idvalor` INT, IN `estado` INT, IN `comentario` VARCHAR(500), IN `id_user_added` INT, IN `date_add` DATETIME, IN `estado_2_param` INT,IN vals_param text)
+BEGIN
+	INSERT INTO inventario_clasificacion_activo_historial(
+	id_ica,
+	idempresa,
+	idarea,
+	idunidades,
+	idmacroproceso,
+	idproceso,
+	activo,
+	desc_activo,
+	idtipo_activo,
+	idcategoria_activo,
+	idubicacion,
+	idpropietario,
+	idcustodio,
+	idvalor,
+	estado,
+	comentario,
+	id_user_added,
+	DATE_ADD,
+	estado_2,
+    vals
+	) VALUES(
+		id_ica,
+		idempresa,
+		idarea,
+		idunidad,
+		idmacroproceso,
+		idproceso,
+		activo,
+		desc_activo,
+		idtipo_activo,
+		idcategoria_activo,
+		idubicacion,
+		idpropietario,
+		idcustodio,
+		idvalor,
+		estado,
+		comentario,
+		id_user_added,
+		DATE_ADD,
+		estado_2_param,
+        vals_param
+	);
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_inventario_clasificacion_activo_historial`(IN `idid` INT)
+BEGIN
+	SELECT
+	ica.id_ica AS ica_id,
+	ica.activo,
+	ica.desc_activo,
+	ica.idpropietario AS propietario,
+	pp.posicion_puesto AS des_propietario,
+	ica.idcustodio AS custodio,
+	ica.observacion AS observacion,
+	ica.date_add AS date_created,
+	pp1.posicion_puesto AS des_custodio,
+	ica.vals AS vals,
+	ica.estado AS ica_estado,
+	ica.comentario AS ica_comentario,
+	e.id AS id_empresa,
+	e.empresa AS empresa,
+	a.id AS id_area,
+	a.area AS area,
+	u.id AS id_unidad,
+	u.unidad AS unidad,
+     ica.estado_2 as ica_estado_2,
+	m.id AS id_macroproceso,
+	m.macroproceso AS macroproceso,
+	p.id AS id_proceso,
+	p.proceso AS proceso,
+	ta.id AS id_tipo_activo,
+	ta.tipo AS tipo_activo,
+	ca.id AS id_categoria_activo,
+	ca.categoria AS categoria_activo,
+	ua.id AS ubicacion_id,
+	ua.continente AS ubicacion_continente,
+	ua.pais AS ubicacion_pais,
+	ua.ciudad AS ubicacion_ciudad,
+	ua.direccion AS ubicacion_direccion,
+	ua.descripcion AS ubicacion_descripcion,
+	va.id AS id_valor,
+	va.valor AS valor
+	FROM inventario_clasificacion_activo_historial AS ica
+	INNER JOIN empresa AS e ON e.id=ica.idempresa
+	INNER JOIN area AS a ON a.id=ica.idarea
+	INNER JOIN unidades AS u ON u.id=ica.idunidades
+	INNER JOIN macroproceso AS m ON m.id=ica.idmacroproceso
+	INNER JOIN proceso AS p ON p.id=ica.idproceso
+	INNER JOIN tipo_activo AS ta ON ta.id=ica.idtipo_activo
+	INNER JOIN categoria_activo AS ca ON ca.id=ica.idcategoria_activo
+	INNER JOIN ubicacion_activo AS ua ON ua.id=ica.idubicacion
+	INNER JOIN valor_activo AS va ON va.id=ica.idvalor
+	INNER JOIN posicion_puesto AS pp ON pp.id=ica.idpropietario
+	INNER JOIN posicion_puesto AS pp1 ON pp1.id=ica.idcustodio
+	WHERE ica.is_deleted=0 AND e.id=idid;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_inventario_clasificacion_activo_historial_by_user`(IN `id_user` INT, IN `idid` INT)
+BEGIN
+	SELECT
+	ica.id_ica AS ica_id,
+	ica.activo,
+	ica.desc_activo,
+	ica.idpropietario AS propietario,
+	ica.date_add AS date_created,
+	pp.posicion_puesto AS des_propietario,
+	ica.idcustodio AS custodio,
+	ica.observacion AS observacion,
+	pp1.posicion_puesto AS des_custodio,
+	ica.vals AS vals,
+	ica.estado AS ica_estado,
+	ica.comentario AS ica_comentario,
+	e.id AS id_empresa,
+	e.empresa AS empresa,
+	a.id AS id_area,
+	a.area AS area,
+	u.id AS id_unidad,
+     ica.estado_2 as ica_estado_2,
+	u.unidad AS unidad,
+	m.id AS id_macroproceso,
+	m.macroproceso AS macroproceso,
+	p.id AS id_proceso,
+	p.proceso AS proceso,
+	ta.id AS id_tipo_activo,
+	ta.tipo AS tipo_activo,
+	ca.id AS id_categoria_activo,
+	ca.categoria AS categoria_activo,
+	ua.id AS ubicacion_id,
+	ua.continente AS ubicacion_continente,
+	ua.pais AS ubicacion_pais,
+	ua.ciudad AS ubicacion_ciudad,
+	ua.direccion AS ubicacion_direccion,
+	ua.descripcion AS ubicacion_descripcion,
+	va.id AS id_valor,
+	va.valor AS valor
+	FROM inventario_clasificacion_activo_historial AS ica
+	INNER JOIN empresa AS e ON e.id=ica.idempresa
+	INNER JOIN area AS a ON a.id=ica.idarea
+	INNER JOIN unidades AS u ON u.id=ica.idunidades
+	INNER JOIN macroproceso AS m ON m.id=ica.idmacroproceso
+	INNER JOIN proceso AS p ON p.id=ica.idproceso
+	INNER JOIN tipo_activo AS ta ON ta.id=ica.idtipo_activo
+	INNER JOIN categoria_activo AS ca ON ca.id=ica.idcategoria_activo
+	INNER JOIN ubicacion_activo AS ua ON ua.id=ica.idubicacion
+	INNER JOIN valor_activo AS va ON va.id=ica.idvalor
+	INNER JOIN posicion_puesto AS pp ON pp.id=ica.idpropietario
+	INNER JOIN posicion_puesto AS pp1 ON pp1.id=ica.idcustodio
+	INNER JOIN inventario_clasificacion_activo AS ic ON ic.id=ica.id_ica
+	WHERE ica.is_deleted=0 AND ic.id_user_added=id_user 
+    AND e.id=idid;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_info_to_email`(IN `idid` INT)
+BEGIN
+	SELECT
+	ica.id AS ica_id,
+	ica.activo,
+	ica.desc_activo,
+	ica.idpropietario AS propietario,
+	pp.posicion_puesto AS des_propietario,
+	ica.idcustodio AS custodio,
+	ica.observacion AS observacion,
+	pp1.posicion_puesto AS des_custodio,
+	ica.vals AS vals,
+	ica.estado AS ica_estado,
+	ica.comentario AS ica_comentario,
+	e.id AS id_empresa,
+	e.empresa AS empresa,
+	a.id AS id_area,
+	a.area AS area,
+	u.id AS id_unidad,
+	u.unidad AS unidad,
+	m.id AS id_macroproceso,
+	m.macroproceso AS macroproceso,
+	p.id AS id_proceso,
+	p.proceso AS proceso,
+	ta.id AS id_tipo_activo,
+	ta.tipo AS tipo_activo,
+	ca.id AS id_categoria_activo,
+	ca.categoria AS categoria_activo,
+	ua.id AS ubicacion_id,
+	ua.continente AS ubicacion_continente,
+	ua.pais AS ubicacion_pais,
+	ua.ciudad AS ubicacion_ciudad,
+	ua.direccion AS ubicacion_direccion,
+	ua.descripcion AS ubicacion_descripcion,
+	va.id AS id_valor,
+	va.valor AS valor
+	FROM inventario_clasificacion_activo AS ica
+	INNER JOIN empresa AS e ON e.id=ica.idempresa
+	INNER JOIN area AS a ON a.id=ica.idarea
+	INNER JOIN unidades AS u ON u.id=ica.idunidades
+	INNER JOIN macroproceso AS m ON m.id=ica.idmacroproceso
+	INNER JOIN proceso AS p ON p.id=ica.idproceso
+	INNER JOIN tipo_activo AS ta ON ta.id=ica.idtipo_activo
+	INNER JOIN categoria_activo AS ca ON ca.id=ica.idcategoria_activo
+	INNER JOIN ubicacion_activo AS ua ON ua.id=ica.idubicacion
+	INNER JOIN valor_activo AS va ON va.id=ica.idvalor
+	INNER JOIN posicion_puesto AS pp ON pp.id=ica.idpropietario
+	INNER JOIN posicion_puesto AS pp1 ON pp1.id=ica.idcustodio
+	WHERE ica.id=idid;
+END
+
+/*END FALTANTES*/
+alter table inventario_clasificacion_activo add column vals text;
+
 delimiter $
 CREATE PROCEDURE `sp_get_all_detalle_valoracion_activo`()
 begin

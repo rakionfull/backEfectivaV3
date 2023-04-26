@@ -113,7 +113,7 @@ class InventarioClasificacionActivo extends Model
         return false;
     }
     public function store_historial($id_ica,$data){
-        $sql = "call sp_add_inventario_clasificacion_activo_historial(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_add_inventario_clasificacion_activo_historial(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $id_ica,
             $data['idempresa'],
@@ -128,15 +128,13 @@ class InventarioClasificacionActivo extends Model
             $data['idubicacion'],
             $data['idpropietario'],
             $data['idcustodio'],
-            $data['val_c'],
-            $data['val_i'],
-            $data['val_d'],
             $data['idvalor'],
             $data['estado'],
             $data['comentario'],
             $data['id_user_added'],
             $data['date_add'],
-            $data['estado_2']
+            $data['estado_2'],
+            $data['valores']
         ]);
         if($result){
             return true;

@@ -10,9 +10,11 @@
 <p> Descripcion Activo: <?php echo $data->desc_activo; ?></p>
 <p> Propietario: <?php echo $data->des_propietario; ?></p>
 <p> Custodio: <?php echo $data->des_custodio; ?></p>
-<p> Valoracion Confidencialidad: <?php echo $data->val_c; ?></p>
-<p> Valoracion Integridad: <?php echo $data->val_i; ?></p>
-<p> Valoracion Disponibilidad: <?php echo $data->val_d; ?></p>
+<?php
+    foreach (json_decode($data->vals) as $val) {
+        echo '<p>'.$val->aspecto.': '.$val->valoracion.'</p>';
+    }
+?>
 <p> Empresa: <?php echo $data->empresa; ?></p>
 <p> Area: <?php echo $data->area; ?></p>
 <p> Unidad: <?php echo $data->unidad; ?></p>
