@@ -1263,8 +1263,8 @@ class Activo extends BaseController
         } catch (Exception $ex) {
             return $this->getResponse(
                 [
-                    // 'error' => $ex->getMessage(),
-                    'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+                    'error' => $ex->getMessage(),
+                    //'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
                 ],
                 ResponseInterface::HTTP_OK
             );
