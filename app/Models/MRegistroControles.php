@@ -194,17 +194,18 @@ class MRegistroControles extends Model
 
       
        
-        $sql = "CALL agregar_Registro_Controles(?,?,?,?,?,?,?,?)";
+        $sql = "CALL agregar_Registro_Controles(?,?,?,?,?,?,?,?,?)";
 
 	    $this->db->query($sql, [
             $data[0]['IDR'],
-            $data[0]['riesgo'],
+            $data[0]['id_riesgo'],
             $data[0]['IDC'],
             $data[0]['control'],
             $data[0]['cobertura'],
             $data[0]['evaluacion'],
             $data[0]['estado'],
-            $data['user']
+            $data['user'],
+            $data[0]['id_evaluacion'],
         ]);
         
         $sql2 = "CALL last_id_Registro_Proceso()";
@@ -237,7 +238,7 @@ class MRegistroControles extends Model
 
         $query = $this->db->query($sql, [
             $data[0]['IDR'],
-            $data[0]['riesgo'],
+            $data[0]['id_riesgo'],
             $data[0]['IDC'],
             $data[0]['control'],
             $data[0]['cobertura'],

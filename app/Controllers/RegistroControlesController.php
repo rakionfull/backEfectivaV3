@@ -310,56 +310,57 @@ class RegistroControlesController extends BaseController
            
     // }
     
-    public function addControles()
-    {
+    // public function addControles()
+    // {
    
-        try {
-            $input = $this->getRequestInput($this->request);
+    //     try {
+    //         $input = $this->getRequestInput($this->request);
 
       
-            $model = new MRegistroControles();
+    //         $model = new MRegistroControles();
         
-            $valida = $model -> validaRegistroControl($input[0]);
+    //         $valida = $model -> validaRegistroControl($input[0]);
 
             
-            if(!$valida){
-                $result = $model->saveControles($input);
-                if($result){
-                    foreach ($input[0]['valores'] as $key => $value) {
-                        $data = [
-                            'idControl' => $result,
-                            'idCC' => $value['idCC'],
-                            'valor' => $value['valor'],
-                            'nom_tabla' => $value['nom_tabla'],
-                        ];
-                        $model->saveDetalle_Control($data);
-                    }
-                    $msg = 'Registrado Correctamente';
-                    $error = 1;
-                }
+    //         if(!$valida){
+    //             $result = $model->saveControles($input);
+    //             if($result){
+    //                 foreach ($input[0]['valores'] as $key => $value) {
+    //                     $data = [
+    //                         'idControl' => $result,
+    //                         'idCC' => $value['idCC'],
+    //                         'valor' => $value['valor'],
+    //                         'nom_tabla' => $value['nom_tabla'],
+    //                     ];
+    //                     $model->saveDetalle_Control($data);
+    //                 }
+    //                 $msg = 'Registrado Correctamente';
+    //                 $error = 1;
+    //             }
               
-            }else{
-                $msg = 'Control ya registrado';
-                $error = 0;
-            }
+    //         }else{
+    //             $msg = 'Control ya registrado';
+    //             $error = 0;
+    //         }
            
-            return $this->getResponse(
-                [
+    //         return $this->getResponse(
+    //             [
                     
-                    'msg' =>  $msg,
-                    'error' =>  $error
-                ]
-            );
-        } catch (Exception $ex) {
-            return $this->getResponse(
-                [
-                    'error' => $ex->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
-        }
+    //                 'msg' =>  $msg,
+    //                 'error' =>  $error
+    //             ]
+    //         );
+    //     } catch (Exception $ex) {
+    //         return $this->getResponse(
+    //             [
+    //                 'error' => $ex->getMessage(),
+    //             ],
+    //             ResponseInterface::HTTP_OK
+    //         );
+    //     }
     
-    }
+    // }
+    
     public function updateControles()
     {
    

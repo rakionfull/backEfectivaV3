@@ -211,6 +211,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
     // CRUD TIPO RIESGOS
     $routes->get('getTipoRiesgos', 'TipoRiesgosController::index',['filter' => 'authFilter']);
+    $routes->get('getTipoRiesgosByActivo', 'TipoRiesgosController::getTipoRiesgosByActivo',['filter' => 'authFilter']);
     $routes->get('showTipoRiesgo/(:num)','TipoRiesgosController::show/$1',['filter' => 'authFilter']);
     $routes->post('addTipoRiesgo', 'TipoRiesgosController::store',['filter' => 'authFilter']);
     $routes->post('updateTipoRiesgo', 'TipoRiesgosController::update',['filter' => 'authFilter']);
@@ -478,7 +479,9 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->get('getData/(:num)','RegistroControlesController::getData/$1',['filter' => 'authFilter']);
       $routes->post('calificarControl/(:num)','RegistroControlesController::calificarControl/$1',['filter' => 'authFilter']);
       $routes->post('ejecutarEvaluacion','RegistroControlesController::ejecutarEvaluacion',['filter' => 'authFilter']);
-      $routes->post('addControles','RegistroControlesController::addControles',['filter' => 'authFilter']);
+     // $routes->post('addControles','RegistroControlesController::addControles',['filter' => 'authFilter']);
+      $routes->post('addControles','EvaluacionRiesgoController::addControles',['filter' => 'authFilter']);
+    
       $routes->post('updateControles','RegistroControlesController::updateControles',['filter' => 'authFilter']);
       $routes->post('deleteControles','RegistroControlesController::deleteControles',['filter' => 'authFilter']);
 
@@ -506,7 +509,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->get('getAlerta', 'Activo::getAlerta',['filter' => 'authFilter']);
 
       // update riesgos controlados
-      $routes->get('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
+      // $routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
       
       $routes->post('getDetalleValoracionActivo','InventarioClasificacionActivoController::getDetalleValoracionActivo');
       $routes->get('getAllDetalleValoracionActivo','InventarioClasificacionActivoController::getAllDetalleValoracionActivo');
@@ -514,7 +517,8 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
     });
 
-
+    // $routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
+      
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -9,7 +9,7 @@ function calificar($array,$idCC)
     $model = new MRegistroControles();
     //traer los pesos segun el IDCC
     $peso_total = 0;
-   
+    $array_resultado =[];
     foreach ($array as $key => $value) {
       
         if($value['valor'] != 0){
@@ -29,26 +29,46 @@ function calificar($array,$idCC)
         if($value2['condicion'] == "<"){
             if($peso_total < floatval($value2['valor'])){
                 $resultado = $value2['caracteristica'] ;
+                $array_resultado = [
+                    'id' => $value2['id'],
+                    'caracteristica' => $value2['caracteristica']
+                ];
             }
         }
         if($value2['condicion'] == ">"){
             if($peso_total >floatval($value2['valor'])){
                 $resultado = $value2['caracteristica'];
+                $array_resultado = [
+                    'id' => $value2['id'],
+                    'caracteristica' => $value2['caracteristica']
+                ];
             }
         }
         if($value2['condicion'] >= ">="){
             if($peso_total < floatval($value2['valor'])){
                 $resultado = $value2['caracteristica'];
+                $array_resultado = [
+                    'id' => $value2['id'],
+                    'caracteristica' => $value2['caracteristica']
+                ];
             }
         }
         if($value2['condicion'] == "<="){
             if($peso_total <= floatval($value2['valor'])){
                 $resultado = $value2['caracteristica'];
+                $array_resultado = [
+                    'id' => $value2['id'],
+                    'caracteristica' => $value2['caracteristica']
+                ];
             }
         }
         if($value2['condicion'] == "="){
             if($peso_total == floatval($value2['valor'])){
                 $resultado = $value2['caracteristica'];
+                $array_resultado = [
+                    'id' => $value2['id'],
+                    'caracteristica' => $value2['caracteristica']
+                ];
             }
         }
       
@@ -56,13 +76,13 @@ function calificar($array,$idCC)
     //peso total
     // traemos la data de la calificacion
     // return $peso_total;
-    return $resultado;
+    return $array_resultado;
 }
 function evaluar($array){
     $model = new MRegistroControles();
     //traigo los datos de la evluacion de control
     $detalle_EC = $model->getEvaluacionControl();
-    $resultado_final = "";
+    $resultado_final = [];
     $cont=0;
     foreach ($detalle_EC as $key => $value) {
        
@@ -78,7 +98,11 @@ function evaluar($array){
               
                     for ($i=0; $i < count($valores) ; $i++) { 
                         if(strtoupper($array[$i]['valor']) == strtoupper($valores[$i]['caracteristica'])){
-                          $resultado_final = $valores[$i]['calificacion'];
+                          //$resultado_final = $valores[$i]['calificacion'];
+                          $resultado_final = [
+                            'id_evaluacion' =>$valores[$i]['id'],
+                            'calificacion' => $valores[$i]['calificacion']
+                          ];
                         //    $resultado_final = [
                         //     $array[$i]['valor'] ,
                         //     $valores[$i]['caracteristica'],
@@ -118,7 +142,11 @@ function evaluar($array){
     }
     
     if($resultado_final == ""){
-        $resultado_final = "No hay Evaluacion Registrada para esta combinacion";
+        $resultado_final = [
+            'id_evaluacion' =>0,
+            'calificacion' =>"No hay Evaluacion Registrada para esta combinacion"
+        ];
+        //$resultado_final = "No hay Evaluacion Registrada para esta combinacion";
     }
     return $resultado_final;
 }

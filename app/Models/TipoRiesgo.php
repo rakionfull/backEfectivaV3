@@ -27,7 +27,11 @@ class TipoRiesgo extends Model
         $result = $this->db->query($sql)->getResultArray();
         return $result;
     }
-
+    public function getTipoRiesgosByActivo(){
+        $sql = "call getTipoRiesgosByActivo";
+        $result = $this->db->query($sql)->getResultArray();
+        return $result;
+    }
     public function store($data){
         $sql = "call sp_insert_tipo_riesgo(?,?,?,?,?)";
         $result = $this->db->query($sql,[

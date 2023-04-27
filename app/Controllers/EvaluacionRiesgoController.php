@@ -418,6 +418,84 @@ class EvaluacionRiesgoController extends BaseController
                 );
         }
     }
+    //agregar control
+    public function addControles()
+    {
+   
+        try {
+            $input = $this->getRequestInput($this->request);
+
+      
+            $model = new MRegistroControles();
+            $modelERC = new EvaluacionRiesgosControles();
+            $valida = $model -> validaRegistroControl($input[0]);
+
+            
+            if(!$valida){
+                //aqui Ok. guardamos el control
+                $result = $model->saveControles($input);
+                if($result){
+                   //guardamos todoas los detalles
+                    foreach ($input[0]['valores'] as $key => $value) {
+                        $data = [
+                            'idControl' => $result,
+                            'idCC' => $value['idCC'],
+                            'valor' => $value['valor'],
+                            'nom_tabla' => $value['nom_tabla'],
+                           
+                        ];
+                        $model->saveDetalle_Control($data);
+                    
+                    }
+
+                    //aqui ejecutaria el tema de la aplicacion del control
+                    
+                    $riesgos = explode("-", $input[0]['IDR']);
+                    //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
+                    //todas las actividades
+                    foreach ($riesgos as $key => $value) {
+                       
+                            $data = [
+                                'id_evaluacion_riesgo' => $value,
+                                'id_control' => $result,
+                                'id_user_added' => $input['user'],
+                            
+                            ];
+                            $modelERC->store($data);
+                        
+                        
+                        $this->updateRiesgosControlados($value);
+                    }
+                    $msg = 'Registrado Correctamente';
+                    $error = 1;
+                    $idcontrol=$result;
+                }
+              
+            }else{
+                $msg = 'Control ya registrado';
+                $error = 0;
+                $idcontrol=0;
+            }
+           
+            return $this->getResponse(
+                [
+                    
+                    'msg' =>  $msg,
+                    'error' =>  $error,
+                    'idcontrol' => $idcontrol,
+                    // 'riesgo' => $riesgo
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
+    
+    }
      //agregar los planes de accion
      public function addPlanAccion(){
 
@@ -551,7 +629,9 @@ class EvaluacionRiesgoController extends BaseController
 
                     $posicion = intval(explode("%",$item['posicion'])[0]);
                     array_push($posiciones_control,$posicion);
-                    array_push($caracteristicas_controles,strtoupper($item['caracteristica']));
+                   // array_push($caracteristicas_controles,strtoupper($item['caracteristica']));
+                //    var_dump($item);
+                    array_push($caracteristicas_controles,strtoupper($item['calificacion']));
                 }
 
                 for ($i = 1; $i < count($posiciones_control); $i++) {
@@ -568,12 +648,13 @@ class EvaluacionRiesgoController extends BaseController
                         }
                     }
                 }
-
+                // $control_selected = 0;
                 foreach ($caracteristicas_controles as $caracteristica_control) {
                     $evaluacionRiesgosControles = new EvaluacionRiesgosControles();
                     $controles = $evaluacionRiesgosControles->getByEvaluacionRiesgoId($id_riesgo);
                     
                     if(count($controles) > 0){
+                        $control_selected = 0;
                         foreach ($controles as $control) {
                             $control_id = intval($control['id_control']);
                             // el control seleccionado = $control_id
@@ -588,11 +669,13 @@ class EvaluacionRiesgoController extends BaseController
                                 $caracteristica = $firstLetter.substr($evaluacion,1,strlen($evaluacion));
                                 $caracteristica_upper = strtoupper($caracteristica);
                                 $caracteristica_control_1 = strtoupper($caracteristica_control);
-                                
+                               
                                 if($caracteristica_upper == $caracteristica_control_1){
+                                   
                                     $found = true;
                                     $cobertura = intval($cobertura);
                                     $control_selected = $control_id;
+                                    // var_dump($control_selected);
                                     switch ($cobertura) {
                                         case 1:
                                             $riesgo_controlado_probabilidad = $this->getAplicacionProbabilidad($caracteristica,$escenario,$posiciones_probabilidad,$riesgo);
@@ -608,29 +691,49 @@ class EvaluacionRiesgoController extends BaseController
                                             $riesgo_controlado_impacto = $this->getAplicacionImpacto($caracteristica,$escenario,$posiciones_impacto,$riesgo);
                                             
                                             $riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'],$riesgo_controlado_probabilidad,$riesgo_controlado_impacto,$escenario);
+                                           
+                                            
                                             break;
                                         default:
                                             break;
                                     }
+                                    $riesgo['id_control'] = $control_selected;
+                                    $riesgo['riesgo_controlado_probabilidad'] = $riesgo_controlado_probabilidad;
+                                    $riesgo['riesgo_controlado_impacto'] = $riesgo_controlado_impacto;
+                                    $riesgo['riesgo_controlado_valor'] = $riesgo_controlado_valor;
+                                    $evaluacionRiesgoModel->update($id_riesgo,$riesgo);
+                                 
                                 }
                             }
                         }
-                        $riesgo['id_control'] = $control_selected;
-                        $riesgo['riesgo_controlado_probabilidad'] = $riesgo_controlado_probabilidad;
-                        $riesgo['riesgo_controlado_impacto'] = $riesgo_controlado_impacto;
-                        $riesgo['riesgo_controlado_valor'] = $riesgo_controlado_valor;
-                        $evaluacionRiesgoModel->update($id_riesgo,$riesgo);
-                        return $this->getResponse(
-                            [
-                                'error' => false,
-                                'message' => 'Valores de riesgos controlados actualizados en evaluación de riesgo',
-                                'data' => $riesgo
-                            ],
-                            ResponseInterface::HTTP_OK
-                        );
+                       
+                        
+                        // var_dump($riesgo);
+                                            //return $riesgo;
+                        
+
+                        // return $this->getResponse(
+                        //     [
+                        //         'error' => false,
+                        //         'msg' =>'estoy aqui',
+                        //         'message' => 'Valores de riesgos controlados actualizados en evaluación de riesgo',
+                        //         'data' => $riesgo
+                        //     ],
+                        //     ResponseInterface::HTTP_OK
+                        // );
                     }
                 }
             }
+            // return $this->getResponse(
+            //     [
+            //         'error' => $id_riesgo,
+            //         // 'message' => $th->getMessage(),
+            //         // 'line' => $th->getLine(),
+            //         // 'file' => $th->getFile()
+            //     ],
+            //     ResponseInterface::HTTP_OK
+            // );
+            
         } catch (\Throwable $th) {
             return $this->getResponse(
                 [
@@ -676,7 +779,7 @@ class EvaluacionRiesgoController extends BaseController
     public function getAplicacionImpacto($caracteristica,$escenario,$posiciones_impacto,$riesgo){
         $MAplicacionImpacto = new MAplicacionImpacto();
         $respuestaCaracteristica = $MAplicacionImpacto->getByCaracteristica(['caracteristica' => $caracteristica,'escenario' => $escenario]);
-        var_dump($respuestaCaracteristica);
+        
         if(intval($escenario) == 2){
             $impacto_actual = $riesgo['impacto'];
             foreach ($posiciones_impacto as $key => $value) {
@@ -693,7 +796,8 @@ class EvaluacionRiesgoController extends BaseController
             $new_posicion = $posiciones_impacto[$posicion];
             $riesgo_controlado_impacto = $new_posicion;
         }else if(intval($escenario) == 1){
-            $value = intval(explode("%",$respuestaCaracteristica['posicion'])[0])/100;
+            //var_dump($respuestaCaracteristica);
+            $value = intval(explode("%",$respuestaCaracteristica[0]['posicion'])[0])/100;
             $impacto_actual = $riesgo['valor_impacto'];
             $new_impacto = $impacto_actual - ($impacto_actual * $value);
             $riesgo_controlado_impacto = $new_impacto;
@@ -718,117 +822,119 @@ class EvaluacionRiesgoController extends BaseController
             $niveles = $model->getAll();
             $found_nivel = false;
             foreach ($niveles as $nivel) {
+                // $nivel = json_decode($nivel);
+                // var_dump($nivel);
                 if(!$found_nivel){
-                    if($nivel->operador1 == ">"){
-                        if($nivel->operador2 == "<"){
-                            if($value>$nivel->valor1 && $value<$nivel->valor2){
+                    if($nivel['operador1'] == ">"){
+                        if($nivel['operador2'] == "<"){
+                            if($value>$nivel['valor1'] && $value<$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador2 == "<="){
-                            if($value>$nivel->valor1 && $value<=$nivel->valor2){
+                        if($nivel['operador2'] == "<="){
+                            if($value>$nivel['valor1'] && $value<=$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
-                            }
-                        }
-                    }
-                    if($nivel->operador1 == ">="){
-                        if($nivel->operador2 == "<"){
-                            if($value>=$nivel->valor1 && $value<$nivel->valor2){
-                                $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
-                            }
-                        }
-                        if($nivel->operador2 == "<="){
-                            if($value>=$nivel->valor1 && $value<=$nivel->valor2){
-                                $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
                     }
-                    if($nivel->operador1 == "<"){
-                        if($nivel->operador2 == ">"){
-                            if($value<$nivel->valor1 && $value>$nivel->valor2){
+                    if($nivel['operador1'] == ">="){
+                        if($nivel['operador2'] == "<"){
+                            if($value>=$nivel['valor1'] && $value<$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador2 == ">="){
-                            if($value<$nivel->valor1 && $value>=$nivel->valor2){
+                        if($nivel['operador2'] == "<="){
+                            if($value>=$nivel['valor1'] && $value<=$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion =$nivel['descripcion'];
                             }
                         }
                     }
-                    if($nivel->operador1 == "<="){
-                        if($nivel->operador2 == ">"){
-                            if($value<=$nivel->valor1 && $value>$nivel->valor2){
+                    if($nivel['operador1'] == "<"){
+                        if($nivel['operador2'] == ">"){
+                            if($value<$nivel['valor1'] && $value>$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador2 == ">="){
-                            if($value<=$nivel->valor1 && $value>=$nivel->valor2){
+                        if($nivel['operador2'] == ">="){
+                            if($value<$nivel['valor1'] && $value>=$nivel['valor2']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
+                            }
+                        }
+                    }
+                    if($nivel['operador1'] == "<="){
+                        if($nivel['operador2'] == ">"){
+                            if($value<=$nivel['valor1'] && $value>$nivel['valor2']){
+                                $found_nivel = true;
+                                $descripcion = $nivel['descripcion'];
+                            }
+                        }
+                        if($nivel['operador2'] == ">="){
+                            if($value<=$nivel['valor1'] && $value>=$nivel['valor2']){
+                                $found_nivel = true;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
                     }
                     // OPERADOR 2
-                    if($nivel->operador2 == ">"){
-                        if($nivel->operador1 == "<"){
-                            if($value > $nivel->valor2 && $value<$nivel->valor1){
+                    if($nivel['operador2'] == ">"){
+                        if($nivel['operador1'] == "<"){
+                            if($value > $nivel['valor2'] && $value<$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion =$nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador1 == "<="){
-                            if($value>$nivel->valor && $value<=$nivel->valor1){
+                        if($nivel['operador1'] == "<="){
+                            if($value>$nivel['valor2'] && $value<=$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
-                            }
-                        }
-                    }
-                    if($nivel->operador2 == ">="){
-                        if($nivel->operador1 == "<"){
-                            if($value >= $nivel->valor2 && $value<$nivel->valor1){
-                                $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
-                            }
-                        }
-                        if($nivel->operador1 == "<="){
-                            if($value>=$nivel->valor && $value<=$nivel->valor1){
-                                $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
                     }
-                    if($nivel->operador2 == "<"){
-                        if($nivel->operador1 == "<"){
-                            if($value < $nivel->valor2 && $value<$nivel->valor1){
+                    if($nivel['operador2'] == ">="){
+                        if($nivel['operador1'] == "<"){
+                            if($value >= $nivel['valor2'] && $value<$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador1 == "<="){
-                            if($value<$nivel->valor && $value<=$nivel->valor1){
+                        if($nivel['operador1'] == "<="){
+                            if($value>=$nivel['valor2'] && $value<=$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
                     }
-                    if($nivel->operador2 == "<="){
-                        if($nivel->operador1 == "<"){
-                            if($value <= $nivel->valor2 && $value<$nivel->valor1){
+                    if($nivel['operador2'] == "<"){
+                        if($nivel['operador1'] == "<"){
+                            if($value < $nivel['valor2'] && $value<$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
-                        if($nivel->operador1 == "<="){
-                            if($value <= $nivel->valor && $value<=$nivel->valor1){
+                        if($nivel['operador1'] == "<="){
+                            if($value<$nivel['valor2'] && $value<=$nivel['valor1']){
                                 $found_nivel = true;
-                                $descripcion = $nivel->descripcion;
+                                $descripcion = $nivel['descripcion'];
+                            }
+                        }
+                    }
+                    if($nivel['operador2'] == "<="){
+                        if($nivel['operador1'] == "<"){
+                            if($value <= $nivel['valor2'] && $value<$nivel['valor1']){
+                                $found_nivel = true;
+                                $descripcion = $nivel['descripcion'];
+                            }
+                        }
+                        if($nivel['operador1'] == "<="){
+                            if($value <= $nivel['valor2'] && $value<=$nivel['valor1']){
+                                $found_nivel = true;
+                                $descripcion = $nivel['descripcion'];
                             }
                         }
                     }

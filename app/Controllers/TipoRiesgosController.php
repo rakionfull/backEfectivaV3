@@ -27,6 +27,22 @@ class TipoRiesgosController extends BaseController
                 );
         }
     }
+    public function getTipoRiesgosByActivo(){
+        try {
+            $model = new TipoRiesgo();
+            $response = [
+                'data' =>  $model->getTipoRiesgosByActivo(),
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+    }
     public function store(){
         try {
             $rules = [
