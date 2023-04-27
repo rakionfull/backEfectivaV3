@@ -214,21 +214,24 @@ class EvaluacionRiesgoController extends BaseController
             }
             $result = $model->edit($id,$input);
             if($result){
-                $modelERC = new EvaluacionRiesgosControles();
-                $modelERC->where('id_evaluacion_riesgo',$id)->update(null,[
-                    'is_deleted' => '1'
-                ]);
-                $modelERC->where('id_evaluacion_riesgo',$id)->delete();
-                if(isset($input['controles'])){
-                    if(count($input['controles']) > 0){
-                        foreach ($input['controles'] as $control) {
-                            $data = [
-                                'id_evaluacion_riesgo' => $id,
-                                'id_control' => $control,
-                                'id_user_added' => $input['id_user_updated'],
-                                'date_add' => $input['date_modify']
-                            ];
-                            $modelERC->store($data);
+                if(!isset($input['accion'])){
+                    $modelERC = new EvaluacionRiesgosControles();
+                    $model->delete_evaluacion_riesgo_controles($id);
+                    // $modelERC->where('id_evaluacion_riesgo',$id)->update(null,[
+                    //     'is_deleted' => '1'
+                    // ]);
+                    // $modelERC->where('id_evaluacion_riesgo',$id)->delete();
+                    if(isset($input['controles'])){
+                        if(count($input['controles']) > 0){
+                            foreach ($input['controles'] as $control) {
+                                $data = [
+                                    'id_evaluacion_riesgo' => $id,
+                                    'id_control' => $control,
+                                    'id_user_added' => $input['id_user_updated'],
+                                    'date_add' => $input['date_modify']
+                                ];
+                                $modelERC->store($data);
+                            }
                         }
                     }
                 }
