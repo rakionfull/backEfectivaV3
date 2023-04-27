@@ -195,7 +195,8 @@ class EvaluacionRiesgo extends Model
         $query = $this->db->query($sql,[
             $id,
             $data['riesgo'],
-            $data['idempresa']
+           // $data['id_empresa'] -> aqui eh modificado miguel
+            $data['id_empresa']
         ]);
         return $query->getResultArray();
     }

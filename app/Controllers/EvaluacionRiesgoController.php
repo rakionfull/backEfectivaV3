@@ -225,8 +225,8 @@ class EvaluacionRiesgoController extends BaseController
                             $data = [
                                 'id_evaluacion_riesgo' => $id,
                                 'id_control' => $control,
-                                'id_user_added' => $input['id_user_added'],
-                                'date_add' => $input['date_add']
+                                'id_user_added' => $input['id_user_updated'],
+                                'date_add' => $input['date_modify']
                             ];
                             $modelERC->store($data);
                         }
