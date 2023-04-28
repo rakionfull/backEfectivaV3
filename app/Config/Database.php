@@ -55,12 +55,8 @@ class Database extends Config
         'hostname' => 'localhost',
         'username' => 'root',
         'password' => '',
-<<<<<<< HEAD
         //'database' => descryp('bd_cry'),
-        'database' => 'bd_efectiva1',
-=======
         'database' => 'bd_efectiva_6',
->>>>>>> f8ca470dd4f946a27b9de1bfaba0ca515fdfbde5
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,

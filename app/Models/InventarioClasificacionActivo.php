@@ -68,7 +68,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function store($data){
-        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $data['idempresa'],
             $data['idarea'],
@@ -89,6 +89,7 @@ class InventarioClasificacionActivo extends Model
             $data['date_add'],
             $data['estado_2'],
             $data['valores'],
+            $data['idvaloracion_activo'],
         ]);
         if($result){
             $sql = "call sp_get_last_id";
@@ -143,7 +144,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function edit($id,$data){
-        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $id,
             $data['idempresa'],
@@ -165,7 +166,8 @@ class InventarioClasificacionActivo extends Model
             $data['date_modify'],
             $data['observacion'],
             $data['estado_2'],
-            $data['valores']
+            $data['valores'],
+            $data['idvaloracion_activo']
         ]);
         if($result){
             $mUser = new Muser();
