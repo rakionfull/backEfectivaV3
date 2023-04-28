@@ -361,53 +361,53 @@ class RegistroControlesController extends BaseController
     
     // }
     
-    public function updateControles()
-    {
+    // public function updateControles()
+    // {
    
-        try {
-            $input = $this->getRequestInput($this->request);
+    //     try {
+    //         $input = $this->getRequestInput($this->request);
 
       
-            $model = new MRegistroControles();
-            $found = $model->validateRegitroControlModify($input);
-            if(count($found) > 0){
-                        $msg = 'Control ya registrado';
-                        $error = 0;     
-             }else{
-                $result = $model->updateControles($input);
+    //         $model = new MRegistroControles();
+    //         $found = $model->validateRegitroControlModify($input);
+    //         if(count($found) > 0){
+    //                     $msg = 'Control ya registrado';
+    //                     $error = 0;     
+    //          }else{
+    //             $result = $model->updateControles($input);
          
-                if($result){
-                    foreach ($input[0]['valores'] as $key => $value) {
-                        $data = [
-                            'idControl' => $input[0]['id'],
-                            'idCC' => $value['idCC'],
-                            'valor' => $value['valor'],
+    //             if($result){
+    //                 foreach ($input[0]['valores'] as $key => $value) {
+    //                     $data = [
+    //                         'idControl' => $input[0]['id'],
+    //                         'idCC' => $value['idCC'],
+    //                         'valor' => $value['valor'],
                            
-                        ];
-                        $model->updateDtealle_Control($data);
-                    }
-                    $msg = 'Modificado Correctamente';
-                    $error = 1;
-                }
-             }
+    //                     ];
+    //                     $model->updateDtealle_Control($data);
+    //                 }
+    //                 $msg = 'Modificado Correctamente';
+    //                 $error = 1;
+    //             }
+    //          }
 
            
-            return $this->getResponse(
-                [
-                    'msg' =>  $msg,
-                    'error' =>  $error
-                ]
-            );
-        } catch (Exception $ex) {
-            return $this->getResponse(
-                [
-                    'error' => $ex->getMessage(),
-                ],
-                ResponseInterface::HTTP_OK
-            );
-        }
+    //         return $this->getResponse(
+    //             [
+    //                 'msg' =>  $msg,
+    //                 'error' =>  $error
+    //             ]
+    //         );
+    //     } catch (Exception $ex) {
+    //         return $this->getResponse(
+    //             [
+    //                 'error' => $ex->getMessage(),
+    //             ],
+    //             ResponseInterface::HTTP_OK
+    //         );
+    //     }
     
-    }
+    // }
     public function deleteControles()
     {
    
@@ -421,12 +421,17 @@ class RegistroControlesController extends BaseController
                 if($model->delete($input['id'])){
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
                     $data['id_user_deleted'] = $input['user'];
                     $model->update($input['id'],$input);
+                    //actualizar aqui el detalle decontrol + riesgo
+
+                    $model->deleteRiesgoControles($input['id']);
+
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Registro de Control eliminado'
+                            'msg' =>  'Control eliminado'
                         ]
                     );
                 }else{
@@ -436,6 +441,7 @@ class RegistroControlesController extends BaseController
                     $model->update($input['id'],$input);
                     return $this->getResponse(
                         [
+                            
                             'error' => true,
                             'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                         ]
@@ -458,7 +464,8 @@ class RegistroControlesController extends BaseController
             $model->update($input['id'],$input);
             return $this->getResponse(
                 [
-                    'error' => true,
+                    'error' => $th->getMessage(),
+                    'error2' => true,
                     'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                 ]
             );

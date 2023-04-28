@@ -135,43 +135,122 @@ class MriesgoPlanAccion extends Model
         $query = $this->db->query($sql, [ ]);
         return $query->getResultArray();
     }
-    // public function sendMail($id,$mail,$bcc = array()){
-    //     try {
-    //         //traer los datos para el correo 
-    //         $sql = "call sp_get_info_to_email_plan(?)";
-    //         $result = $this->db->query($sql,[
-    //             $id
-    //         ])->getResult();
-    //         if(count($result)>0){
-    //             log_message('info','Aquie sta en pplan de accion');
-    //             $email = \Config\Services::email();
-    //             $email->setTo($mail);
-    //             if(count($bcc)>0){
-    //                 $email->setBCC($bcc);
-    //             }
-    //             $email->setFrom('jbazant@valtx.pe', 'Plan de acción');
-    //             $email->setSubject('Alerta de plan de acción');
-    //             $email->setMessage(
-    //                 view('mail/plan_accion',[
-                                                
-    //                     'fullname' => $result['nombres_us'].' '.$result['apepat_us'].' '.$result['apemat_us'],
-    //                     'plan' => $result['plan_accion'],
-    //                     'estado' => 'Plan regitrado correctamente',
-    //                     'alerta' => $result['alerta']
-                    
-    //                 ])
-    //             );
-    //             $valor = $email->send();
-    //             return $email;
-    //         }
-    //         return false;
-    //     } catch (\Throwable $th) {
-    //         log_message('error',$th->getMessage()." linea ".$th->getLine()." file ".$th->getFile());
-    //         return false;
-    //     }
-        
-    // }
+    public function sendMail($iduser,$idplan,$mail,$idregistrador,$bcc = array()){
+        try {
+            //traer los datos para el correo plan de accion  +usuario responsable
+            $sql = "call sp_get_info_to_email_plan(?,?)";
+            $result = $this->db->query($sql,[
+                $iduser,$idplan
+            ])->getResult();
+            if(count($result)>0){
+                log_message('info','Aquie sta en pplan de accion');
+                //primero debo actualizarel envio de correo en la tabla plan_correo
 
+                // $fecha_alerta = date("Y-m-d", strtotime($result['fecha_inicio'])); 
+                // $fecha_actual = date("Y-m-d");
+                // // echo $fecha_actual;
+                // // echo $fecha_alerta;
+                // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
+                // $fecha_actual = date("Y-m-d");
+
+
+
+                $email = \Config\Services::email();
+                $email->setTo($mail);
+                if(count($bcc)>0){
+                    $email->setBCC($bcc);
+                }
+                $email->setFrom('jbazant@valtx.pe', 'Plan de acción');
+                $email->setSubject('Alerta de registro de plan de acción');
+                $email->setMessage(
+                    view('mail/plan_accion_registrado',[
+                                                
+                        'fullname' => $result[0]->nombres_us.' '.$result[0]->apepat_us.' '.$result[0]->apemat_us,
+                        'plan' => $result[0]->plan_accion,
+                        'estado' => 'Plan regitrado correctamente',
+                        'inicio' => $result[0]->fecha_inicio,
+                        'fin' => $result[0]->fecha_fin,
+                        'alerta' => $result[0]->alerta
+                    
+                    ])
+                );
+                $valor = $email->send();
+                if($valor){
+                    // se ejecuta el registro de la alerta por primeravez
+                    $insert = $this -> insertCorreoPlan($idplan,$fecha_actual,$idregistrador);
+                    //cambiamos a en proceso
+                    $update = $this -> updateEstadoPLan($idplan);
+                }
+                return $email;
+            }
+            return false;
+            //return $iduser.$idplan.$email;
+        } catch (\Throwable $th) {
+
+            log_message('error',$th->getMessage()." linea ".$th->getLine()." file ".$th->getFile());
+            return $th->getMessage();
+        }
+        
+    }
+    public function sendMailActividad($iduser,$idactividad,$mail,$idregistrador,$bcc = array()){
+        try {
+            //traer los datos para el correo plan de accion  +usuario responsable
+            $sql = "call sp_get_info_to_email_actividad(?,?)";
+            $result = $this->db->query($sql,[
+                $iduser,$idactividad
+            ])->getResult();
+            if(count($result)>0){
+                log_message('info','Aquie sta en actividad del plan');
+                //primero debo actualizarel envio de correo en la tabla plan_correo
+
+                // $fecha_alerta = date("Y-m-d", strtotime($result['fecha_inicio'])); 
+                // $fecha_actual = date("Y-m-d");
+                // // echo $fecha_actual;
+                // // echo $fecha_alerta;
+                // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
+                // $fecha_actual = date("Y-m-d");
+
+
+
+                $email = \Config\Services::email();
+                $email->setTo($mail);
+                if(count($bcc)>0){
+                    $email->setBCC($bcc);
+                }
+                $email->setFrom('jbazant@valtx.pe', 'Actividad');
+                $email->setSubject('Alerta de registro de actividad');
+                $email->setMessage(
+                    view('mail/actividad_registrado',[
+                                                
+                        'fullname' => $result[0]->nombres_us.' '.$result[0]->apepat_us.' '.$result[0]->apemat_us,
+                        'plan' => $result[0]->plan_accion,
+                        'actividad' => $result[0]->descripcion,
+                        
+                        'estado' => 'Actividad regitrado correctamente',
+                        'inicio' => $result[0]->fecha_inicio,
+                        'fin' => $result[0]->fecha_fin,
+                        'alerta' => $result[0]->alerta
+                    
+                    ])
+                );
+                $valor = $email->send();
+                if($valor){
+                    // se ejecuta el registro de la alerta por primeravez
+                    $insert = $this -> insertCorreoActividad($idplan,$fecha_actual,$idregistrador);
+                    //cambiamos a en proceso
+                   // $update = $this -> updateEstadoPLan($idplan);
+                }
+                return $email;
+            }
+            return false;
+            //return $iduser.$idplan.$email;
+        } catch (\Throwable $th) {
+
+            log_message('error',$th->getMessage()." linea ".$th->getLine()." file ".$th->getFile());
+            return $th->getMessage();
+        }
+        
+    }
     public function savePlanAccion($data){
 
         $sql = "CALL agregar_plan_accion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -201,11 +280,20 @@ class MriesgoPlanAccion extends Model
 
         // $this->sendMail($id,$user->email_us);
 
+        
+
                
         $last_id = $this->db->query("SELECT  id as maxid FROM 
         plan_accion order by id DESC LIMIT 1");
+        $last_id_plan= $last_id->getRow()->maxid;
+        $mUser = new Muser();
+        $user = $mUser->getUserbyId($data[0]['idusuario']);
+        $bcc = array();
+        $valor = $this->sendMail($data[0]['idusuario'],$last_id_plan,$user->email_us, $data['user'],$bcc);
+        
 
-        return $last_id->getRow()->maxid;
+        return $last_id_plan;
+        //return $valor;
     }
 
    
@@ -256,7 +344,22 @@ class MriesgoPlanAccion extends Model
 
 
     
+    public function getActividadesByPlan($idplan){
+        $sql = "CALL getActividadesByPlan(?)";
 
+	    $query = $this->db->query($sql, [
+            $idplan
+        ]);
+        return $query->getResultArray();
+    }
+    public function getPlanByRiesgos($idplan){
+        $sql = "CALL getPlanByRiesgos(?)";
+
+	    $query = $this->db->query($sql, [
+            $idplan
+        ]);
+        return $query->getResultArray();
+    }
 
 
     //        Actividades del Plan
@@ -319,8 +422,14 @@ class MriesgoPlanAccion extends Model
                 $data['idplanaccion'],
                
             ]);
+            $last_id = $this->db->query("SELECT id as maxid FROM actividades_plan where id_planes={$data['idplanaccion']} order by id DESC LIMIT 1;");
+            $last_id_plan= $last_id->getRow()->maxid;
+            $mUser = new Muser();
+            $user = $mUser->getUserbyId($data['idusuario']);
+            $bcc = array();
+            $valor = $this->sendMailActividad($data['idusuario'],$last_id_plan,$user->email_us, $data['user'],$bcc);
 
-        return $query;
+        return $valor;
     }
     
     public function updateActividadPlan($data){
