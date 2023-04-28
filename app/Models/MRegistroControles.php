@@ -230,6 +230,31 @@ class MRegistroControles extends Model
        
         return  $query;
     }
+    public function deleteDetalleControles($data){
+
+        $sql = "CALL delete_detalle_control(?)";
+
+	    $query = $this->db->query($sql, [
+            $data[0]['id']
+        ]);
+
+     
+       
+        return  $query;
+    }
+    public function deleteRiesgoControles($data){
+
+        $sql = "CALL delete_riesgo_control(?)";
+
+	    $query = $this->db->query($sql, [
+            $data
+        ]);
+
+     
+       
+        return  $query;
+    }
+    
     
     public function updateControles($data){
 
@@ -263,7 +288,19 @@ class MRegistroControles extends Model
 
         return  $query;
     }
-    
+    public function updateControlRiesgo($data1,$idcontrol){
+        
+               
+                $sql = "CALL updateControlRiesgo(?,?)";
+        
+                $query = $this->db->query($sql, [
+                    $data1,
+                    $idcontrol
+                  
+                ]);
+        
+                return  $query;
+            }
     public function getRegistroControles2(){
      
         $sql = "CALL getRegistroControles2()";

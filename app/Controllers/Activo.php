@@ -3619,7 +3619,7 @@ public function addActividadPlan(){
         $model = new MriesgoPlanAccion();
     
         $result = $model->saveActividadPlan($input);
-        $msg = 'Actividad Registrada Correctamente';
+        $msg = 'Actividad registrada correctamente';
         $error = 1;
 
         return $this->getResponse(
@@ -3631,37 +3631,44 @@ public function addActividadPlan(){
     } catch (Exception $ex) {
         return $this->getResponse(
             [
-                //  'error' => $ex->getMessage(),
-                'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+                 'error' => $ex->getMessage(),
+                //'error' =>'No se pudo agregar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
             ],
             ResponseInterface::HTTP_OK
         );
     }
 }
 
-public function updateActividadPlan(){
+// public function updateActividadPlan(){
     
-    try {
+//     try {
         
-        $input = $this->getRequestInput($this->request);
+//         $input = $this->getRequestInput($this->request);
     
-        $model = new MriesgoPlanAccion();
-        $result = $model->updateActividadPlan($input);
+//         $model = new MriesgoPlanAccion();
+//         $result = $model->updateActividadPlan($input);
     
-        return $this->getResponse([
-            'msg' => 'Actividad actualizada correctamente',
-            'error' => 1
-        ]);
+//         //despues de actualizar debo llamar a todas las actividades
+//         //recorrerlo y verificar que todas esten en 100, para ejecutar el riesgo vs control
+
+//         $actividades = $model->getActividadesByPlan();
+
+
+//         return $this->getResponse([
+//             'msg' => 'Actividad actualizada correctamente',
+//             'error' => 1
+//         ]);
+
     
-    } catch (Exception $ex) {
+//     } catch (Exception $ex) {
         
-        return $this->getResponse( [
-            // 'error' => $ex->getMessage(),
-            'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
-        ], ResponseInterface::HTTP_OK);
-    }
+//         return $this->getResponse( [
+//             // 'error' => $ex->getMessage(),
+//             'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+//         ], ResponseInterface::HTTP_OK);
+//     }
     
-}
+// }
 //revisar
 public function deleteActividadPlan(){
     

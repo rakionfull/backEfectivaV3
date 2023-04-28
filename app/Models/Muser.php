@@ -195,29 +195,29 @@ class Muser extends Model
         $consulta = "SELECT TU.usuario_us,TU.docident_us,TU.nombres_us, TU.apepat_us,TU.apemat_us,TP.perfil,TU.creacion_us,
         IF(TU.estado_us=1, 'Activo', 'Inactivo') as estado, IF(bloqueo_us=0, 'Desbloqueado', 'Bloqueado') as bloqueo,
         (SELECT last_activity FROM tb_sesiones WHERE id_us = TU.id_us ORDER by last_activity DESC LIMIT 1 ) AS ultimo_acceso
-         FROM tb_users as TU inner join tb_perfiles as TP on TU.perfil_us=TP.id_perfil; ";
+         FROM tb_users as TU inner join tb_perfiles as TP on TU.perfil_us=TP.id_perfil where is_deleted=0; ";
         $Usuario = $this->db->query($consulta);
         return $Usuario->getResultArray();
     }
     
     public function getUserByActivo(){
 
-        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1'");
+        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and is_deleted=0");
         return $query->getResultArray();
     }
     public function getUserByEmpresa($data,$data1){
 
-        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idempresa={$data} and idarea={$data1}");
+        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idempresa={$data} and idarea={$data1} and is_deleted=0");
         return $query->getResultArray();
     }
     public function getUserByArea($id_area){
 
-        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idarea={$id_area}");
+        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and idarea={$id_area} and is_deleted=0");
         return $query->getResultArray();
     }
     public function getUserNombreByActivo(){
 
-        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1'");
+        $query = $this->db->query("SELECT * FROM tb_users where estado_us='1' and is_deleted=0");
         return $query->getResultArray();
     }
     public function getEscenario(){

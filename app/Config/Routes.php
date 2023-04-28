@@ -429,7 +429,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
    $routes->get('getDetallePlan/(:num)', 'Activo::getDetallePlan/$1',['filter' => 'authFilter']);
    $routes->post('getActividadByPlan', 'Activo::getActividadByPlan',['filter' => 'authFilter']);
    $routes->post('addActividadPlan', 'Activo::addActividadPlan',['filter' => 'authFilter']);
-   $routes->post('updateActividadPlan', 'Activo::updateActividadPlan',['filter' => 'authFilter']);
+   $routes->post('updateActividadPlan', 'EvaluacionRiesgoController::updateActividadPlan',['filter' => 'authFilter']);
    $routes->delete('deleteActividadPlan', 'Activo::deleteActividadPlan',['filter' => 'authFilter']);
 
 
@@ -481,8 +481,8 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('ejecutarEvaluacion','RegistroControlesController::ejecutarEvaluacion',['filter' => 'authFilter']);
      // $routes->post('addControles','RegistroControlesController::addControles',['filter' => 'authFilter']);
       $routes->post('addControles','EvaluacionRiesgoController::addControles',['filter' => 'authFilter']);
-    
-      $routes->post('updateControles','RegistroControlesController::updateControles',['filter' => 'authFilter']);
+      $routes->post('updateControles','EvaluacionRiesgoController::updateControles',['filter' => 'authFilter']);
+      //$routes->post('updateControles','RegistroControlesController::updateControles',['filter' => 'authFilter']);
       $routes->post('deleteControles','RegistroControlesController::deleteControles',['filter' => 'authFilter']);
 
       //consulta especial para vista de tabla contorles
@@ -517,7 +517,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
     });
 
-    // $routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
+    //$routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
       
 /*
  * --------------------------------------------------------------------

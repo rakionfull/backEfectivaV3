@@ -439,6 +439,7 @@ class EvaluacionRiesgoController extends BaseController
                 $result = $model->saveControles($input);
                 if($result){
                    //guardamos todoas los detalles
+                   
                     foreach ($input[0]['valores'] as $key => $value) {
                         $data = [
                             'idControl' => $result,
@@ -456,7 +457,8 @@ class EvaluacionRiesgoController extends BaseController
                     $riesgos = explode("-", $input[0]['IDR']);
                     //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
                     //todas las actividades
-                    foreach ($riesgos as $key => $value) {
+                    if($riesgos[0] != ""){
+                        foreach ($riesgos as $key => $value) {
                        
                             $data = [
                                 'id_evaluacion_riesgo' => $value,
@@ -469,7 +471,9 @@ class EvaluacionRiesgoController extends BaseController
                         
                         $this->updateRiesgosControlados($value);
                     }
-                    $msg = 'Registrado Correctamente';
+                    }
+                    
+                    $msg = 'Registrado correctamente';
                     $error = 1;
                     $idcontrol=$result;
                 }
@@ -499,6 +503,84 @@ class EvaluacionRiesgoController extends BaseController
         }
     
     }
+    //modificar controles
+    public function updateControles()
+    {
+   
+        try {
+            $input = $this->getRequestInput($this->request);
+
+      
+            $model = new MRegistroControles();
+            $modelERC = new EvaluacionRiesgosControles();
+            $found = $model->validateRegitroControlModify($input);
+            if(count($found) > 0){
+                        $msg = 'Control ya registrado';
+                        $error = 0;     
+             }else{
+
+                $result = $model->updateControles($input);
+                //cambiamos el estado de todoel detalle que ya no se usara y creamos nuevos
+                $model->deleteDetalleControles($input);
+                if($result){
+                   //guardamos todoas los detalles
+                    foreach ($input[0]['valores'] as $key => $value) {
+                        $data = [
+                            'idControl' => $input[0]['id'],
+                            'idCC' => $value['idCC'],
+                            'valor' => $value['valor'],
+                            'nom_tabla' => $value['nom_tabla'],
+                           
+                        ];
+                        $model->saveDetalle_Control($data);
+                    
+                    }
+
+                    //aqui ejecutaria el tema de la aplicacion del control
+                    
+                    $riesgos = explode("-", $input[0]['IDR']);
+                    //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
+                    //todas las actividades
+                    //tengo que actualizar los riesgos para que ejecuten los nuevos
+                    //$model->deleteRiesgoControles($input[0]['id']);
+                    foreach ($riesgos as $key => $value) {
+                       
+                            $data = [
+                                'id_evaluacion_riesgo' => $value,
+                                'id_control' => $input[0]['id'],
+                                'id_user_added' => $input['user'],
+                            
+                            ];
+                            $modelERC->store($data);
+                        
+                        
+                        $this->updateRiesgosControlados($value);
+                    }
+                    $msg = 'Modificado correctamente';
+                    $error = 1;
+                    //$idcontrol=$result;
+                }
+             }
+
+           
+            return $this->getResponse(
+                [
+                    'msg' =>  $msg,
+                    'error' =>  $error
+                ]
+            );
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
+    
+    }
+
+
      //agregar los planes de accion
      public function addPlanAccion(){
 
@@ -511,10 +593,12 @@ class EvaluacionRiesgoController extends BaseController
             if(!$valida){
                 //registramos el plan de accion
                 $result = $model->savePlanAccion($input);
+                //falta registrar el correo de alerta de primer registro
+
                 //registramos riesgo con cada control para detectarlo
                 //sacamos todos los riesgos y controles asociados con split
-                $riesgos = explode(",", $input[0]['id_riesgo']);
-                $controles = explode(",", $input[0]['id_control']);
+                $riesgos = explode("-", $input[0]['id_riesgo']);
+                $controles = explode("-", $input[0]['id_control']);
                 //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
                 //todas las actividades
                 foreach ($riesgos as $key => $value) {
@@ -528,7 +612,7 @@ class EvaluacionRiesgoController extends BaseController
                         $riesgo->store($data);
                       
                     }
-                 $controlado= $this->updateRiesgosControlados($value);
+                    //$this->updateRiesgosControlados($value);
                 }
                 $msg = 'Plan Registrado Correctamente';
                 $error = 1;
@@ -542,7 +626,7 @@ class EvaluacionRiesgoController extends BaseController
     
             return $this->getResponse(
                 [
-                    'id' => $result,   
+                    'idplan' => $result,   
                     'msg' =>  $msg,
                     'error' =>  $error,
                     // 'error2' =>  $error2,
@@ -561,7 +645,89 @@ class EvaluacionRiesgoController extends BaseController
             );
         }
     }
+    //actualizar las actividades para evaluar
+    public function updateActividadPlan(){
+    
+        try {
+            
+            $input = $this->getRequestInput($this->request);
+        
+            $model = new MriesgoPlanAccion();
+            $model2 = new MRegistroControles();
+            $result = $model->updateActividadPlan($input);
+        
+            //despues de actualizar debo llamar a todas las actividades
+            //recorrerlo y verificar que todas esten en 100, para ejecutar el riesgo vs control
+    
+            $actividades = $model->getActividadesByPlan($input[0]['idplanaccion']);
+            $completos=0;
+            foreach ($actividades as $key => $value) {
+                if($value['progreso'] == 100){
+                    $completos =1;
+                }else{
+                    $completos =0;
+                }
+            }
+            if($completos == 1){
+                $plan_final = $model->getPlanByRiesgos($input[0]['idplanaccion']);
 
+                $riesgos = explode("-", $plan_final[0]['id_riesgo']);
+                $control = explode("-", $plan_final[0]['id_control']);
+                //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
+                //todas las actividades
+                $array_riesgos="";
+
+                // $array_controles=[];
+                if($riesgos[0] != ""){
+                    foreach ($riesgos as $key => $value) {
+                        $array = $value."-";
+                        // array_push($array_riesgos,$array);
+                        $array_riesgos = $array_riesgos.$array;
+                        // $data = [
+                        //     'id_evaluacion_riesgo' => $value,
+                        //     'id_control' => $result,
+                        //     'id_user_added' => $input['user'],
+                        
+                        // ];
+                        // $modelERC->store($data);
+                    
+                    
+                        $this->updateRiesgosControlados($value);
+                    }
+                    foreach ($control as $key => $value2) {
+                        $model2 -> updateControlRiesgo($array_riesgos,$value2);
+                    }
+
+                    // //actualizar el control con los riesgos respectivos
+                   
+                }
+
+                return $this->getResponse([
+                    'msg' => 'El plan de accion esta culminado, se ha aplicado el control',
+                    // 'data' => $actividades,
+                    'error' => 1,
+                    // 'riesgos' => $array_riesgos
+                ]);
+            }else{
+                return $this->getResponse([
+                    'msg' => 'Actividad actualizada correctamente',
+                    'data' => $actividades,
+                    'error' => 1
+                ]);
+            }
+           
+    
+        
+        } catch (Exception $ex) {
+            
+            return $this->getResponse( [
+                
+                'error' => $ex->getMessage(),
+                'error2' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+            ], ResponseInterface::HTTP_OK);
+        }
+        
+    }
     // //editar los planes deaccion
     // public function updatePlanAccion(){
     
@@ -570,6 +736,8 @@ class EvaluacionRiesgoController extends BaseController
     //         $input = $this->getRequestInput($this->request);
         
     //         $model = new MriesgoPlanAccion();
+    //         $model = new MRegistroControles();
+    //         $modelERC = new EvaluacionRiesgosControles();
     //         $model->updatePlanAccion($input);
         
     //         return $this->getResponse([
@@ -681,15 +849,31 @@ class EvaluacionRiesgoController extends BaseController
                                     // var_dump($control_selected);
                                     switch ($cobertura) {
                                         case 1:
+                                            if($escenario == 1){
+                                                $riesgo_controlado_impacto = $riesgo['valor_impacto'];
+                                                
+                                            }else{
+                                                $riesgo_controlado_impacto = $riesgo['impacto'];
+                                               
+                                            }
                                             $riesgo_controlado_probabilidad = $this->getAplicacionProbabilidad($caracteristica,$escenario,$posiciones_probabilidad,$riesgo);
-                                            $riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'],$riesgo_controlado_probabilidad,$riesgo['riesgo_controlado_impacto'],$escenario);
-                                            break;
+                                            //$riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'],$riesgo_controlado_probabilidad,$riesgo['riesgo_controlado_impacto'],$escenario);
+                                            $riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'],$riesgo_controlado_probabilidad,$riesgo_controlado_impacto,$escenario);
+                                              
+                                          break;
                                         case 2:
+                                            if($escenario == 1){
+                                                $riesgo_controlado_probabilidad = $riesgo['valor_probabilidad'];
+                                            }else{ 
+                                                $riesgo_controlado_probabilidad =  $riesgo['probabilidad'];;
+                                            }
+                                           
                                             $riesgo_controlado_impacto = $this->getAplicacionImpacto($caracteristica,$escenario,$posiciones_impacto,$riesgo);
-                                            $riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'],$riesgo['riesgo_controlado_probabilidad'],$riesgo_controlado_impacto,$escenario);
+                                            $riesgo_controlado_valor = $this->getRiesgoControladoValor($riesgo['valor_probabilidad'],$riesgo['valor_impacto'], $riesgo_controlado_probabilidad,$riesgo_controlado_impacto,$escenario);
                                             
                                             break;
                                         case 3:
+
                                             $riesgo_controlado_probabilidad = $this->getAplicacionProbabilidad($caracteristica,$escenario,$posiciones_probabilidad,$riesgo);
                                             $riesgo_controlado_impacto = $this->getAplicacionImpacto($caracteristica,$escenario,$posiciones_impacto,$riesgo);
                                             
@@ -762,6 +946,7 @@ class EvaluacionRiesgoController extends BaseController
                     $index = $key;
                 }
             }
+           
             $posicion = intval($index) - intval($respuestaCaracteristica['posicion']);
             if($posicion <= 0){
                 $posicion = 0;
@@ -771,7 +956,7 @@ class EvaluacionRiesgoController extends BaseController
             $new_posicion = $posiciones_probabilidad[$posicion];
             $riesgo_controlado_probabilidad = $new_posicion;
         }else if(intval($escenario) == 1){
-            $value = intval(explode("%",$respuestaCaracteristica['posicion'])[0])/100;
+            $value = intval(explode("%",$respuestaCaracteristica[0]['posicion'])[0])/100;
             $probabilidad_actual = $riesgo['valor_probabilidad'];
             $new_probabilidad = $probabilidad_actual - ($probabilidad_actual * $value);
             $riesgo_controlado_probabilidad = $new_probabilidad;
@@ -790,7 +975,8 @@ class EvaluacionRiesgoController extends BaseController
                     $index = $key;
                 }
             }
-            $posicion = intval($index) - intval($respuestaCaracteristica['posicion']);
+            // var_dump($respuestaCaracteristica[0]);die();
+            $posicion = intval($index) - intval($respuestaCaracteristica[0]['posicion']);
             if($posicion <= 0){
                 $posicion = 0;
             }else{
@@ -820,10 +1006,12 @@ class EvaluacionRiesgoController extends BaseController
             $respuesta = $MValoracionRiesgo->getByProbabilidadImpacto(['id_probabilidad' => $idProbabilidad,'id_impacto' => $idImpacto])[0];
             return $respuesta['valor'];
         }else if(intval($escenario) == 1){
-            $value = $valorProb * $valorImp;
+            // $value = $valorProb * $valorImp;
+            $value = $descripcionProb * $descripcionImp;
             $model = new NivelRiesgo();
             $niveles = $model->getAll();
             $found_nivel = false;
+            
             foreach ($niveles as $nivel) {
                 // $nivel = json_decode($nivel);
                 // var_dump($nivel);
