@@ -947,7 +947,7 @@ class EvaluacionRiesgoController extends BaseController
                 }
             }
            
-            $posicion = intval($index) - intval($respuestaCaracteristica['posicion']);
+            $posicion = intval($index) - intval($respuestaCaracteristica[0]['posicion']);
             if($posicion <= 0){
                 $posicion = 0;
             }else{
@@ -956,7 +956,8 @@ class EvaluacionRiesgoController extends BaseController
             $new_posicion = $posiciones_probabilidad[$posicion];
             $riesgo_controlado_probabilidad = $new_posicion;
         }else if(intval($escenario) == 1){
-            $value = intval(explode("%",$respuestaCaracteristica[0]['posicion'])[0])/100;
+          //  $value = intval(explode("%",$respuestaCaracteristica[0]['posicion'])[0])/100;
+          $value = intval(explode("%",$respuestaCaracteristica['posicion'])[0])/100;
             $probabilidad_actual = $riesgo['valor_probabilidad'];
             $new_probabilidad = $probabilidad_actual - ($probabilidad_actual * $value);
             $riesgo_controlado_probabilidad = $new_probabilidad;
