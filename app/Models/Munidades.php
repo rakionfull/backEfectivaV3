@@ -80,6 +80,15 @@ class Munidades extends Model
        
         return $query->getResultArray();
     }
+
+    public function getUnidadadesByEmpresaByArea($data){
+        $sql = "call sp_get_unidades_by_empresa_by_area(?,?)";
+        $query = $this->db->query($sql,[
+            $data['idempresa'],
+            $data['idarea'],
+        ]);
+        return $query->getResultArray();
+    }
     
     public function saveUnidades($data){
     

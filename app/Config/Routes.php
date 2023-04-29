@@ -515,6 +515,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->get('getAllDetalleValoracionActivo','InventarioClasificacionActivoController::getAllDetalleValoracionActivo');
       $routes->post('getValoracionActivoById','InventarioClasificacionActivoController::getValoracionActivoById');
       $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
+      $routes->post('getUnidadadesByEmpresaByArea','Activo::getUnidadadesByEmpresaByArea');
     });
 
     //$routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');

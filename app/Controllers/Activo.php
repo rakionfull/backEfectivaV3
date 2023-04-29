@@ -1369,7 +1369,26 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
         }
+           
+    }
+    public function getUnidadadesByEmpresaByArea(){
 
+        try {
+            $model = new Munidades();
+            $input = $this->getRequestInput($this->request);
+            $response = [
+                'data' =>  $model->getUnidadadesByEmpresaByArea($input)
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
            
     }
     public function getUnidadByActivo(){
