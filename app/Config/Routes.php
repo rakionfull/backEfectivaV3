@@ -516,8 +516,14 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('getValoracionActivoById','InventarioClasificacionActivoController::getValoracionActivoById');
       $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
       $routes->post('getUnidadadesByEmpresaByArea','Activo::getUnidadadesByEmpresaByArea');
-    });
 
+
+      //esto es adicional para ejecutar el controlmas fuerte
+
+     // $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
+
+    });
+    $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
     //$routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
       
 /*
