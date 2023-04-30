@@ -520,7 +520,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
       //esto es adicional para ejecutar el controlmas fuerte
 
-     // $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
+     $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
 
     });
     $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
