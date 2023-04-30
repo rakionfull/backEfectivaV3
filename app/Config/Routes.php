@@ -523,7 +523,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
      $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
 
     });
-    $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
+    // $routes->post('controlMasFuerte','EvaluacionRiesgoController::controlMasFuerte');
     //$routes->post('updateRiesgosControlados/(:num)','EvaluacionRiesgoController::updateRiesgosControlados/$1');
       
 /*
