@@ -87,7 +87,20 @@ class Mperfil extends Model
         }
     }
     
+    public function validatePerfilModify($data){
+          
+        // $query = $this->db->query("SELECT * from empresa  
+        // where empresa ='{$data['empresa']}' and is_deleted=0;");
+        $sql = "CALL sp_validate_perfil_modify(?,?)";
 
+        $query = $this->db->query($sql, [
+            $data['id_perfil'],
+            $data['perfil'],
+          
+        ]);
+        return $query->getResultArray();
+
+    }
     //agregar el perfil
     public function savePerfil($data){
         // return $data;
