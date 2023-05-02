@@ -43,7 +43,7 @@ class CoberturaController extends BaseController
             $valida = $model -> validaCobertura($input[0]['cobertura']);
             if(!$valida){
                 $result = $model->saveCobertura($input);
-                $msg = 'Registrado Correctamente';
+                $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
                 $msg = 'Cobertura ya registrada';
@@ -86,7 +86,7 @@ class CoberturaController extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado Correctamente'
+                    'msg' =>  'Modificado correctamente'
                 ]
             );
             
@@ -119,7 +119,7 @@ class CoberturaController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado Correctamente'
+                            'msg' =>  'Eliminado correctamente'
                         ]
                     );
                 }else{

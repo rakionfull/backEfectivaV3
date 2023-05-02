@@ -46,7 +46,7 @@ class AplicacionImpactoController extends BaseController
                 $valida2 = $model -> validaAplicacionImpacto2($input[0]);
                 if(!$valida2){
                     $result = $model->saveAplicacionImpacto($input);
-                    $msg = 'Registrado correctamente';
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
                 }else{
                     $msg = 'La posición ya está registrada';
@@ -107,7 +107,7 @@ class AplicacionImpactoController extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
             
@@ -138,7 +138,7 @@ class AplicacionImpactoController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{

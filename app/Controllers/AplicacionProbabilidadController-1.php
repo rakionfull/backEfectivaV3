@@ -3,20 +3,20 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\MAplicacionImpacto;
+use App\Models\MAplicacionProbabilidad;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
-class AplicacionImpactoController extends BaseController
+class AplicacionProbabilidadController extends BaseController
 {
     use ResponseTrait;
-    public function getAplicacionImpacto(){
+    public function getAplicacionProbabilidad(){
         $input = $this->getRequestInput($this->request);
         try {
-            $model = new MAplicacionImpacto();
+            $model = new MAplicacionProbabilidad();
                 $response = [
-                    'data' =>  $model->getAplicacionImpacto($input['escenario'])
+                    'data' =>  $model->getAplicacionProbabilidad($input['escenario'])
                 ];
                 return $this->respond($response, ResponseInterface::HTTP_OK);
         
@@ -32,21 +32,21 @@ class AplicacionImpactoController extends BaseController
            
     }
     
-    public function addAplicacionImpacto()
+    public function addAplicacionProbabilidad()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
 
       
-            $model = new MAplicacionImpacto();
+            $model = new MAplicacionProbabilidad();
         
-            $valida = $model -> validaAplicacionImpacto($input[0]);
+            $valida = $model -> validaAplicacionProbabilidad($input[0]);
             if(!$valida){
-                $valida2 = $model -> validaAplicacionImpacto2($input[0]);
+                $valida2 = $model -> validaAplicacionProbabilidad2($input[0]);
                 if(!$valida2){
-                    $result = $model->saveAplicacionImpacto($input);
-                    $msg = 'Registrado correctamente';
+                    $result = $model->saveAplicacionProbabilidad($input);
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
                 }else{
                     $msg = 'La posición ya está registrada';
@@ -54,7 +54,7 @@ class AplicacionImpactoController extends BaseController
                 }
               
             }else{
-                $msg = 'Aplicación de impacto ya registrada';
+                $msg = 'Aplicación de la probabilidad ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -73,24 +73,24 @@ class AplicacionImpactoController extends BaseController
         }
     
     }
-    public function updateAplicacionImpacto()
+    public function updateAplicacionProbabilidad()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
-            $found = $model->validateApliImpacModify($input);
+            $model = new MAplicacionProbabilidad();
+            $found = $model->validateApliProbaModify($input);
 
             if(count($found) > 0){
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Aplicación de Impacto ya registrada'
+                        'msg' =>'Aplicación de Probabilidad ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
             }else{
-                $found2 = $model->validateApliImpacModify2($input);
+                $found2 = $model->validateApliProbaModify2($input);
                 if(count($found2) > 0){
                     return $this->getResponse(
                         [
@@ -102,8 +102,7 @@ class AplicacionImpactoController extends BaseController
                 }
             }
            
-
-            $result = $model->updateAplicacionImpacto($input);
+            $result = $model->updateAplicacionProbabilidad($input);
         
             return $this->getResponse(
                 [
@@ -123,10 +122,10 @@ class AplicacionImpactoController extends BaseController
       
         
     }
-    public function deleteAplicacionImpacto()
+    public function deleteAplicacionProbabilidad()
     {
         $input = $this->getRequestInput($this->request);
-        $model = new MAplicacionImpacto();
+        $model = new MAplicacionProbabilidad();
         $found = $model->find($input[0]['id']);
         $this->db->transBegin();
         try{
@@ -138,7 +137,7 @@ class AplicacionImpactoController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{
@@ -175,12 +174,13 @@ class AplicacionImpactoController extends BaseController
                 ]
             );
         }
+      
         
     }
     public function getByCaracteristica(){
         try{
             $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
+            $model = new MAplicacionProbabilidad();
             $response = [
                 'data' =>  $model->getByCaracteristica($input)
             ];

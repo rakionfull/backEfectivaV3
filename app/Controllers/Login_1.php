@@ -75,7 +75,7 @@ class Login extends BaseController
                                     // $modelsUser -> setTimeIntento($input['username']);
                                     $modelsUser -> setTimeIntento($input['username']);
                                     // $error = new  \stdClass;
-                                    // $error->password = 'Se ha intentado '.$configuracion[0]['intentos'].' veces, el usuario se dabilitará por 
+                                    // $error->password = 'Se ha intentato '.$configuracion[0]['intentos'].' veces, el usuario se dabilitará por 
                                     // 2 min';
                                     $error = ['password' => 'Se ha intentado '.$configuracion[0]['intentos'].' veces, el usuario se deshabilitará por 
                                     2 min'];
@@ -247,21 +247,21 @@ class Login extends BaseController
                     if($user->change_pass == 0){
                         $token = getSignedJWTForUser($username);
                         $msg=0;
-                        $mensaje = 'Cambio de contraseña de primer logueo obligatorio';
+                        $mensaje = 'Cambio de contraseña 1er logueo obligatorio';
                       
                     }else{
                         $token = getSignedJWTForUser($username);
                        
                         if($fecha_actual >= $fecha_exp){
                             $msg = 0;
-                            $mensaje = 'Contraseña expirada, se redireccionará para su cambio';
+                            $mensaje = 'Contraseña expirada, se redireccionará para cambio';
                         }else{
                                 $modelSesion->saveSesion($token, $user->id_us);
                                 $permisos=$modelPerfil->getPermisos($user->perfil_us);
                                 if($fecha_actual >= $fecha_recordatorio){
                                     if($fecha_exp  > $fecha_recordatorio){
                                    
-                                        $mensaje = 'Recordatorio: Su contraseña está a punto de expirar';
+                                        $mensaje = 'Recordatorio: Su contraseña está a punto expirar';
                                     }
                                 }
                         }

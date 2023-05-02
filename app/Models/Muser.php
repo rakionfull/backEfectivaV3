@@ -34,12 +34,12 @@ class Muser extends Model
       
         $query=$this->db->query("INSERT INTO tb_users 
         (docident_us,nombres_us,apepat_us,apemat_us,email_us,
-        usuario_us,creacion_us,estado_us,bloqueo_us,change_pass,perfil_us,idempresa,idposicion,idarea,idunidad) VALUES
+        usuario_us,creacion_us,estado_us,bloqueo_us,change_pass,perfil_us,idempresa,idposicion,idarea,idunidad,intentos_us) VALUES
         ('{$data['docident_us']}','{$data['nombres_us']}',
         '{$data['apepat_us']}','{$data['apemat_us']}',
         '{$data['email_us']}','{$data['usuario_us']}',
         '{$creacion_us}','{$estado_us}',0,'{$change_pass}','{$data['perfil_us']}',
-        '{$data['id_empresa']}','{$data['id_puesto']}','{$data['id_area']}','{$data['id_unidad']}'); ") ;
+        '{$data['id_empresa']}','{$data['id_puesto']}','{$data['id_area']}','{$data['id_unidad']}',1); ") ;
          
         return true;
 

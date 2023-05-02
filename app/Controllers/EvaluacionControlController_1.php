@@ -106,7 +106,7 @@ class EvaluacionControlController extends BaseController
                             $model->saveDetalleEvaluacionControl($array);
                         }
                     }
-                    $msg = 'Registrado correctamente';
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
             }else{
                 $msg = 'Evaluacion de control ya registrado';
@@ -175,7 +175,7 @@ class EvaluacionControlController extends BaseController
                        
                     }
             }else{
-                $msg = 'Evaluación de control ya registrada';
+                $msg = 'Evaluación de control ya registrado';
                 $error = true;
             }
             return $this->getResponse(
@@ -209,7 +209,7 @@ class EvaluacionControlController extends BaseController
         
         //     return $this->getResponse(
         //         [
-        //             'msg' =>  'Eliminado correctamente'
+        //             'msg' =>  'Eliminado Correctamente'
         //         ]
         //     );
         // } catch (Exception $ex) {
@@ -232,7 +232,7 @@ class EvaluacionControlController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{

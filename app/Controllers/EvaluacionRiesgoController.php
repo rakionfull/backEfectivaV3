@@ -556,6 +556,9 @@ class EvaluacionRiesgoController extends BaseController
                         
                         $this->updateRiesgosControlados($value);
                     }
+
+                    
+
                     $msg = 'Modificado correctamente';
                     $error = 1;
                     //$idcontrol=$result;
@@ -566,7 +569,8 @@ class EvaluacionRiesgoController extends BaseController
             return $this->getResponse(
                 [
                     'msg' =>  $msg,
-                    'error' =>  $error
+                    'error' =>  $error,
+                   
                 ]
             );
         } catch (Exception $ex) {
@@ -700,10 +704,11 @@ class EvaluacionRiesgoController extends BaseController
                   
                    
                 }
-                // $resultado  = $this->updateRiesgosControlados(66);
+
+                //$resultado  = $this->updateRiesgosControlados(75);
                 return $this->getResponse([
                     'msg' => 'El plan de accion esta culminado, se ha aplicado el control',
-                    // 'data' => $resultado,
+                    //'data' => $resultado,
                     'error' => 1,
                     // 'riesgos' => $array_riesgos
                 ]);
@@ -758,6 +763,12 @@ class EvaluacionRiesgoController extends BaseController
     public function controlFuerte($controles){
         //$controles = explode("-", $controles);
         //primero debo ordenar y traer aplicacion de la probabilidad
+        //$input = $this->getRequestInput($this->request);
+        //$controles = explode("-", $controles);
+        //primero debo ordenar y traer aplicacion de la probabilidad
+        //fuerte modeado debil
+        //$controles =  $input['controles'];
+        $controles =  $controles;
         //fuerte modeado debil
         $Mescenario = new Muser();
         $model = new MEvaluacionControl();
@@ -769,6 +780,13 @@ class EvaluacionRiesgoController extends BaseController
         $id_control = [];
         $escenario = $Mescenario ->getEscenario();
         $respuesta = $model->getCaracteristicaOpcion($escenario);
+        $controles_fuertes = [];
+        $cobertura1 = 0;
+        $cobertura2 = 0;
+        $cobertura3 = 0;
+        $cobertura_final =0;
+        $controles_pruebas = [];
+       
         //var_dump($respuesta);
         if($respuesta){
 
@@ -806,6 +824,7 @@ class EvaluacionRiesgoController extends BaseController
                            // $value
                         'id' => $result->id,
                         'evaluacion' => $result->evaluacion,
+                        'cobertura' => $result->idCobertura
                          
                     ];
                      array_push($controles_obtenidos,$array_aux);
@@ -813,25 +832,107 @@ class EvaluacionRiesgoController extends BaseController
 
                 //obtenidos los controles sus datos empezamos hacer la comparacion
                 //recorremos primero el ordenado y luego los controles
-               
-                foreach ($caracteristicas_controles as $key => $value) {
-                   foreach ($controles_obtenidos as $key => $value2) {
+               $max_level = "";
+                foreach ($caracteristicas_controles as $key => $value) { // FUERTE MODERADO DEBIL
+                   foreach ($controles_obtenidos as $key => $value2) {  // DEBIL FUERTE MODERADO  FUERTE
+                    //primero asignar el valor mas alto y guardarlo en una variable
+                    //luego que se guarden todos los del valor encontrado
                     if($encontrado){
                         if($value == $value2['evaluacion']){
+                            $max_level = $value;
+                            //aqui probare
+                           
                             //encuentra el mayor ahi se queda
                             $encontrado = false;
-                            $id_control = $value2['id'];
+                            // $id_control = [
+                            //     ''
+                            // ]
+                            // $value2['id'];
+                            //agregaros 
+
+
+                            
                         }
                     }
-                   }
+                        //aqui debe agregar del max_level
+                        if($max_level == $value2['evaluacion']){
+                            $array = [
+                          
+                                'id' => $value2['id'],
+                                'evaluacion' => $value2['evaluacion'],
+                                'cobertura' => $value2['cobertura']
+                            
+                    
+                
+               
+                            ];
+                        
+                            array_push($controles_fuertes,$array);
+                        }
+
+                       
+                    }
+                   
                 }
+                //si ya tengo los controles mas fuertes entonces solo recorro e igualo
+                foreach ($caracteristicas_controles as $key => $value) {
+                        foreach ($controles_fuertes as $key => $value2) {
+                                // $array_aux = [
+                                //     $value2['cobertura']
+                                // ];
+                                // array_push($controles_pruebas,$array_aux);
+                                if($value2['cobertura'] == 1){
+                                    $cobertura1 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                                if($value2['cobertura'] == 2){
+                                    $cobertura2 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                                if($value2['cobertura'] == 3){
+                                    $cobertura3 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                            // if($value == $value2[$value]['evaluacion']){
+                            //     $array_aux = [
+                            //         $value,
+                            //         $value2
+                            //     ];
+                            //     array_push($controles_pruebas,$array_aux);
+                            // }
+                        }
+                }
+                //asignamos la cobertura que enviaremos
+                if($cobertura1 != 0){
+                    $cobertura_final = $cobertura1;
+                }
+                if($cobertura2 != 0){
+                    $cobertura_final = $cobertura2;
+                }
+                if($cobertura3 != 0){
+                    $cobertura_final = $cobertura3;
+                }
+                if($cobertura1 != 0 && $cobertura2!=0){
+                    $cobertura_final = 3;
+                }
+                //evaluamos la cobertura que queda y le mandamos su id_control
         }else{
             $id_control = false;
         }
       
 
+        //     $response = [
+        //         'id_control' => $controles_fuertes
+        //     ];
+        //     return $this->respond($response, ResponseInterface::HTTP_OK);
+        $response = [
+            'id_control' => $id_control,
+            'cobertura' => $cobertura_final
+        ];
+        return $response;
+
     
-        return $id_control;
+        //return $this->respond($response, ResponseInterface::HTTP_OK);
 
     }
     //preguntar tengo que elegir el control mas fuerte?
@@ -902,17 +1003,18 @@ class EvaluacionRiesgoController extends BaseController
                 //foreach ($caracteristicas_controles as $caracteristica_control) {
                     $evaluacionRiesgosControles = new EvaluacionRiesgosControles();
                     $controles = $evaluacionRiesgosControles->getByEvaluacionRiesgoId($id_riesgo);
+                    
                     foreach ($controles as $key => $value) {
                       
                         array_push($controles_post,$value['id_control']);
                     }
-                    
+                 
                     $controles = $this->controlFuerte($controles_post);
-                    
+                    //return $controles;
                     //if(count($controles) > 0){
                         $control_selected = 0;
                         //foreach ($controles as $control) {
-                            $control_id = intval($controles);
+                            $control_id = intval($controles['id_control']);
                             // el control seleccionado = $control_id
                             $found = false;
                            // return $control_id;
@@ -920,8 +1022,8 @@ class EvaluacionRiesgoController extends BaseController
                                 $registroControlModel = new MRegistroControles();
                                 $registroControl = $registroControlModel->getRegistroControl($control_id);
                               
-                                $cobertura = $registroControl->idCobertura;
-                               
+                               // $cobertura = $registroControl->idCobertura;
+                               $cobertura =  intval($controles['cobertura']);
                                 $evaluacion = strtolower($registroControl->evaluacion);
                                
                                 $firstLetter = strtoupper(substr($evaluacion,0,1));
@@ -938,6 +1040,8 @@ class EvaluacionRiesgoController extends BaseController
                                     $control_selected = $control_id;
                                     
                                     // var_dump($control_selected);
+
+                                    
                                     switch ($cobertura) {
                                         case 1:
                                             if($escenario == 1){
@@ -983,6 +1087,8 @@ class EvaluacionRiesgoController extends BaseController
                                     $riesgo['riesgo_controlado_valor'] = $riesgo_controlado_valor;
                                     $evaluacionRiesgoModel->update($id_riesgo,$riesgo);
                                  
+            //hasta aqui
+                                    
                                 //}
                             //}
                        // }
@@ -1253,9 +1359,73 @@ class EvaluacionRiesgoController extends BaseController
         $controles_obtenidos =[];
         $encontrado = true;
         $id_control = [];
+        $controles_fuertes = [];
+        $cobertura1 = 0;
+        $cobertura2 = 0;
+        $cobertura3 = 0;
+        $cobertura_final =0;
+        $controles_pruebas = [];
         $escenario = $Mescenario ->getEscenario();
         $respuesta = $model->getCaracteristicaOpcion($escenario);
         //var_dump($respuesta);
+        // if($respuesta){
+
+        //     foreach ($respuesta as $key => $value) {
+        //         //var_dump($value);
+        //         $posicion =  explode("%", $value['posicion'])[0];
+        //         //$posicion = ($value['posicion'].split("%")[0]);
+        //          array_push($posiciones_control,$posicion);
+        //         //aqui se edito por miguel cambie caracteristica por calificacion
+        //         array_push($caracteristicas_controles,strtoupper($value['calificacion']));
+               
+        //     }
+           
+        //         for ($i = 1; $i < count($posiciones_control) ; $i++) {
+        //             for ($j = 0; $j <  (count($posiciones_control) - $i); $j++) {
+        //                 if($posiciones_control[$j] <= $posiciones_control[$j+1]){
+        //                     $aux = $posiciones_control[$j];
+        //                     $posiciones_control[$j] = $posiciones_control[$j+1];
+        //                     $posiciones_control[$j+1] = $aux;
+
+        //                     $aux_caracteristica = $caracteristicas_controles[$j];
+        //                     $caracteristicas_controles[$j] = $caracteristicas_controles[$j+1];
+        //                     $caracteristicas_controles[$j+1] = $aux_caracteristica;
+
+        //                 }
+        //             }  
+        //         }  
+        //         //ahora traemos todos los controles y colocamos su id y descripcion para agregarlo
+        //         //aun array_push
+
+        //         foreach ($controles as $key => $value) {
+        //            $result = $modelControles -> getRegistroControl($value);
+                    
+        //             $array_aux =[
+        //                    // $value
+        //                 'id' => $result->id,
+        //                 'evaluacion' => $result->evaluacion,
+                         
+        //             ];
+        //              array_push($controles_obtenidos,$array_aux);
+        //         }
+
+        //         //obtenidos los controles sus datos empezamos hacer la comparacion
+        //         //recorremos primero el ordenado y luego los controles
+               
+        //         foreach ($caracteristicas_controles as $key => $value) {
+        //            foreach ($controles_obtenidos as $key => $value2) {
+        //             if($encontrado){
+        //                 if($value == $value2['evaluacion']){
+        //                     //encuentra el mayor ahi se queda
+        //                     $encontrado = false;
+        //                     $id_control = $value2['id'];
+        //                 }
+        //             }
+        //            }
+        //         }
+        // }else{
+        //     $id_control = false;
+        // }
         if($respuesta){
 
             foreach ($respuesta as $key => $value) {
@@ -1292,6 +1462,7 @@ class EvaluacionRiesgoController extends BaseController
                            // $value
                         'id' => $result->id,
                         'evaluacion' => $result->evaluacion,
+                        'cobertura' => $result->idCobertura
                          
                     ];
                      array_push($controles_obtenidos,$array_aux);
@@ -1299,24 +1470,96 @@ class EvaluacionRiesgoController extends BaseController
 
                 //obtenidos los controles sus datos empezamos hacer la comparacion
                 //recorremos primero el ordenado y luego los controles
-               
-                foreach ($caracteristicas_controles as $key => $value) {
-                   foreach ($controles_obtenidos as $key => $value2) {
+               $max_level = "";
+                foreach ($caracteristicas_controles as $key => $value) { // FUERTE MODERADO DEBIL
+                   foreach ($controles_obtenidos as $key => $value2) {  // DEBIL FUERTE MODERADO  FUERTE
+                    //primero asignar el valor mas alto y guardarlo en una variable
+                    //luego que se guarden todos los del valor encontrado
                     if($encontrado){
                         if($value == $value2['evaluacion']){
+                            $max_level = $value;
+                            //aqui probare
+                           
                             //encuentra el mayor ahi se queda
                             $encontrado = false;
-                            $id_control = $value2['id'];
+                            // $id_control = [
+                            //     ''
+                            // ]
+                            // $value2['id'];
+                            //agregaros 
+
+
+                            
                         }
                     }
-                   }
+                        //aqui debe agregar del max_level
+                        if($max_level == $value2['evaluacion']){
+                            $array = [
+                          
+                                'id' => $value2['id'],
+                                'evaluacion' => $value2['evaluacion'],
+                                'cobertura' => $value2['cobertura']
+                            
+                    
+                
+               
+                            ];
+                        
+                            array_push($controles_fuertes,$array);
+                        }
+
+                       
+                    }
+                   
                 }
+                //si ya tengo los controles mas fuertes entonces solo recorro e igualo
+                foreach ($caracteristicas_controles as $key => $value) {
+                        foreach ($controles_fuertes as $key => $value2) {
+                                // $array_aux = [
+                                //     $value2['cobertura']
+                                // ];
+                                // array_push($controles_pruebas,$array_aux);
+                                if($value2['cobertura'] == 1){
+                                    $cobertura1 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                                if($value2['cobertura'] == 2){
+                                    $cobertura2 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                                if($value2['cobertura'] == 3){
+                                    $cobertura3 = $value2['cobertura'];
+                                    $id_control = $value2['id'];
+                                }
+                            // if($value == $value2[$value]['evaluacion']){
+                            //     $array_aux = [
+                            //         $value,
+                            //         $value2
+                            //     ];
+                            //     array_push($controles_pruebas,$array_aux);
+                            // }
+                        }
+                }
+                //asignamos la cobertura que enviaremos
+                if($cobertura1 != 0){
+                    $cobertura_final = $cobertura1;
+                }
+                if($cobertura2 != 0){
+                    $cobertura_final = $cobertura2;
+                }
+                if($cobertura3 != 0){
+                    $cobertura_final = $cobertura3;
+                }
+                if($cobertura1 != 0 && $cobertura2!=0){
+                    $cobertura_final = 3;
+                }
+                //evaluamos la cobertura que queda y le mandamos su id_control
         }else{
             $id_control = false;
         }
-      
         $response = [
-            'id_control' => $id_control
+            'id_control' => $id_control,
+            'cobertura' => $cobertura_final
         ];
         return $this->respond($response, ResponseInterface::HTTP_OK);
     

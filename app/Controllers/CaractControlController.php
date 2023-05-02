@@ -66,7 +66,7 @@ class CaractControlController extends BaseController
                     $valida2 = $model -> validaCaractControl2($input);
                     if(!$valida2){
                         $result = $model->saveCaractControl($input);
-                        $msg = 'Registrado Correctamente';
+                        $msg = 'Registrado correctamente';
                         $error = 1;
                     }else{
                         $msg = 'La lógica ya esta registrada';
@@ -75,7 +75,7 @@ class CaractControlController extends BaseController
                    
                 }else{
                     $result = $model->saveCaractControl($input);
-                    $msg = 'Registrado Correctamente';
+                    $msg = 'Registrado correctamente';
                     $error = 1;
                 }
                
@@ -174,7 +174,7 @@ class CaractControlController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado Correctamente'
+                            'msg' =>  'Eliminado correctamente'
                         ]
                     );
                 }else{

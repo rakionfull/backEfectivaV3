@@ -3,20 +3,20 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\MAplicacionImpacto;
+use App\Models\MCobertura;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
-class AplicacionImpactoController extends BaseController
+class CoberturaController extends BaseController
 {
     use ResponseTrait;
-    public function getAplicacionImpacto(){
-        $input = $this->getRequestInput($this->request);
+    public function getCobertura(){
+
         try {
-            $model = new MAplicacionImpacto();
+            $model = new MCobertura();
                 $response = [
-                    'data' =>  $model->getAplicacionImpacto($input['escenario'])
+                    'data' =>  $model->getCobertura()
                 ];
                 return $this->respond($response, ResponseInterface::HTTP_OK);
         
@@ -31,30 +31,22 @@ class AplicacionImpactoController extends BaseController
 
            
     }
-    
-    public function addAplicacionImpacto()
+    public function addCobertura()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
 
       
-            $model = new MAplicacionImpacto();
+            $model = new MCobertura();
         
-            $valida = $model -> validaAplicacionImpacto($input[0]);
+            $valida = $model -> validaCobertura($input[0]['cobertura']);
             if(!$valida){
-                $valida2 = $model -> validaAplicacionImpacto2($input[0]);
-                if(!$valida2){
-                    $result = $model->saveAplicacionImpacto($input);
-                    $msg = 'Registrado correctamente';
-                    $error = 1;
-                }else{
-                    $msg = 'La posición ya está registrada';
-                    $error = 0;
-                }
-              
+                $result = $model->saveCobertura($input);
+                $msg = 'Registrado Correctamente';
+                $error = 1;
             }else{
-                $msg = 'Aplicación de impacto ya registrada';
+                $msg = 'Cobertura ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -73,41 +65,28 @@ class AplicacionImpactoController extends BaseController
         }
     
     }
-    public function updateAplicacionImpacto()
+    public function updateCobertura()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
-            $found = $model->validateApliImpacModify($input);
+            $model = new MCobertura();
+            $found = $model->validateCoberturaModify($input);
 
             if(count($found) > 0){
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Aplicación de Impacto ya registrada'
+                        'msg' =>'Cobertura ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
-            }else{
-                $found2 = $model->validateApliImpacModify2($input);
-                if(count($found2) > 0){
-                    return $this->getResponse(
-                        [
-                            'error' =>true,
-                             'msg'=> 'La posición ya está registrada'
-                        ],
-                        ResponseInterface::HTTP_OK
-                    );
-                }
             }
-           
-
-            $result = $model->updateAplicacionImpacto($input);
+            $result = $model->updateCobertura($input);
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
             
@@ -123,22 +102,24 @@ class AplicacionImpactoController extends BaseController
       
         
     }
-    public function deleteAplicacionImpacto()
+    public function deleteCobertura()
     {
         $input = $this->getRequestInput($this->request);
-        $model = new MAplicacionImpacto();
+        $model = new MCobertura();
         $found = $model->find($input[0]['id']);
         $this->db->transBegin();
         try{
             if($found){
                 if($model->delete($input[0]['id'])){
                     $this->db->transRollback();
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
+                    $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{
@@ -167,7 +148,7 @@ class AplicacionImpactoController extends BaseController
             $data['is_deleted'] = 0;
             $data['date_deleted'] = null;
             $data['id_user_deleted'] = null;
-            $model->update($input['id'],$data);
+            $model->update($input[0]['id'],$data);
             return $this->getResponse(
                 [  
                     'error' => true,
@@ -175,23 +156,8 @@ class AplicacionImpactoController extends BaseController
                 ]
             );
         }
-        
-    }
-    public function getByCaracteristica(){
-        try{
-            $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
-            $response = [
-                'data' =>  $model->getByCaracteristica($input)
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (Exception $ex) {
-            return $this->getResponse(
-                [
-                    'error' => $ex->getMessage(),
-                ]
-            );
-        }
       
+      
+        
     }
 }

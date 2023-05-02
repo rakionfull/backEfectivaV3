@@ -3,20 +3,20 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\MAplicacionImpacto;
+use App\Models\MCaractControl;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
-class AplicacionImpactoController extends BaseController
+class CaractControlController extends BaseController
 {
     use ResponseTrait;
-    public function getAplicacionImpacto(){
-        $input = $this->getRequestInput($this->request);
+    public function getCaractControl($a,$b,$c){
+
         try {
-            $model = new MAplicacionImpacto();
+            $model = new MCaractControl();
                 $response = [
-                    'data' =>  $model->getAplicacionImpacto($input['escenario'])
+                    'data' =>  $model->getCaractControl($a,$b,$c)
                 ];
                 return $this->respond($response, ResponseInterface::HTTP_OK);
         
@@ -31,30 +31,56 @@ class AplicacionImpactoController extends BaseController
 
            
     }
-    
-    public function addAplicacionImpacto()
+    public function getOpcionesCaracteristica($tipo){
+
+        try {
+            $model = new MCaractControl();
+                $response = [
+                    'data' =>  $model->getOpcionesCaracteristica($tipo)
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+
+           
+    }
+    public function addCaractControl()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
 
       
-            $model = new MAplicacionImpacto();
+            $model = new MCaractControl();
         
-            $valida = $model -> validaAplicacionImpacto($input[0]);
+            $valida = $model -> validaCaractControl($input);
             if(!$valida){
-                $valida2 = $model -> validaAplicacionImpacto2($input[0]);
-                if(!$valida2){
-                    $result = $model->saveAplicacionImpacto($input);
-                    $msg = 'Registrado correctamente';
-                    $error = 1;
+                if( $input[0]['valor'] != "" && $input[0]['condicion'] != "" && $input[0]['calificacion'] == 1){
+                    $valida2 = $model -> validaCaractControl2($input);
+                    if(!$valida2){
+                        $result = $model->saveCaractControl($input);
+                        $msg = 'Registrado Correctamente';
+                        $error = 1;
+                    }else{
+                        $msg = 'La lógica ya esta registrada';
+                        $error = 0;
+                    }
+                   
                 }else{
-                    $msg = 'La posición ya está registrada';
-                    $error = 0;
+                    $result = $model->saveCaractControl($input);
+                    $msg = 'Registrado Correctamente';
+                    $error = 1;
                 }
-              
+               
             }else{
-                $msg = 'Aplicación de impacto ya registrada';
+                $msg = 'Caracteristica de Control ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -73,43 +99,49 @@ class AplicacionImpactoController extends BaseController
         }
     
     }
-    public function updateAplicacionImpacto()
+    public function updateCaractControl()
     {
    
         try {
             $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
-            $found = $model->validateApliImpacModify($input);
+            $model = new MCaractControl();
+            $found = $model->validateCaractControlModify($input);
 
             if(count($found) > 0){
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Aplicación de Impacto ya registrada'
+                        'msg' =>'Característica ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
             }else{
-                $found2 = $model->validateApliImpacModify2($input);
-                if(count($found2) > 0){
+                $found2 = $model->validateCaractControlModify2($input);
+                if( $input[0]['valor'] != "" && $input[0]['condicion'] != "" && $input[0]['calificacion'] == 1){
+                    if(count($found2) > 0){
+                        return $this->getResponse(
+                            [
+                                'error' =>true,
+                                 'msg'=> 'La lógica ya está registrada'
+                            ],
+                            ResponseInterface::HTTP_OK
+                        );
+                    }
+
+                }else{
+                    $result = $model->updateCaractControl($input);
                     return $this->getResponse(
                         [
-                            'error' =>true,
-                             'msg'=> 'La posición ya está registrada'
-                        ],
-                        ResponseInterface::HTTP_OK
+                            'error' =>false,
+                            'msg' =>  'Modificado correctamente'
+                        ]
                     );
                 }
+               
             }
            
-
-            $result = $model->updateAplicacionImpacto($input);
         
-            return $this->getResponse(
-                [
-                    'msg' =>  'Modificado correctamente'
-                ]
-            );
+           
             
         } catch (Exception $ex) {
             return $this->getResponse(
@@ -123,29 +155,33 @@ class AplicacionImpactoController extends BaseController
       
         
     }
-    public function deleteAplicacionImpacto()
+    public function deleteCaractControl()
     {
         $input = $this->getRequestInput($this->request);
-        $model = new MAplicacionImpacto();
-        $found = $model->find($input[0]['id']);
+        $model = new MCaractControl();
+        $found = $model->find($input[0]['id_op']);
         $this->db->transBegin();
         try{
             if($found){
-                if($model->delete($input[0]['id'])){
+                if($model->delete($input[0]['id_op'])){
                     $this->db->transRollback();
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
+                    $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
-                    $model->update($input[0]['id'],$data);
+                    $model->update($input[0]['id_op'],$data);
+                    $model->updateGeneral($input,$data);
+                   // $result = $model->where('idOpcion',1)->update($input[0]['id']);
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{
                     $data['is_deleted'] = 0;
                     $data['date_deleted'] = null;
                     $data['id_user_deleted'] = null;
-                    $model->update($input[0]['id'],$data);
+                    $model->update($input[0]['id_op'],$data);
                     return $this->getResponse(
                         [
                             'error' => true,
@@ -161,13 +197,14 @@ class AplicacionImpactoController extends BaseController
                     ]
                 );
             }
+            
             $this->db->transCommit();
 
         } catch (Exception $ex) {
             $data['is_deleted'] = 0;
             $data['date_deleted'] = null;
             $data['id_user_deleted'] = null;
-            $model->update($input['id'],$data);
+            $model->update($input[0]['id_op'],$data);
             return $this->getResponse(
                 [  
                     'error' => true,
@@ -175,23 +212,8 @@ class AplicacionImpactoController extends BaseController
                 ]
             );
         }
+      
         
     }
-    public function getByCaracteristica(){
-        try{
-            $input = $this->getRequestInput($this->request);
-            $model = new MAplicacionImpacto();
-            $response = [
-                'data' =>  $model->getByCaracteristica($input)
-            ];
-            return $this->respond($response, ResponseInterface::HTTP_OK);
-        } catch (Exception $ex) {
-            return $this->getResponse(
-                [
-                    'error' => $ex->getMessage(),
-                ]
-            );
-        }
-      
-    }
+    
 }

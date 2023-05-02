@@ -124,7 +124,7 @@ class ValoracionRiesgoController extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }

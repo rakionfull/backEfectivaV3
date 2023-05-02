@@ -95,7 +95,7 @@ class Activo extends BaseController
                  $valida = $model -> validaEmpresa($input[0]);
                 if(!$valida){
                     $result = $model->saveEmpresa($input);
-                    $msg = 'Registrado correctamente';
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
                 }else{
                     $msg = 'Empresa ya registrada';
@@ -226,7 +226,7 @@ class Activo extends BaseController
                         // return $this->getResponse(
                         //     [
                         //         'error' => $input[0]['id'],
-                        //         'msg' =>  'Eliminado correctamente'
+                        //         'msg' =>  'Eliminado Correctamente'
                         //     ]
                         // );
                     }else{
@@ -325,7 +325,7 @@ class Activo extends BaseController
             $valida = $model -> validaArea($input[0]);
             if(!$valida){
                 $result = $model->saveArea($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Arera ya registrada';
@@ -411,7 +411,7 @@ class Activo extends BaseController
 
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente',
+                    'msg' =>  'Modificado Correctamente',
                     // 'error' =>  
                 ]
             );
@@ -449,7 +449,7 @@ class Activo extends BaseController
                         // return $this->getResponse(
                         //     [
                         //         'error' => false,
-                        //         'msg' =>  'Eliminado correctamente'
+                        //         'msg' =>  'Eliminado Correctamente'
                         //     ]
                         // );
                     }else{
@@ -645,7 +645,7 @@ class Activo extends BaseController
     
             if(!$valida){
                 $result = $model->saveValorActivo($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Valor de Activo ya registrada';
@@ -694,7 +694,7 @@ class Activo extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -729,7 +729,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -846,7 +846,7 @@ class Activo extends BaseController
             $valida = $model -> validarTipoActivo($input);
             if(!$valida){
                 $result = $model->saveTipoActivo($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Tipo de Activo ya registrada';
@@ -918,7 +918,7 @@ class Activo extends BaseController
             }
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
             
@@ -1047,7 +1047,7 @@ class Activo extends BaseController
             $valida = $model -> validarClasInfo($input[0]['clasificacion']);
             if(!$valida){
                 $result = $model->saveClasInformacion($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Clasificaicon de información ya registrada';
@@ -1095,7 +1095,7 @@ class Activo extends BaseController
     
         return $this->getResponse(
             [
-                'msg' =>  'Modificado correctamente'
+                'msg' =>  'Modificado Correctamente'
             ]
         );
         } catch (Exception $ex) {
@@ -1127,7 +1127,7 @@ class Activo extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }else{
@@ -1271,7 +1271,7 @@ class Activo extends BaseController
             $result = $model->updateAspectoSeg($input);
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -1369,7 +1369,26 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
         }
+           
+    }
+    public function getUnidadadesByEmpresaByArea(){
 
+        try {
+            $model = new Munidades();
+            $input = $this->getRequestInput($this->request);
+            $response = [
+                'data' =>  $model->getUnidadadesByEmpresaByArea($input)
+            ];
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
            
     }
     public function getUnidadByActivo(){
@@ -1405,7 +1424,7 @@ class Activo extends BaseController
             $valida = $model -> validaUnidad($input[0]);
             if(!$valida){
                 $result = $model->saveUnidades($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Unidad ya registrada';
@@ -1472,7 +1491,7 @@ class Activo extends BaseController
             }
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -1646,7 +1665,7 @@ class Activo extends BaseController
             $valida = $model -> validaMacroproceso($input[0]);
             if(!$valida){
                 $result = $model->saveMacroproceso($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Macroproceso ya registrada';
@@ -1700,7 +1719,7 @@ class Activo extends BaseController
             }
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -1848,7 +1867,7 @@ class Activo extends BaseController
         
             if(!$valida){
                 $result = $model->saveProceso($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Proceso ya registrada';
@@ -1894,7 +1913,7 @@ class Activo extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -2079,7 +2098,7 @@ class Activo extends BaseController
         
             if(!$valida){
                 $result = $model->savePosicion($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Posicion ya registrada';
@@ -2124,7 +2143,7 @@ class Activo extends BaseController
             
                 return $this->getResponse(
                     [
-                        'msg' =>  'Modificado correctamente'
+                        'msg' =>  'Modificado Correctamente'
                     ]
                 );
             } catch (Exception $ex) {
@@ -2315,7 +2334,7 @@ class Activo extends BaseController
 
                         $model->saveDetalleValActivo($array);
                     }
-                    $msg = 'Registrado correctamente';
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
                 }else{
                     $msg = 'Valoracion ya registrada';
@@ -2373,7 +2392,7 @@ class Activo extends BaseController
                                     $model->saveDetalleValActivo($array);
                                 }
 
-                        $msg = 'Modificado correctamente';           
+                        $msg = 'Modificado Correctamente';           
 
                         return $this->getResponse(
                             [
@@ -2400,23 +2419,32 @@ class Activo extends BaseController
         $input = $this->getRequestInput($this->request);
         $model = new MValoracionActivo();
         $found = $model->find($input[0]['id']);
-        $this->db->transBegin();
+        // $this->db->transBegin();
         try{
             if($found){
                 try {
-                    $result = $model->delete($input[0]['id']);
+                    $result = $model->deleteValoracionActivo('valoracion_activo',$input[0]['id']);
+                    //$result = $model->delete($input[0]['id']);
                     if($result){
-                        $this->db->transRollback();
+                        // $this->db->transRollback();
                         $data['date_deleted'] = date("Y-m-d H:i:s");
                         $data['id_user_deleted'] = $input['user'];
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
                         $model->updateDetalleAspecto($input[0]['id']);
+                        // return $this->getResponse(
+                        //     [
+                        //         'error' => false,
+                        //         'msg' =>  'Eliminado Correctamente'
+                        //     ]
+                        // );
+                    }else{
                         return $this->getResponse(
                             [
-                                'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'error' => true,
+                                
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                             ]
                         );
                     }
@@ -2425,6 +2453,7 @@ class Activo extends BaseController
                     return $this->getResponse(
                         [
                             'error' => true,
+                            // 'error2' => $ex->getMessage(),
                             'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                         ]
                     );
@@ -2438,7 +2467,7 @@ class Activo extends BaseController
                     ]
                 );
             }
-            $this->db->transCommit();
+            // $this->db->transCommit();
 
         } catch (Exception $ex) {
             $data['is_deleted'] = 0;
@@ -2525,7 +2554,7 @@ class Activo extends BaseController
             $valida = $model -> validarCatActivo($input[0]);
             if(!$valida){
                 $result = $model->saveCatActivo($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Categoria ya registrada';
@@ -2570,7 +2599,7 @@ class Activo extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -2604,7 +2633,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -2693,7 +2722,7 @@ class Activo extends BaseController
             $valida = $model -> validarUbiActivo($input);
             if(!$valida){
                 $result = $model->saveUbiActivo($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Ubicacion de activo registrado ya registrada';
@@ -2740,7 +2769,7 @@ class Activo extends BaseController
         
             return $this->getResponse(
                 [
-                    'msg' =>  'Modificado correctamente'
+                    'msg' =>  'Modificado Correctamente'
                 ]
             );
         } catch (Exception $ex) {
@@ -2775,7 +2804,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -2912,7 +2941,7 @@ class Activo extends BaseController
             $valida = $model -> validaEstado($input[0]['estado']);
             if(!$valida){
                 $result = $model->saveEstado($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Estado ya registrado';
@@ -2991,7 +3020,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -3062,7 +3091,7 @@ class Activo extends BaseController
             $valida = $model -> validaPrioridad($input[0]['prioridad']);
             if(!$valida){
                 $result = $model->savePrioridad($input);
-                $msg = 'Registrado correctamente';
+                $msg = 'Registrado Correctamente';
                 $error = 1;
             }else{
                 $msg = 'Prioridad ya registrada';
@@ -3142,7 +3171,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -3214,7 +3243,7 @@ class Activo extends BaseController
                 $valida = $model -> validaAlerta_seguimiento($input[0]['alerta']);
                 if(!$valida){
                     $result = $model->saveAlerta_seguimiento($input);
-                    $msg = 'Registrado correctamente';
+                    $msg = 'Registrado Correctamente';
                     $error = 1;
                 }else{
                     $msg = 'Alerta ya registrada';
@@ -3294,7 +3323,7 @@ class Activo extends BaseController
                         return $this->getResponse(
                             [
                                 'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'msg' =>  'Eliminado Correctamente'
                             ]
                         );
                     }
@@ -3420,7 +3449,7 @@ public function getActividadByPlan($id_plan)
 //                 }
                 
 //             }
-//             $msg = 'Plan Registrado correctamente';
+//             $msg = 'Plan Registrado Correctamente';
 //             $error = 1;
 //         }else{
 //             $result = 0;
@@ -3509,7 +3538,7 @@ public function deletePlanAccion(){
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado correctamente'
+                            'msg' =>  'Eliminado Correctamente'
                         ]
                     );
                 }
@@ -3680,7 +3709,7 @@ public function deleteActividadPlan(){
        // $result = $model->deleteActividadesPlan($input);
        
             return $this->getResponse([
-                'msg' => 'Actividad eliminado correctamente',
+                'msg' => 'Actividad Eliminado correctamente',
                 
                 'error' => 0
             ]);

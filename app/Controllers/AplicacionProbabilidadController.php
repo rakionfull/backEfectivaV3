@@ -46,7 +46,7 @@ class AplicacionProbabilidadController extends BaseController
                 $valida2 = $model -> validaAplicacionProbabilidad2($input[0]);
                 if(!$valida2){
                     $result = $model->saveAplicacionProbabilidad($input);
-                    $msg = 'Registrado Correctamente';
+                    $msg = 'Registrado correctamente';
                     $error = 1;
                 }else{
                     $msg = 'La posición ya está registrada';
@@ -137,7 +137,7 @@ class AplicacionProbabilidadController extends BaseController
                     return $this->getResponse(
                         [
                             'error' => false,
-                            'msg' =>  'Eliminado Correctamente'
+                            'msg' =>  'Eliminado correctamente'
                         ]
                     );
                 }else{

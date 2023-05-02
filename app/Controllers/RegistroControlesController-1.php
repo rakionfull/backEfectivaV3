@@ -334,7 +334,7 @@ class RegistroControlesController extends BaseController
     //                     ];
     //                     $model->saveDetalle_Control($data);
     //                 }
-    //                 $msg = 'Registrado correctamente';
+    //                 $msg = 'Registrado Correctamente';
     //                 $error = 1;
     //             }
               
@@ -386,7 +386,7 @@ class RegistroControlesController extends BaseController
     //                     ];
     //                     $model->updateDtealle_Control($data);
     //                 }
-    //                 $msg = 'Modificado correctamente';
+    //                 $msg = 'Modificado Correctamente';
     //                 $error = 1;
     //             }
     //          }
