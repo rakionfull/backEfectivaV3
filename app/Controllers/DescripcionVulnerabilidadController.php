@@ -53,6 +53,17 @@ class DescripcionVulnerabilidadController extends BaseController
         }
 
         $model = new DescripcionVulnerabilidad();
+        $found = $model->where('idcategoria_vulnerabilidad',$input['idcategoria'])
+        ->where('vulnerabilidad',$input['vulnerabilidad'])
+        ->where('is_deleted','0')->findAll();
+        if(count($found) > 0){
+            return $this->getResponse(
+                [
+                    'error' => true,
+                    'msg' =>  'Descripcion de vulnerabilidad ya registrado'
+                ]
+            );
+        }
         $result = $model->store($input);
         return $this->getResponse(
             [

@@ -116,6 +116,16 @@ class ProbabilidadRiesgoController extends BaseController
         }
 
         $model = new ProbabilidadRiesgo();
+        $found = $model->where('descripcion',$input['descripcion'])->where('escenario','1')->where('is_deleted','0')->findAll();
+        if(count($found) > 0){
+            return $this->getResponse(
+                [
+                    'error' => true,
+                    'type' => 'error',
+                    'msg' =>  "Probabilidad de riesgo ya registrado"
+                ]
+            );
+        }
         $user = new Muser();
         $userData = $user->getUserbyId($input['id_user']);
         if($userData->escenario == 2){
@@ -232,6 +242,16 @@ class ProbabilidadRiesgoController extends BaseController
                 return ($this->getResponse($error,ResponseInterface::HTTP_OK));
             }
             $model = new ProbabilidadRiesgo();
+            $found = $model->where('descripcion',$input['descripcion'])->where('escenario','2')->where('is_deleted','0')->findAll();
+            if(count($found) > 0){
+                return $this->getResponse(
+                    [
+                        'error' => true,
+                        'type' => 'error',
+                        'msg' =>  "Probabilidad de riesgo ya registrado"
+                    ]
+                );
+            }
             $user = new Muser();
             $userData = $user->getUserbyId($input['id_user']);
             if($userData->escenario == 1){
