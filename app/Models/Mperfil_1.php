@@ -31,33 +31,18 @@ class Mperfil extends Model
         return $maxID->getRow()->maxid;
     }
     //buscar pefil por id
-    /*public function getPerfilById($data){
+    public function getPerfilById($data){
        
         $consulta ="SELECT * FROM  tb_perfiles where id_perfil={$data}"; 
         $query = $this->db->query($consulta);
         return $query->getRow();
     }
-*/
-    public function getPerfilById($perfil_id){
-        $sql = "CALL getPerfilById(?)";
-        $result = $this->db->query($sql, [$perfil_id]);
-        return $result->getRow();
-    }
-
-    /*
     public function getUserbyIdPerfil($data){
        
         $consulta ="SELECT * FROM  tb_perfiles as TP inner join tb_users as TU on TU.perfil_us = TP.id_perfil where TU.id_us={$data}"; 
         $query = $this->db->query($consulta);
         return $query->getRow();
-    }*/
-
-    public function getUserbyIdPerfil($usuario_id) {
-        $sql = "CALL obtenerUsuarioPorIdPerfil(?)";
-        $result = $this->db->query($sql, [$usuario_id]);
-        return $result->getRow();
     }
-
     //retorna todos los perfiles
     public function getPerfiles($data){
         $consulta = "";
@@ -66,7 +51,6 @@ class Mperfil extends Model
         $query = $this->db->query($consulta);
         return $query->getResultArray();
     }
-    /*
     public function validaPerfil($data){
       
         $query = $this->db->query("SELECT * FROM tb_perfiles where perfil='{$data}' AND is_deleted=0");
@@ -74,20 +58,6 @@ class Mperfil extends Model
         if( $query->getRow()) return true;
         else return false;
     }
-    */
-    public function validaPerfil($data) {
-        $sql = "CALL obtenerPerfilPorNombre(?)";
-        $result = $this->db->query($sql, [$data]);
-        $result = $query->getRow();
-    
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-
     //agregar el perfil
     public function savePerfil($data){
         // return $data;
@@ -117,25 +87,13 @@ class Mperfil extends Model
     }
    
     //detalle perfiles}
-    /*public function getDetPerfil($data){
+    public function getDetPerfil($data){
 
         $query = $this->db->query("SELECT * from tb_perfiles
          where id_perfil={$data['id_perfil']}" );
         return $query->getRow();
-    }*/
-
-    public function getDetPerfil($data){
-        $query = $this->db->query("CALL getDetPerfil(?)", [$data['id_perfil']]);
-        return $query->getRow();
     }
-    
-
     //datos para detalle perfil par ael log
-    public function getDetPerById($data) {
-        $query = $this->db->query("CALL obtenerDetPerById(?)", [$data]);
-        return $query->getRow();
-    }
-/*    
     public function getDetPerById($data){
 
         $query = $this->db->query("SELECT * from tb_detalle_perfil  as DP inner join tb_perfiles as TP
@@ -144,22 +102,14 @@ class Mperfil extends Model
 
         return $query->getRow();
     }
-   */
+   
     //permisos de usuario segun rol
-    /*public function getPermisos($id){
+    public function getPermisos($id){
 
         $query = $this->db->query("SELECT * from tb_detalle_perfil as TDP inner join tb_perfiles as TP on TDP.id_perfil=TP.id_perfil
          where TDP.id_perfil={$id}  and TP.est_perfil=1 order by id_det_per ASC" );
         return $query->getResultArray();
     }
-*/
-    public function getPermisos($id) {
-        $sql = "CALL obtenerPermisos(?)";
-        $result = $this->db->query($sql, [$id]);
-        return $result->getResultArray();
-    }
-
-    /*
     public function getPermisosByPerfil($data){
 
         $query = $this->db->query("SELECT * from tb_detalle_perfil as TDP inner join tb_perfiles as TP
@@ -167,19 +117,6 @@ class Mperfil extends Model
 		TDP.tabla='tb_item' and TI.desc_item='{$data['opcion'] }' and TP.est_perfil=1 order by TDP.id_det_per ASC" );
         return $query->getRow();
     }
-*/
-    public function getPermisosByPerfil($data){
-        $perfil = $data['perfil'];
-        $opcion = $data['opcion'];
-       // $query = $this->db->query("CALL obtenerPermisosPorPerfil('$perfil', '$opcion')");
-        $sql = "CALL obtenerPermisosPorPerfil(?,?)";
-        $result = $this->db->query($sql, [
-            $perfil,
-            $opcion
-        ]);
-        return $result->getRow();
-    }
-    /*
     //agregar el detalle de perfil
     public function saveDetPerfil($data){
       
@@ -192,14 +129,6 @@ class Mperfil extends Model
     
         return $query;
     }
-*/
-    public function saveDetPerfil($data) {
-        $sql = "CALL insertarDetallePerfil(?, ?, ?)";
-        $params = array($data['id_perfil'], $data['tabla'], $data['id']);
-        $query = $this->db->query($sql, $params);
-        return $query;
-      }
-    /*  
     public function updateDetPer($data,$column){
       
         $query=$this->db->query("UPDATE tb_detalle_perfil SET 
@@ -208,12 +137,6 @@ class Mperfil extends Model
            
         return $query;
     }
-*/
-    public function updateDetPer($data, $column) {
-        $query = $this->db->query("CALL actualizarDetPer({$data['id_op']}, {$data['estado']}, '{$column}')");
-        return $query;
-    }
-    
     //obtener opcion segun id
     public function getPerfilOpcion($tabla,$data){
         $id = 'id_mod'; $op='mod';
@@ -224,7 +147,6 @@ class Mperfil extends Model
            
         return $query->getRow();
     }
-    /*
     public function getModulo($data){
         
         $query = $this->db->query("SELECT * FROM tb_detalle_perfil as DP inner join tb_modulo as TM on DP.id=TM.id_mod 
@@ -232,29 +154,12 @@ class Mperfil extends Model
         return $query->getResultArray();
 
     }
-*/
-    public function getModulo($data){
-        $query = $this->db->query("CALL obtenerModulosPerfil({$data['id_perfil']})");
-        return $query->getResultArray();
-    }
-    
-/*
     public function getAllModulos(){
         
         $query = $this->db->query("SELECT * FROM tb_modulo" );
         return $query->getResultArray();
 
     }
-*/
-    public function getAllModulos(){
-        
-        $query = $this->db->query("CALL getAllModulos()");
-        return $query->getResultArray();
-
-    }
-
-   /*
-
     public function getOpcion($data){
         
         $query = $this->db->query("SELECT * from tb_detalle_perfil as DP inner join tb_opcion as T on DP.id=T.id_op 
@@ -262,53 +167,25 @@ class Mperfil extends Model
         return $query->getResultArray();
 
     }
-*/
-    public function getOpcion($data){
-        
-        $sql = "CALL get_opcion($id_perfil)";
-        $query = $this->db->query($sql);
-        $result = $query->getResultArray();
-
-
-    }
-/*
     public function getAllOpciones(){
         
         $query = $this->db->query("SELECT * FROM tb_opcion" );
         return $query->getResultArray();
 
     }
-*/
-    public function getAllOpciones(){
-        $query = $this->db->query("CALL get_all_opciones()");
-        return $query->getResultArray();
-    }
-    /*
     public function getItem($data){
         
         $query = $this->db->query("SELECT * FROM tb_detalle_perfil as DP 
         inner join tb_item as TI on DP.id=TI.id_item where DP.tabla='tb_item' and DP.id_perfil={$data['id_perfil']} order by TI.id_op,TI.id_item ASC;" );
         return $query->getResultArray();
 
-    }*/
-    public function getItem($data){
-        $query = $this->db->query("CALL get_item({$data['id_perfil']})");
-        return $query->getResultArray();
     }
-
-    /*
     public function getAllItems(){
         
         $query = $this->db->query("SELECT * FROM tb_item order by id_op ASC" );
         return $query->getResultArray();
 
-    }*/
-
-    public function getAllItems(){
-        $query = $this->db->query("CALL getAllItems()");
-        return $query->getResultArray();
     }
-    
 
     public function getDetallePerfil(){
         $sql = "call sp_get_detalle_perfil_to_reporte()";

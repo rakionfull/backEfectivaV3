@@ -46,17 +46,14 @@ $routes->post('/validaCaptcha', 'Login::validaCaptcha');
 
 $routes->post('/deletePrueba', 'Activo::deletePrueba');
 // http://localhost:8080/register
-$routes->post('/register', 'Register::register', ['filter' => 'authFilter']);
+// $routes->post('/register', 'Register::register', ['filter' => 'authFilter']);
 // $routes->post('/register2', 'Register::register');
-// $routes->cli('Task','Task::mensaje');
-//$routes->get('listEvaluacionRiesgosExtra/(:num)','EvaluacionRiesgoController::index/$1');
+
+
   $routes->get('Task','Task::mensaje');
-// $routes->post('addProbabilidadRiesgo1','ProbabilidadRiesgoController::store_escenario_1');
-// $routes->delete('deleteMacroproceso', 'Activo::deleteMacroproceso',['filter' => 'authFilter']);
-// $routes->post('addInventarioClasificacionActivo','InventarioClasificacionActivoController::store');
-// http://localhost:8080/api/
-// $routes->post('updateStatus/(:num)','InventarioClasificacionActivoController::updateStatus/$1');
-// $routes->post('getValorActivoByValoraciones','InventarioClasificacionActivoController::getValorActivoByValoraciones');
+
+// $routes->post('deletePerfil', 'Home::deletePerfil');
+
 
 $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('logout/(:num)', 'Login::logout/$1',['filter' => 'authFilter']);

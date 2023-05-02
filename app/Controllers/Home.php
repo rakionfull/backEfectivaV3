@@ -147,22 +147,22 @@ class Home extends BaseController
             ],
             'nombres_us' => [
                 'required' => 'Debe ingresar Nombres',
-                'min_length' => 'El campo nombre debe tener minimo 2 caracteres'
+                'min_length' => 'El campo nombre debe tener mínimo 2 caracteres'
               
             ],
             'apemat_us' => [
                 'required' => 'Debe ingresar apellido materno',
-                'min_length' => 'El campo nombre debe tener minimo 2 caracteres'
+                'min_length' => 'El campo nombre debe tener mínimo 2 caracteres'
               
             ],
             'apepat_us' => [
                 'required' => 'Debe ingresar apellido paterno',
-                'min_length' => 'El campo nombre debe tener minimo 2 caracteres'
+                'min_length' => 'El campo nombre debe tener mínimo 2 caracteres'
               
             ],
             'email_us' => [
                 'required' => 'Debe ingresar correo',
-                'min_length' => 'El campo nombre debe tener minimo 2 caracteres'
+                'min_length' => 'El campo correo debe tener mínimo 2 caracteres'
                 // 'is_unique' => 'El campo correo debe ser único'
             ],
             'estado_us' => [
@@ -172,7 +172,7 @@ class Home extends BaseController
             'usuario_us' => [
                 'required' => 'Debe ingresar usuario',
                 'is_unique' => 'El campo usuario debe ser único',
-                'min_length' => 'El campo usuario debe tener minimo 5 caracteres'
+                'min_length' => 'El campo usuario debe tener mínimo 5 caracteres'
             ],
             'perfil_us' => [
                 'required' => 'Debe Seleccionar una opcion',
@@ -180,7 +180,7 @@ class Home extends BaseController
             ],
             'passw' => [
                 'required' => 'Debe ingresar Contraseña',     
-                'min_length' => 'La clave debe tener como minimo 8 carácteres',  
+                'min_length' => 'La clave debe tener como mínimo 8 carácteres',  
                 'validatePass' => 'La clave debe contener 1 May, 1 Min , 1 Núm y 1 Caract. especial',  
             ]
         ];
@@ -608,14 +608,14 @@ class Home extends BaseController
       
       $perfil =  $model->getPerfilById($input['data']);
       $user =  $modelUser->getUserbyId($input['id']);
-
-      $this->db->transBegin();
-
+      
+      //$this->db->transBegin();
+      
       try{
           if($found){
               try {
                   $result = $model->delete($input['data']);
-                 
+                    $this->db->transRollback();
                   if($result){
                       $this->db->transRollback();
                       $data['date_deleted'] = date("Y-m-d H:i:s");
@@ -633,7 +633,7 @@ class Home extends BaseController
                           ]
                       );
                   }
-                 
+               
               } catch (Exception $ex) {
                   return $this->getResponse(
                       [
@@ -651,8 +651,10 @@ class Home extends BaseController
                   ]
               );
           }
-          $this->db->transCommit();
+                
+         $this->db->transCommit();
 
+    
       } catch (Exception $ex) {
           $data['is_deleted'] = 0;
           $data['date_deleted'] = null;

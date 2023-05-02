@@ -55,8 +55,7 @@ class Login extends BaseController
                     $time_actual = time();
                 
                    
-
-                   
+                    if($intento){
                         if($intento -> bloqueo_us != 1){
                             if (!$this->validateRequest($input, $rules, $errors)) {
                             
@@ -105,6 +104,15 @@ class Login extends BaseController
                                 // ResponseInterface::HTTP_BAD_REQUEST
                             );
                         }
+                    }else{
+                        $error = ['password' => 'Usuario no existe'];
+                        return $this->getResponse(
+                            $error, ResponseInterface::HTTP_OK
+                            // ResponseInterface::HTTP_BAD_REQUEST
+                        );
+                    }
+                   
+                       
                     
                 
                 
