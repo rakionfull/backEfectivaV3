@@ -126,6 +126,14 @@ class CaractControlController extends BaseController
                             ],
                             ResponseInterface::HTTP_OK
                         );
+                    }else{
+                        $result = $model->updateCaractControl($input);
+                        return $this->getResponse(
+                            [
+                                'error' =>false,
+                                'msg' =>  'Modificado correctamente'
+                            ]
+                        );
                     }
 
                 }else{
