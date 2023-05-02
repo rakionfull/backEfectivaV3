@@ -48,6 +48,11 @@ if(!function_exists('validacionPassword')){
     
         return 'La contraseña debe contener como minimo '.$configuracion[0]['tama_min'].' caracteres';
       }
+      if (strlen($data["passw"]) > $configuracion[0]['tama_max'] && strlen($data["repassw"]) > $configuracion[0]['tama_max'])
+      {
+    
+        return 'La contraseña debe contener como máximo '.$configuracion[0]['tama_max'].' caracteres';
+      }
       if(!($data["passw"] == $data["repassw"])){
         return "Las contraseñas no coinciden";
       }

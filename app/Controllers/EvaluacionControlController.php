@@ -109,7 +109,7 @@ class EvaluacionControlController extends BaseController
                     $msg = 'Registrado correctamente';
                     $error = 1;
             }else{
-                $msg = 'Evaluacion de control ya registrado';
+                $msg = 'Evaluación de control ya registrado';
                 $error = 0;
             }
            
@@ -136,25 +136,7 @@ class EvaluacionControlController extends BaseController
         try {
             $input = $this->getRequestInput($this->request);
             $model = new MEvaluacionControl();
-           // $result = $model->updateEvaluacionControl($input);
-            // if($result){
-                
-            //     $delete=$model->deleteDetalleEvaluacionControl($input);
-            //     if($delete){
-            //         foreach ($input[0]['valores'] as $key => $value) {
-            //             $array = [
-            //                 'id' => $input[0]['id'],
-            //                 'valor' => $value
-            //             ];
-            //             $model->saveDetalleEvaluacionControl($array);
-            //         }
-            //     }
-            // }
-            // return $this->getResponse(
-            //     [
-            //         'msg' =>  $delete
-            //     ]
-            // );
+         
             $datos = validar_evaluacion_control2($input[0]['valores'],$input[0]['id']);
             if(!$datos){
                     $result = $model->updateEvaluacionControl($input);

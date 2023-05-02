@@ -586,13 +586,26 @@ class Home extends BaseController
 
       
         $model = new Mperfil();
-        $result = $model->updatePerfil($input);
-    
+       
+        $found = $model->validatePerfilModify($input);
+
+        if(count($found) > 0){
+            return $this->getResponse(
+                [
+                    'error' =>true,
+                    'msg' =>'Perfil ya registrado'
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
+       $model->updatePerfil($input);
+    //agregar validacion de perfil
         return $this->getResponse(
             [
-                'msg' =>  $result
+                'msg' =>  'Modificado correctamente'
             ]
         );
+        
       
         
     }
