@@ -308,7 +308,9 @@ class InventarioClasificacionActivoController extends BaseController
             return $this->getResponse(
                 [
                     'error' => true,
-                    'msg' =>  $th->getMessage()
+                    'msg' =>  $th->getMessage(),
+                    'line' => $th->getLine(),
+                    'file' => $th->getFile()
                 ]
             );
         }
