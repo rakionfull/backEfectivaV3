@@ -256,11 +256,27 @@ function validar_valoracion_activo($array,$idvalor){
                     // //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
                if($cont < count($valores)){
               
+                    // for ($i=0; $i < count($valores) ; $i++) { 
+                    //     //$resultado_final = $array[$i];
+                    //     if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
+                    //         ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
+                    //         $idvalor == $valores[$i]['idvalor']){
+                    //         $resultado_final = true;
+                      
+                    //      $cont++;
+                        
+
+                    //     }else{
+                    //         $resultado_final = "";
+                    //         $resultado = [];
+                    //         $cont=0;
+                    //     }
+                    // }
+                    //aqui se corrigio
                     for ($i=0; $i < count($valores) ; $i++) { 
                         //$resultado_final = $array[$i];
                         if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
-                            ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
-                            $idvalor == $valores[$i]['idvalor']){
+                            ($array[$i]['valoracion']) == ($valores[$i]['valoracion'])){
                             $resultado_final = true;
                       
                          $cont++;
@@ -296,11 +312,27 @@ function validar_valoracion_activo2($array,$idvalor,$id){
                         // //hago la compaativa si el valor del array es = al valor de la evaluacion de control 
                     if($cont < count($valores)){
                     
+                            // for ($i=0; $i < count($valores) ; $i++) { 
+                            //     //$resultado_final = $array[$i];
+                            //     if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
+                            //         ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
+                            //         $idvalor == $valores[$i]['idvalor']){
+                            //         $resultado_final = true;
+                            
+                            //     $cont++;
+                                
+
+                            //     }else{
+                            //         $resultado_final = "";
+                            //         $resultado = [];
+                            //         $cont=0;
+                            //     }
+                            // }
+                            //aqui tambien
                             for ($i=0; $i < count($valores) ; $i++) { 
                                 //$resultado_final = $array[$i];
                                 if(($array[$i]['idaspecto']) == ($valores[$i]['idaspectos_seguridad']) && 
-                                    ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) &&
-                                    $idvalor == $valores[$i]['idvalor']){
+                                    ($array[$i]['valoracion']) == ($valores[$i]['valoracion']) ){
                                     $resultado_final = true;
                             
                                 $cont++;
