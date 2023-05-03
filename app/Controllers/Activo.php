@@ -3829,7 +3829,7 @@ public function getUserByEmpresa(){
         $input = $this->getRequestInput($this->request);      
         $model = new Muser();
             $response = [
-                'data' =>  $model->getUserByEmpresa($input['idempresa'],$input['idarea'])
+                'data' =>  $model->getUserByEmpresa($input['idempresa'],$input['idarea'],$input['idunidad'],$input['idposicion'])
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
     

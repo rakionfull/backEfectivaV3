@@ -351,9 +351,9 @@ public function getUserByActivo(){
         return $query->getResultArray();
     }
 */
-    public function getUserByEmpresa($data,$data1){
+    public function getUserByEmpresa($data,$data1,$data2,$data3){
 
-        $query = $this->db->query("CALL get_user_by_empresa($data, $data1)");
+        $query = $this->db->query("CALL get_user_by_empresa($data, $data1,$data2,$data3)");
     return $query->getResultArray();
     }
 /*

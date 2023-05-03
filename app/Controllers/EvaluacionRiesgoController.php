@@ -593,7 +593,8 @@ class EvaluacionRiesgoController extends BaseController
     
             $model = new MriesgoPlanAccion();
             $riesgo = new EvaluacionRiesgosControles();
-            $valida =  $model->validaPlanAccion($input[0]);
+            //$valida =  $model->validaPlanAccion($input[0]);
+            $valida = false;
             if(!$valida){
                 //registramos el plan de accion
                 $result = $model->savePlanAccion($input);
