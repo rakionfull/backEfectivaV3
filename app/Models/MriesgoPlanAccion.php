@@ -151,7 +151,7 @@ class MriesgoPlanAccion extends Model
                 // // echo $fecha_actual;
                 // // echo $fecha_alerta;
                 // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
-                // $fecha_actual = date("Y-m-d");
+                $fecha_actual = date("Y-m-d");
 
 
 
@@ -208,7 +208,7 @@ class MriesgoPlanAccion extends Model
                 // // echo $fecha_actual;
                 // // echo $fecha_alerta;
                 // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
-                // $fecha_actual = date("Y-m-d");
+                $fecha_actual = date("Y-m-d");
 
 
 
@@ -236,7 +236,7 @@ class MriesgoPlanAccion extends Model
                 $valor = $email->send();
                 if($valor){
                     // se ejecuta el registro de la alerta por primeravez
-                    $insert = $this -> insertCorreoActividad($idplan,$fecha_actual,$idregistrador);
+                    $insert = $this -> insertCorreoActividad($idactividad,$fecha_actual,$idregistrador);
                     //cambiamos a en proceso
                    // $update = $this -> updateEstadoPLan($idplan);
                 }
