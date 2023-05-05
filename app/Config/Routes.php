@@ -81,10 +81,12 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('getModulos', 'Home::getModulos',['filter' => 'authFilter']);
     $routes->get('getOpcion', 'Home::getOpcion',['filter' => 'authFilter']);
     $routes->get('getItem', 'Home::getItem',['filter' => 'authFilter']);
-
+    
     //reportes
     $routes->get('dataUser', 'Home::dataUser',['filter' => 'authFilter']);
     $routes->get('detallePerfil', 'Home::detallePerfil',['filter' => 'authFilter']);
+
+    $routes->get('dataReporteSeguridad', 'Home::dataReporteSeguridad',['filter' => 'authFilter']);
    
 
     $routes->post('updateView', 'Home::updateView',['filter' => 'authFilter']);

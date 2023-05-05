@@ -287,6 +287,7 @@ class Home extends BaseController
         //     return ($this->getResponse($error,ResponseInterface::HTTP_OK));
         // }
 
+        //aqui debo hacer el cambio
         $model = new Muser();
         $modelPerfil = new Mperfil();
 
@@ -300,6 +301,8 @@ class Home extends BaseController
         log_acciones(
             'El usuario '.$input['username'].' ah modificado los datos del usuario: '.$input['data']['usuario_us'].$texto
             ,$input['terminal'],$input['ip'],$input['id'],$id,$input['username']);
+
+            
 
         return $this->getResponse(
             [
@@ -398,10 +401,10 @@ class Home extends BaseController
         $model = new Muser();
         $result = $model->updateEstadoUser($input['data']);
 
-        $estado = "Desabilitado";
+        $estado = "Bloqueado";
 
-        if($input['data']['estado_us'] == 1){
-            $estado = "Habilitado";
+        if($input['data']['estado_us'] == 0){
+            $estado = "Desbloqueado";
         } 
        $user =  $model->getUserUpdate($input['data']['id_us']);
         log_acciones(
@@ -920,6 +923,22 @@ class Home extends BaseController
         return $this->getResponse([
             'datos' => $model->getDetallePerfil()
         ]);
+    }
+    public function dataReporteSeguridad()
+    {
+        $input = $this->getRequestInput($this->request);
+        $model = new Muser();
+            
+            
+                return $this->getResponse(
+                    [
+                     
+                        'datos' =>  $model->dataReporteSeguridad($input[0]),
+                    ]
+                );
+            
+            
+                
     }
 
 }

@@ -9,12 +9,12 @@ if(!function_exists('log_acciones')){
     $modelLog = new Mlog();
     $texto = $accion;
     $id_afectado=0;
-    if($accion == 'login'){
-        $texto = "El usuario: ".$username." a iniciado sesión";
-    }
-    if($accion == 'logout'){
-        $texto = "El usuario: ".$username." a cerrado sesión correstamente desde el sistema";
-    }
+    // if($accion == 'login'){
+    //     $texto = "El usuario: ".$username." a iniciado sesión";
+    // }
+    // if($accion == 'logout'){
+    //     $texto = "El usuario: ".$username." a cerrado sesión correstamente desde el sistema";
+    // }
     if($accion == 'change_pass'){
       $texto = "El usuario: ".$username." ah realizado cambio de clave";
     }
