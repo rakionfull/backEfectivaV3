@@ -3493,8 +3493,9 @@ public function deletePlanAccion(){
     
     $input = $this->getRequestInput($this->request);
     $model = new MriesgoPlanAccion();
-    $found = $model->find($input[0]['id']);
     $this->db->transBegin();
+    $found = $model->find($input[0]['id']);
+   
     try{
         if($found){
             try {

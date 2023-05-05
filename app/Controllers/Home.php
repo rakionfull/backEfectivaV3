@@ -419,9 +419,10 @@ class Home extends BaseController
 
         $input = $this->getRequestInput($this->request);
         $model = new Muser();
+        $this->db->transBegin();
         $found = $model->find($id);
         $user =  $model->getUserbyId($id);
-        $this->db->transBegin();
+       
         try{
             if($found){
                 try {
@@ -429,7 +430,7 @@ class Home extends BaseController
                     if($result){
                         $this->db->transRollback();
                         $data['date_deleted'] = date("Y-m-d H:i:s");
-                        $data['id_user_deleted'] = $id;
+                        $data['id_user_deleted'] = $input['id'];
                         $data['is_deleted'] = 1;
                        
                         $model->update($id,$data);
@@ -617,12 +618,14 @@ class Home extends BaseController
       $model = new Mperfil();
       $modelDetalle = new MdetallePerfil();
       $modelUser = new Muser();
+
+      $this->db->transBegin();
       $found = $model->find($input['data']);
       
       $perfil =  $model->getPerfilById($input['data']);
       $user =  $modelUser->getUserbyId($input['id']);
       
-      //$this->db->transBegin();
+      
       
       try{
           if($found){
