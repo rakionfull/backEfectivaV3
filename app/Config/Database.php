@@ -52,10 +52,10 @@ class Database extends Config
 
     public $default = [
         'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => 'root',
+        'hostname' => '',
+        'username' => '',
         'password' => '',
-        'database' => 'bd_efectiva1',
+        'database' =>'',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -125,5 +125,9 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+        $this->default['hostname'] = getenv('database.default.hostname');
+        $this->default['database'] = getenv('database.default.database');
+        $this->default['username'] = getenv('database.default.username');
+        $this->default['password'] = getenv('database.default.password');
     }
 }

@@ -104,14 +104,8 @@ class EvaluacionRiesgoController extends BaseController
                 'id_descripcion_vulnerabilidad' => 'required',
                 'riesgo' => 'required',
                 'valor_probabilidad' => 'required',
-                // 'probabilidad' => 'required',
                 'valor_impacto' => 'required',
-                // 'impacto' => 'required',
                 'valor' => 'required',
-                // 'id_control' => 'required',
-                // 'riesgo_controlado_probabilidad' => 'required',
-                // 'riesgo_controlado_impacto' => 'required',
-                // 'riesgo_controlado_valor' => 'required',
                 'estado' => 'required'
             ];
             $errors = [
@@ -127,14 +121,8 @@ class EvaluacionRiesgoController extends BaseController
                 'id_descripcion_vulnerabilidad' =>  ['required' => 'El campo descripcion de vulnerabilidad es requerido'],
                 'riesgo' =>  ['required' => 'El campo riesgo es requerido'],
                 'valor_probabilidad' =>  ['required' => 'El campo valo de la probabilidad es requerido'],
-                // 'probabilidad' =>  ['required' => 'El campo probabilidad es requerido'],
                 'valor_impacto' =>  ['required' => 'El campo valor impacto es requerido'],
-                // 'impacto' =>  ['required' => 'El campo impacto es requerido'],
                 'valor' =>  ['required' => 'El campo valor es requerido'],
-                // 'id_control' =>  ['required' => 'El campo control es requerido'],
-                // 'riesgo_controlado_probabilidad' =>  ['required' => 'El campo riesgo controlado probabilidad es requerido'],
-                // 'riesgo_controlado_impacto' =>  ['required' => 'El campo riesgo controlado impacto es requerido'],
-                // 'riesgo_controlado_valor' =>  ['required' => 'El campo riesgo controlado valor es requerido'],
                 'estado' =>  ['required' => 'El campo estado es requerido']
             ];
             $input = $this->getRequestInput($this->request);

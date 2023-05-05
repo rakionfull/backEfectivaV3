@@ -68,33 +68,69 @@ class EvaluacionRiesgo extends Model
     }
     
     public function store($data){
-        $sql = "call sp_add_evaluacion_riesgo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        $result = $this->db->query($sql,[
-            $data['id_tipo_riesgo'],
-            $data['id_empresa'],
-            $data['id_area'],
-            $data['id_unidad'],
-            $data['id_macroproceso'],
-            $data['id_proceso'],
-            $data['id_activo'],
-            $data['id_tipo_amenaza'],
-            $data['id_descripcion_amenaza'],
-            $data['id_tipo_vulnerabilidad'],
-            $data['id_descripcion_vulnerabilidad'],
-            $data['riesgo'],
-            $data['valor_probabilidad'],
-            $data['probabilidad'],
-            $data['valor_impacto'],
-            $data['impacto'],
-            $data['valor'],
-            $data['id_control'],
-            $data['riesgo_controlado_probabilidad'],
-            $data['riesgo_controlado_impacto'],
-            $data['riesgo_controlado_valor'],
-            $data['estado'],
-            $data['id_user_added'],
-            $data['date_add']
-        ]);
+        if($data['id_valoracion_riesgo'] == ""){
+            $sql = "call sp_add_evaluacion_riesgo_nivel(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $result = $this->db->query($sql,[
+                $data['id_tipo_riesgo'],
+                $data['id_empresa'],
+                $data['id_area'],
+                $data['id_unidad'],
+                $data['id_macroproceso'],
+                $data['id_proceso'],
+                $data['id_activo'],
+                $data['id_tipo_amenaza'],
+                $data['id_descripcion_amenaza'],
+                $data['id_tipo_vulnerabilidad'],
+                $data['id_descripcion_vulnerabilidad'],
+                $data['riesgo'],
+                $data['valor_probabilidad'],
+                $data['probabilidad'],
+                $data['valor_impacto'],
+                $data['impacto'],
+                $data['valor'],
+                $data['id_control'],
+                $data['riesgo_controlado_probabilidad'],
+                $data['riesgo_controlado_impacto'],
+                $data['riesgo_controlado_valor'],
+                $data['estado'],
+                $data['id_user_added'],
+                $data['date_add'],
+                $data['id_probabilidad'],
+                $data['id_impacto'],
+                $data['id_nivel_riesgo']
+            ]);
+        }else{
+            $sql = "call sp_add_evaluacion_riesgo_valoracion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $result = $this->db->query($sql,[
+                $data['id_tipo_riesgo'],
+                $data['id_empresa'],
+                $data['id_area'],
+                $data['id_unidad'],
+                $data['id_macroproceso'],
+                $data['id_proceso'],
+                $data['id_activo'],
+                $data['id_tipo_amenaza'],
+                $data['id_descripcion_amenaza'],
+                $data['id_tipo_vulnerabilidad'],
+                $data['id_descripcion_vulnerabilidad'],
+                $data['riesgo'],
+                $data['valor_probabilidad'],
+                $data['probabilidad'],
+                $data['valor_impacto'],
+                $data['impacto'],
+                $data['valor'],
+                $data['id_control'],
+                $data['riesgo_controlado_probabilidad'],
+                $data['riesgo_controlado_impacto'],
+                $data['riesgo_controlado_valor'],
+                $data['estado'],
+                $data['id_user_added'],
+                $data['date_add'],
+                $data['id_probabilidad'],
+                $data['id_impacto'],
+                $data['id_valoracion_riesgo']
+            ]);
+        }
         if($result){
             return true;
         }
@@ -102,34 +138,71 @@ class EvaluacionRiesgo extends Model
     }
 
     public function edit($id,$data){
-        $sql = "call sp_update_evaluacion_riesgo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        $result = $this->db->query($sql,[
-            $id,
-            $data['id_tipo_riesgo'],
-            $data['id_empresa'],
-            $data['id_area'],
-            $data['id_unidad'],
-            $data['id_macroproceso'],
-            $data['id_proceso'],
-            $data['id_activo'],
-            $data['id_tipo_amenaza'],
-            $data['id_descripcion_amenaza'],
-            $data['id_tipo_vulnerabilidad'],
-            $data['id_descripcion_vulnerabilidad'],
-            $data['riesgo'],
-            $data['valor_probabilidad'],
-            $data['probabilidad'],
-            $data['valor_impacto'],
-            $data['impacto'],
-            $data['valor'],
-            $data['id_control'],
-            $data['riesgo_controlado_probabilidad'],
-            $data['riesgo_controlado_impacto'],
-            $data['riesgo_controlado_valor'],
-            $data['estado'],
-            $data['id_user_updated'],
-            $data['date_modify']
-        ]);
+        if($data['id_valoracion_riesgo'] == ""){
+            $sql = "call sp_update_evaluacion_riesgo_nivel(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $result = $this->db->query($sql,[
+                $id,
+                $data['id_tipo_riesgo'],
+                $data['id_empresa'],
+                $data['id_area'],
+                $data['id_unidad'],
+                $data['id_macroproceso'],
+                $data['id_proceso'],
+                $data['id_activo'],
+                $data['id_tipo_amenaza'],
+                $data['id_descripcion_amenaza'],
+                $data['id_tipo_vulnerabilidad'],
+                $data['id_descripcion_vulnerabilidad'],
+                $data['riesgo'],
+                $data['valor_probabilidad'],
+                $data['probabilidad'],
+                $data['valor_impacto'],
+                $data['impacto'],
+                $data['valor'],
+                $data['id_control'],
+                $data['riesgo_controlado_probabilidad'],
+                $data['riesgo_controlado_impacto'],
+                $data['riesgo_controlado_valor'],
+                $data['estado'],
+                $data['id_user_updated'],
+                $data['date_modify'],
+                $data['id_probabilidad'],
+                $data['id_impacto'],
+                $data['id_nivel_riesgo']
+            ]);
+        }else{
+            $sql = "call sp_update_evaluacion_riesgo_valoracion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $result = $this->db->query($sql,[
+                $id,
+                $data['id_tipo_riesgo'],
+                $data['id_empresa'],
+                $data['id_area'],
+                $data['id_unidad'],
+                $data['id_macroproceso'],
+                $data['id_proceso'],
+                $data['id_activo'],
+                $data['id_tipo_amenaza'],
+                $data['id_descripcion_amenaza'],
+                $data['id_tipo_vulnerabilidad'],
+                $data['id_descripcion_vulnerabilidad'],
+                $data['riesgo'],
+                $data['valor_probabilidad'],
+                $data['probabilidad'],
+                $data['valor_impacto'],
+                $data['impacto'],
+                $data['valor'],
+                $data['id_control'],
+                $data['riesgo_controlado_probabilidad'],
+                $data['riesgo_controlado_impacto'],
+                $data['riesgo_controlado_valor'],
+                $data['estado'],
+                $data['id_user_updated'],
+                $data['date_modify'],
+                $data['id_probabilidad'],
+                $data['id_impacto'],
+                $data['id_valoracion_riesgo']
+            ]);
+        }
         if($result){
             return true;
         }
