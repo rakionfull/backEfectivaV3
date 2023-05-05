@@ -473,6 +473,86 @@ class RegistroControlesController extends BaseController
     
     }
     //registro de controles
+    // public function getRegistroControles2(){
+        
+    //     try {
+    //         $model = new MRegistroControles();
+         
+    //         $result =  $model->getRegistroControles2();
+    //         // $result3 =  $model->getRegistroControles3();
+    //         $array_datos = [];
+            
+    //         foreach ($result as $key => $value) {
+    //             $array_aux=[];
+    //            if($value['caracteristica'] == 'Responsable'){
+    //                 if($value['nom_tabla'] != ""){
+    //                     $tabla = $model -> getTabla($value['nom_tabla'] );
+    //                     $campo_tabla =  $model->getData2($tabla);
+    //                     if($value['RCValor'] != ""){
+    //                         foreach ($campo_tabla as $key => $value2) {
+    //                             if($value2['id']  == $value['RCValor'] ){
+    //                                 $array_aux=[
+                                        
+    //                                             'IDC' => $value['IDRC'] ,
+    //                                             'nom_control' => $value['nom_control'] ,
+    //                                             'responsable' => $value2[$tabla] ,
+    //                                             'estado' => $value['RCEstado'] ,
+    //                                             'prioridad' => '',
+    //                                 ];
+    //                                 array_push($array_datos,$array_aux);
+    //                             }
+                                
+    //                         }
+    //                     }else{
+    //                         $array_aux=[
+                                
+    //                             'IDC' => $value['IDRC'] ,
+    //                             'nom_control' => $value['nom_control'] ,
+    //                             'responsable' => '' ,
+    //                             'estado' => $value['RCEstado'] ,
+    //                             'prioridad' => '',
+    //                         ];
+    //                         array_push($array_datos,$array_aux);
+    //                     }
+                   
+    //                 }
+                    
+                   
+    //             }else{
+    //                 // $array_aux=[
+                                
+    //                 //     'IDC' => $value['IDRC'] ,
+    //                 //     'nom_control' => $value['nom_control'] ,
+    //                 //     'responsable' => '' ,
+    //                 //     'estado' => $value['RCEstado'] ,
+    //                 //     'prioridad' => '',
+    //                 // ];
+    //                 // array_push($array_datos,$array_aux);
+    //             }
+    //             // if($value['caracteristica'] == 'Prioridad'){
+    //             //    array_push($array_aux,($value['RCValor']));
+    //             // }
+               
+          
+    //         }
+
+    //             $response = [
+    //                 'data' =>  $array_datos,
+                   
+    //             ];
+    //             return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+    //     } catch (Exception $ex) {
+    //         return $this->getResponse(
+    //                 [
+    //                     'error' => $ex->getMessage(),
+    //                 ],
+    //                 ResponseInterface::HTTP_OK
+    //             );
+    //     }
+
+           
+    // }
     public function getRegistroControles2(){
         
         try {
@@ -533,6 +613,16 @@ class RegistroControlesController extends BaseController
                     }
                     
                    
+                }else{
+                    // $array_aux=[
+                                
+                    //     'IDC' => $value['IDRC'] ,
+                    //     'nom_control' => $value['nom_control'] ,
+                    //     'responsable' => '' ,
+                    //     'estado' => $value['RCEstado'] ,
+                    //     'prioridad' => '',
+                    // ];
+                    // array_push($array_datos,$array_aux);
                 }
                 // if($value['caracteristica'] == 'Prioridad'){
                 //    array_push($array_aux,($value['RCValor']));

@@ -62,7 +62,7 @@ class Mperfil extends Model
     public function getPerfiles($data){
         $consulta = "";
         if($data['estado'] =='all'){ $consulta="SELECT * FROM  tb_perfiles where is_deleted=0";
-        }else{ $consulta ="SELECT * FROM  tb_perfiles where est_perfil={$data['estado']}  and is_deleted=0"; }
+        }else{ $consulta ="SELECT * FROM  tb_perfiles where est_perfil='{$data['estado']}'  and is_deleted=0"; }
         $query = $this->db->query($consulta);
         return $query->getResultArray();
     }
@@ -277,11 +277,13 @@ class Mperfil extends Model
     }
 */
     public function getOpcion($data){
-        
-        $sql = "CALL get_opcion($id_perfil)";
-        $query = $this->db->query($sql);
-        $result = $query->getResultArray();
-
+        $sql = "CALL get_opcion(?)";
+        $query = $this->db->query($sql, [
+            $data['id_perfil'],
+        ]);
+      
+        // $result = $query->getResultArray();
+        return $query->getResultArray();
 
     }
 /*

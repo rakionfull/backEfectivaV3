@@ -534,6 +534,17 @@ class RegistroControlesController extends BaseController
                     
                    
                 }
+                else{
+                    $array_aux=[
+                                
+                        'IDC' => $value['IDRC'] ,
+                        'nom_control' => $value['nom_control'] ,
+                        'responsable' => '' ,
+                        'estado' => $value['RCEstado'] ,
+                        'prioridad' => '',
+                    ];
+                    array_push($array_datos,$array_aux);
+                }
                 // if($value['caracteristica'] == 'Prioridad'){
                 //    array_push($array_aux,($value['RCValor']));
                 // }

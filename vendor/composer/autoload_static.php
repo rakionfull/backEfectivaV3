@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3654afd1e1204afeece7667ab65bb66f
+class ComposerStaticInit36aac2081361453fcf53039a5da03a89
 {
     public static $files = array (
         '3917c79c5052b270641b5a200963dbc2' => __DIR__ . '/..' . '/kint-php/kint/init.php',
@@ -757,10 +757,10 @@ class ComposerStaticInit3654afd1e1204afeece7667ab65bb66f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3654afd1e1204afeece7667ab65bb66f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3654afd1e1204afeece7667ab65bb66f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3654afd1e1204afeece7667ab65bb66f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit3654afd1e1204afeece7667ab65bb66f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit36aac2081361453fcf53039a5da03a89::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit36aac2081361453fcf53039a5da03a89::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit36aac2081361453fcf53039a5da03a89::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit36aac2081361453fcf53039a5da03a89::$classMap;
 
         }, null, ClassLoader::class);
     }
