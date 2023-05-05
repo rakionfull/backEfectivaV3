@@ -81,6 +81,57 @@ class NivelRiesgo extends Model
         return false;
     }
 
+    public function deleteNivelRiesgo($valor,$id){
+        $sql = "CALL eliminar_general(?)";
+        // $valor = 'macroproceso';
+        $query = $this->db->query($sql, [$valor]);
+        // aqui obtenermos los nombres de las tablas ralacionadas
+        $tablas = $query->getResultArray();
+        $resultado=false;
+        $cont_tablas=0;
+        // $id=20;
+        
+        foreach ($tablas as $key => $value) {
+          
+            $sql2 = "CALL consulta_eliminar_general(?,?,?)";
+          
+
+            $query2 = $this->db->query($sql2,[
+                $valor,
+                $value['TABLE_NAME'],
+                $id
+            ]);
+            $resultado = $query2->getResultArray();
+
+            if($resultado){
+               
+                $cont = 0;
+                foreach ($resultado as $key => $value) {
+                    if($value['is_deleted'] == 1){
+                       
+                        $cont++;
+                    }
+
+                 }
+                if($cont == count($resultado)){
+               
+                    $cont_tablas ++ ;
+                }
+            }else{
+                $cont_tablas ++ ;
+            }
+         
+           
+        }
+        if($cont_tablas == count($tablas)){
+            return true;
+       
+        }else{
+            return false;
+       
+        }
+    }
+
     public function validateModify($data){
         $sql = "call sp_validate_nivel_riesgo_modify(?,?)";
         $query = $this->db->query($sql,[

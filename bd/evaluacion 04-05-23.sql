@@ -1,14 +1,14 @@
-ALTER TABLE evaluacion_riesgo add column id_probabilidad int;
-alter table evaluacion_riesgo add foreign key(id_probabilidad) references probabilidad_riesgo(id);
+ALTER TABLE evaluacion_riesgo add column idprobabilidad_riesgo int;
+alter table evaluacion_riesgo add foreign key(idprobabilidad_riesgo) references probabilidad_riesgo(id);
 
-ALTER TABLE evaluacion_riesgo add column id_impacto int;
-alter table evaluacion_riesgo add foreign key(id_impacto) references impacto_riesgo(id);
+ALTER TABLE evaluacion_riesgo add column idimpacto_riesgo int;
+alter table evaluacion_riesgo add foreign key(idimpacto_riesgo) references impacto_riesgo(id);
 
-ALTER TABLE evaluacion_riesgo add column id_nivel_riesgo int;
-alter table evaluacion_riesgo add foreign key(id_nivel_riesgo) references nivel_riesgo(id);
+ALTER TABLE evaluacion_riesgo add column idnivel_riesgo int;
+alter table evaluacion_riesgo add foreign key(idnivel_riesgo) references nivel_riesgo(id);
 
-ALTER TABLE evaluacion_riesgo add column id_valoracion_riesgo int;
-alter table evaluacion_riesgo add foreign key(id_valoracion_riesgo) references valoracion_riesgo(id);
+ALTER TABLE evaluacion_riesgo add column idvaloracion_riesgo int;
+alter table evaluacion_riesgo add foreign key(idvaloracion_riesgo) references valoracion_riesgo(id);
 
 delimiter $
 CREATE PROCEDURE `sp_add_evaluacion_riesgo_nivel`(IN `id_tipo_riesgo` INT, IN `id_empresa` INT, IN `id_area` INT, IN `id_unidad` INT, IN `id_macroproceso` INT, IN `id_proceso` INT, IN `id_activo` INT, IN `id_tipo_amenaza` INT, IN `id_descripcion_amenaza` INT, IN `id_tipo_vulnerabilidad` INT, IN `id_descripcion_vulnerabilidad` INT, IN `riesgo` VARCHAR(150), IN `valor_probabilidad` INT, IN `probabilidad` VARCHAR(150), IN `valor_impacto` VARCHAR(150), IN `impacto` VARCHAR(150), IN `valor` VARCHAR(150), IN `id_control` INT, IN `riesgo_controlado_probabilidad` VARCHAR(150), IN `riesgo_controlado_impacto` VARCHAR(150), IN `riesgo_controlado_valor` VARCHAR(150), IN `estado` INT, IN `id_user_added` INT, IN `date_add` DATETIME,IN id_probabilidad_param int,in id_impacto_param int,IN id_nivel_riesgo_param int)
@@ -38,9 +38,9 @@ BEGIN
 	estado,
 	id_user_added,
 	DATE_ADD,
-    id_probabilidad,
-    id_impacto,
-    id_nivel_riesgo
+    idprobabilidad_riesgo,
+    idimpacto_riesgo,
+    idnivel_riesgo
 	) VALUES (
 		id_tipo_riesgo,
 		id_empresa,
@@ -101,9 +101,9 @@ BEGIN
 	estado,
 	id_user_added,
 	DATE_ADD,
-    id_probabilidad,
-    id_impacto,
-    id_valoracion_riesgo
+    idprobabilidad_riesgo,
+    idimpacto_riesgo,
+    idvaloracion_riesgo
 	) VALUES (
 		id_tipo_riesgo,
 		id_empresa,
@@ -165,9 +165,9 @@ BEGIN
 	estado=idestado,
 	id_user_updated=idid_user_updated,
 	date_modify=iddate_modify,
-    id_probabilidad=id_probabilidad_param,
-    id_impacto=id_impacto_param,
-    id_nivel_riesgo=id_nivel_riesgo_param
+    idprobabilidad_riesgo=id_probabilidad_param,
+    idimpacto_riesgo=id_impacto_param,
+    idnivel_riesgo=id_nivel_riesgo_param
 	WHERE id=idid;
 END $
 delimiter ;
@@ -201,9 +201,9 @@ BEGIN
 	estado=idestado,
 	id_user_updated=idid_user_updated,
 	date_modify=iddate_modify,
-    id_probabilidad=id_probabilidad_param,
-    id_impacto=id_impacto_param,
-    id_valoracion_riesgo=id_valoracion_riesgo_param
+    idprobabilidad_riesgo=id_probabilidad_param,
+    idimpacto_riesgo=id_impacto_param,
+    idvaloracion_riesgo=id_valoracion_riesgo_param
 	WHERE id=idid;
 END $
 delimiter ;

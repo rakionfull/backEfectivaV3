@@ -53,6 +53,7 @@ $routes->post('/deletePrueba', 'Activo::deletePrueba');
   $routes->get('Task','Task::mensaje');
 
 // $routes->post('deletePerfil', 'Home::deletePerfil');
+    // $routes->post('deleteNivelRiesgo/(:num)', 'NivelRiesgoController::destroy/$1', ['filter' => 'authFilter']);
 
 
 $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {

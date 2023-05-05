@@ -448,7 +448,12 @@ class ImpactoRiesgoController extends BaseController
                 );
             }
             $this->db->transCommit();
-
+            return $this->getResponse(
+                [
+                    'error' => false,
+                    'msg' =>  'Impacto de riesgo eliminado'
+                ]
+            );
         } catch (\Throwable $th) {
             $input['estado'] = 1;
             $input['is_deleted'] = 0;

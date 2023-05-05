@@ -183,20 +183,22 @@ class NivelRiesgoController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new NivelRiesgo();
-        $model->find($id);
+        $found = $model->find($id);
+        
         $this->db->transBegin();
         try {
-            if($model){
-                if($model->delete($id)){
-                    $this->db->transRollback();
+            if($found){
+                $result = $model->deleteNivelRiesgo('nivel_riesgo',$id);
+                if($result){
+                    // $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
-                    return $this->getResponse(
-                        [
-                            'error' => false,
-                            'msg' =>  'Nivel de riesgo eliminado'
-                        ]
-                    );
+                    // return $this->getResponse(
+                    //     [
+                    //         'error' => false,
+                    //         'msg' =>  'Nivel de riesgo eliminado'
+                    //     ]
+                    // );
                 }else{
                     $input['is_deleted'] = 0;
                     $input['date_deleted'] = null;
@@ -218,7 +220,12 @@ class NivelRiesgoController extends BaseController
                 );
             }
             $this->db->transCommit();
-           
+            return $this->getResponse(
+                [
+                    'error' => false,
+                    'msg' =>  'Nivel de riesgo eliminado'
+                ]
+            );
         } catch (\Throwable $th) {
             $input['is_deleted'] = 0;
             $input['date_deleted'] = null;
