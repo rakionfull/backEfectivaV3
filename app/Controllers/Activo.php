@@ -95,6 +95,14 @@ class Activo extends BaseController
                  $valida = $model -> validaEmpresa($input[0]);
                 if(!$valida){
                     $result = $model->saveEmpresa($input);
+                    //aqui va el log del sistema
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+
+                    $accion = 'El usuario '.$user->usuario_us. ' ha creado la empresa: '.$input[0]['empresa'];
+
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     $msg = 'Registrado correctamente';
                     $error = 1;
                 }else{
@@ -186,6 +194,14 @@ class Activo extends BaseController
                     ]);
                 }
             }
+              //aqui va el log del sistema
+              $modelUser = new Muser();
+              $user = $modelUser->getUserbyId($input['user']);
+              
+              $accion = 'El usuario '.$user->usuario_us. ' ha modificado la empresa: '.$input[0]['empresa'];
+
+              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -223,6 +239,16 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                         //aqui va el log del sistema
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' ha eliminado la empresa: '.$found['empresa'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+                        
                         // return $this->getResponse(
                         //     [
                         //         'error' => $input[0]['id'],

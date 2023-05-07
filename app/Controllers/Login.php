@@ -279,7 +279,7 @@ class Login extends BaseController
                         // $escenario=$model->getEscenario();
                         
                        
-                        //log_acciones('login',$terminal,$ip,$user->id_us,0,$username);
+                        log_sistema('login',$terminal,$ip,$user->id_us,$username);
                     }
                     return $this->getResponse(
                             [
@@ -326,7 +326,7 @@ class Login extends BaseController
     public function logout($id_us){
         $modelSesion = new Msesiones();
         $input = $this->getRequestInput($this->request);
-        //log_acciones('logout',$input['terminal'],$input['ip'],$id_us,0,$input['username']);
+        log_sistema('logout',$input['terminal'],$input['ip'],$id_us,$input['username']);
         $result=$modelSesion->updateLoged($id_us);
         
         $response = [

@@ -397,16 +397,18 @@ public function getUserByActivo(){
 
     //reporte Seguridad
     public function dataReporteSeguridad($data){
-        // $consulta = "SELECT TU.usuario_us,TU.docident_us,TU.nombres_us, TU.apepat_us,TU.apemat_us,TP.perfil,TU.creacion_us,
-        // IF(TU.estado_us=1, 'Activo', 'Inactivo') as estado, IF(bloqueo_us=0, 'Desbloqueado', 'Bloqueado') as bloqueo,
-        // (SELECT last_activity FROM tb_sesiones WHERE id_us = TU.id_us ORDER by last_activity DESC LIMIT 1 ) AS ultimo_acceso
-        //  FROM tb_users as TU inner join tb_perfiles as TP on TU.perfil_us=TP.id_perfil; ";
-        // $Usuario = $this->db->query($consulta);
+      
         $fecha_fin= (date("Y-m-d",strtotime($data['fecha_fin']."+ 1 days"))); 
         $query = $this->db->query("CALL dataReporteSeguridad('{$data['fecha_ini']}','{$fecha_fin}')");
         return $query->getResultArray();
     }
-
+    //reporte movimientos
+    public function dataReporteMovimientos($data){
+      
+        $fecha_fin= (date("Y-m-d",strtotime($data['fecha_fin']."+ 1 days"))); 
+        $query = $this->db->query("CALL dataReporteMovimientos('{$data['fecha_ini']}','{$fecha_fin}')");
+        return $query->getResultArray();
+    }
    
 
 }

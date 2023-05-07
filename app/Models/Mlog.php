@@ -24,5 +24,21 @@ class Mlog extends Model
 
         return $query;
     }
+
+    public function saveLog_sistema($data){
+       
+   
+        $sql = "CALL saveLog_sistema(?,?,?,?,?)";
+
+        $query = $this->db->query($sql, [
+            $data['terminal'],
+            $data['ip_addres'],
+            $data['u_ejecutor'],
+            $data['accion'],
+            $data['fecha']
+        ]);
+
+        return $query;
+    }
     
 }

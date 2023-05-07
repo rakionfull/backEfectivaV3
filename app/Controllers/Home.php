@@ -643,6 +643,7 @@ class Home extends BaseController
                        log_acciones(
                         'El usuario '.$input['username'].' ah eliminado el perfil : '.$perfil->desc_perfil
                         ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
+                        
                       $model->update($input['data'],$data);
                       $modelDetalle->update($input['data'],$data);
                       return $this->getResponse(
