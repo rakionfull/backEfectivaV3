@@ -591,7 +591,7 @@ class Home extends BaseController
       
         $model = new Mperfil();
        
-        $found = $model->validatePerfilModify($input);
+        $found = $model->validatePerfilModify($input['data']);
 
         if(count($found) > 0){
             return $this->getResponse(
@@ -602,7 +602,10 @@ class Home extends BaseController
                 ResponseInterface::HTTP_OK
             );
         }
-       $model->updatePerfil($input);
+        log_acciones(
+            'El usuario '.$input['username'].' ah modificado el perfil : '.$input['data']['perfil']
+            ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
+       $model->updatePerfil($input['data']);
     //agregar validacion de perfil
         return $this->getResponse(
             [
@@ -643,7 +646,7 @@ class Home extends BaseController
                        log_acciones(
                         'El usuario '.$input['username'].' ah eliminado el perfil : '.$perfil->desc_perfil
                         ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
-                        
+
                       $model->update($input['data'],$data);
                       $modelDetalle->update($input['data'],$data);
                       return $this->getResponse(
@@ -935,6 +938,22 @@ class Home extends BaseController
                     [
                      
                         'datos' =>  $model->dataReporteSeguridad($input[0]),
+                    ]
+                );
+            
+            
+                
+    }
+     public function dataReporteMovimientos()
+    {
+        $input = $this->getRequestInput($this->request);
+        $model = new Muser();
+            
+            
+                return $this->getResponse(
+                    [
+                     
+                        'datos' =>  $model->dataReporteMovimientos($input[0]),
                     ]
                 );
             

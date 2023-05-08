@@ -88,6 +88,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('detallePerfil', 'Home::detallePerfil',['filter' => 'authFilter']);
 
     $routes->get('dataReporteSeguridad', 'Home::dataReporteSeguridad',['filter' => 'authFilter']);
+    $routes->get('dataReporteMovimientos', 'Home::dataReporteMovimientos',['filter' => 'authFilter']);
    
 
     $routes->post('updateView', 'Home::updateView',['filter' => 'authFilter']);

@@ -99,7 +99,7 @@ class Activo extends BaseController
                     $modelUser = new Muser();
                     $user = $modelUser->getUserbyId($input['user']);
 
-                    $accion = 'El usuario '.$user->usuario_us. ' ha creado la empresa: '.$input[0]['empresa'];
+                    $accion = 'El usuario '.$user->usuario_us. ' creó la empresa: '.$input[0]['empresa'];
 
                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
@@ -198,7 +198,7 @@ class Activo extends BaseController
               $modelUser = new Muser();
               $user = $modelUser->getUserbyId($input['user']);
               
-              $accion = 'El usuario '.$user->usuario_us. ' ha modificado la empresa: '.$input[0]['empresa'];
+              $accion = 'El usuario '.$user->usuario_us. ' modificó la empresa: '.$input[0]['empresa'];
 
               log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
@@ -244,11 +244,11 @@ class Activo extends BaseController
                         $modelUser = new Muser();
                         $user = $modelUser->getUserbyId($input['user']);
                         
-                        $accion = 'El usuario '.$user->usuario_us. ' ha eliminado la empresa: '.$found['empresa'];
+                        $accion = 'El usuario '.$user->usuario_us. ' eliminó la empresa: '.$found['empresa'];
 
                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
-                        
+
                         // return $this->getResponse(
                         //     [
                         //         'error' => $input[0]['id'],
@@ -351,6 +351,14 @@ class Activo extends BaseController
             $valida = $model -> validaArea($input[0]);
             if(!$valida){
                 $result = $model->saveArea($input);
+                //log del sistema
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+
+                $accion = 'El usuario '.$user->usuario_us. ' creó el área: '.$input[0]['area'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -434,6 +442,13 @@ class Activo extends BaseController
                     ]);
                 }
             }
+                //log del sistema
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+
+                $accion = 'El usuario '.$user->usuario_us. ' modificó el área: '.$input[0]['area'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
             return $this->getResponse(
                 [
@@ -472,6 +487,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                         //log del sistema
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+
+                        $accion = 'El usuario '.$user->usuario_us. ' eliminó el área: '.$found['area'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         // return $this->getResponse(
                         //     [
                         //         'error' => false,
@@ -671,6 +695,14 @@ class Activo extends BaseController
     
             if(!$valida){
                 $result = $model->saveValorActivo($input);
+                //log del sistema
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+
+
+                $accion = 'El usuario '.$user->usuario_us. ' creó el valor de activo: '.$input[0]['valor'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -716,6 +748,13 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
              }
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó el valor de activo: '.$input[0]['valor'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             $result = $model->updateValorActivo($input);
         
             return $this->getResponse(
@@ -752,6 +791,14 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+                          //log del sistema
+                          $modelUser = new Muser();
+                          $user = $modelUser->getUserbyId($input['user']);
+  
+                          $accion = 'El usuario '.$user->usuario_us. ' eliminó el valor de activo: '.$found['valor'];
+  
+                          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -768,28 +815,7 @@ class Activo extends BaseController
                         ]
                     );
                 }
-                // if($model->delete($input['id'])){
-                //     $this->db->transRollback();
-                //     $data['is_deleted'] = 1;
-                //     $model->update($input['id'],$data);
-                //     return $this->getResponse(
-                //         [
-                //             'error' => false,
-                //             'msg' =>  'Valor Activo eliminado Correctamente'
-                //         ]
-                //     );
-                // }else{
-                //     $data['is_deleted'] = 0;
-                //     $data['date_deleted'] = null;
-                //     $data['id_user_deleted'] = null;
-                //     $model->update($input['id'],$data);
-                //     return $this->getResponse(
-                //         [
-                //             'error' => true,
-                //             'msg' =>  'No se pudo eliminar'
-                //         ]
-                //     );
-                // }
+               
             }else{
                 return $this->getResponse(
                     [
@@ -872,6 +898,15 @@ class Activo extends BaseController
             $valida = $model -> validarTipoActivo($input);
             if(!$valida){
                 $result = $model->saveTipoActivo($input);
+                  //log del sistema
+                  $modelUser = new Muser();
+                  $user = $modelUser->getUserbyId($input['user']);
+  
+  
+                  $accion = 'El usuario '.$user->usuario_us. ' creó el tipo de activo: '.$input[0]['tipo'];
+  
+                  log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -942,6 +977,16 @@ class Activo extends BaseController
                     $categoriaActivoModel->update($item['id'],['estado' => $input[0]['estado']]);
                 }
             }
+
+             //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó el tipo de activo: '.$input[0]['tipo'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+             
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -979,6 +1024,15 @@ class Activo extends BaseController
                     $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
+
+                     //log del sistema
+                     $modelUser = new Muser();
+                     $user = $modelUser->getUserbyId($input['user']);
+
+                     $accion = 'El usuario '.$user->usuario_us. ' eliminó el tipo de activo: '.$found['tipo'];
+
+                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,
@@ -1073,6 +1127,16 @@ class Activo extends BaseController
             $valida = $model -> validarClasInfo($input[0]['clasificacion']);
             if(!$valida){
                 $result = $model->saveClasInformacion($input);
+
+                 //log del sistema
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+
+
+                $accion = 'El usuario '.$user->usuario_us. ' creó la clasificacion de la información: '.$input[0]['clasificacion'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -1117,6 +1181,15 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
         }
+           //log del sistema
+           $modelUser = new Muser();
+           $user = $modelUser->getUserbyId($input['user']);
+
+
+           $accion = 'El usuario '.$user->usuario_us. ' modificó la clasificacion de la información: '.$input[0]['clasificacion'];
+
+           log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
         $result = $model->updateClasInformacion($input);
     
         return $this->getResponse(
@@ -1150,6 +1223,13 @@ class Activo extends BaseController
                     $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
+                     //log del sistema
+                     $modelUser = new Muser();
+                     $user = $modelUser->getUserbyId($input['user']);
+
+                     $accion = 'El usuario '.$user->usuario_us. ' eliminó la clasificación de la información: '.$found['clasificacion'];
+
+                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -1258,6 +1338,16 @@ class Activo extends BaseController
 
         
             $model = new MaspectoSeg();
+
+             //log del sistema
+           $modelUser = new Muser();
+           $user = $modelUser->getUserbyId($input['user']);
+
+
+           $accion = 'El usuario '.$user->usuario_us. ' creó el aspecto de seguridad: '.$input[0]['aspecto'];
+
+           log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             $result = $model->saveAspectoSeg($input);
         
             return $this->getResponse(
@@ -1295,6 +1385,14 @@ class Activo extends BaseController
                 );
              }
             $result = $model->updateAspectoSeg($input);
+              //log del sistema
+           $modelUser = new Muser();
+           $user = $modelUser->getUserbyId($input['user']);
+
+
+           $accion = 'El usuario '.$user->usuario_us. ' modificó el aspecto de seguridad: '.$input[0]['aspecto'];
+
+           log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -1329,6 +1427,15 @@ class Activo extends BaseController
                     $data['is_deleted'] = 1;
 
                     $model->update($input[0]['id'],$data);
+
+                     //log del sistema
+                     $modelUser = new Muser();
+                     $user = $modelUser->getUserbyId($input['user']);
+
+                     $accion = 'El usuario '.$user->usuario_us. ' eliminó el aspecto de seguridad: '.$found['aspecto'];
+
+                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,
@@ -1431,6 +1538,15 @@ class Activo extends BaseController
             $valida = $model -> validaUnidad($input[0]);
             if(!$valida){
                 $result = $model->saveUnidades($input);
+                  //log del sistema
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+
+
+                $accion = 'El usuario '.$user->usuario_us. ' creó la unidad: '.$input[0]['unidad'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -1473,6 +1589,8 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
             }
+
+            
             $model->updateUnidades($input);
             
             $macroprocesoModel = new Mmacroprocesos();
@@ -1496,6 +1614,16 @@ class Activo extends BaseController
                     $procesoModel->update($item['id'],['estado'=>$input[0]['estado']]);
                 }
             }
+
+             //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó la unidad: '.$input[0]['unidad'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -1532,6 +1660,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                         //log del sistema
+                         $modelUser = new Muser();
+                         $user = $modelUser->getUserbyId($input['user']);
+ 
+                         $accion = 'El usuario '.$user->usuario_us. ' eliminó la unidad: '.$found['unidad'];
+ 
+                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         // return $this->getResponse(
                         //     [
                         //         'error' => false,
@@ -1672,6 +1809,16 @@ class Activo extends BaseController
             $valida = $model -> validaMacroproceso($input[0]);
             if(!$valida){
                 $result = $model->saveMacroproceso($input);
+
+                 //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' creó el macroproceso: '.$input[0]['macroproceso'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -1724,6 +1871,15 @@ class Activo extends BaseController
                     $procesoModel->update($item['id'],['estado'=>$input[0]['estado']]);
                 }
             }
+               //log del sistema
+               $modelUser = new Muser();
+               $user = $modelUser->getUserbyId($input['user']);
+  
+  
+               $accion = 'El usuario '.$user->usuario_us. ' modificó el macroproceso: '.$input[0]['macroproceso'];
+  
+               log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -1766,6 +1922,14 @@ class Activo extends BaseController
                        
                         $valor  = $model->update($input[0]['id'],$data);
                        
+                         //log del sistema
+                         $modelUser = new Muser();
+                         $user = $modelUser->getUserbyId($input['user']);
+ 
+                         $accion = 'El usuario '.$user->usuario_us. ' eliminó el macroproceso: '.$found['macroproceso'];
+ 
+                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                             // return $this->getResponse(
                             //     [
                             //         // 'error' => false,
@@ -1874,6 +2038,16 @@ class Activo extends BaseController
         
             if(!$valida){
                 $result = $model->saveProceso($input);
+
+                   //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' creó el proceso: '.$input[0]['proceso'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -1916,6 +2090,15 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
             }
+               //log del sistema
+               $modelUser = new Muser();
+               $user = $modelUser->getUserbyId($input['user']);
+  
+  
+               $accion = 'El usuario '.$user->usuario_us. ' modificó el proceso: '.$input[0]['proceso'];
+  
+               log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             $result = $model->updateProceso($input);
         
             return $this->getResponse(
@@ -1953,6 +2136,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                         //log del sistema
+                         $modelUser = new Muser();
+                         $user = $modelUser->getUserbyId($input['user']);
+ 
+                         $accion = 'El usuario '.$user->usuario_us. ' eliminó el proceso: '.$found['proceso'];
+ 
+                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         // return $this->getResponse(
                         //     [
                         //         'error' => false,
@@ -2105,6 +2297,16 @@ class Activo extends BaseController
         
             if(!$valida){
                 $result = $model->savePosicion($input);
+
+                   //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' creó la posición: '.$input[0]['posicion'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -2148,6 +2350,15 @@ class Activo extends BaseController
                 }
                 $result = $model->updatePosicion($input);
             
+                //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó la posición: '.$input[0]['posicion'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 return $this->getResponse(
                     [
                         'msg' =>  'Modificado correctamente'
@@ -2182,6 +2393,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                         //log del sistema
+                         $modelUser = new Muser();
+                         $user = $modelUser->getUserbyId($input['user']);
+ 
+                         $accion = 'El usuario '.$user->usuario_us. ' eliminó la posición: '.$found['posicion_puesto'];
+ 
+                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         // return $this->getResponse(
                         //     [
                         //         'error' => false,
@@ -2341,6 +2561,16 @@ class Activo extends BaseController
 
                         $model->saveDetalleValActivo($array);
                     }
+
+                    //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' creó la valoración de activo: '.$input[0]['id'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     $msg = 'Registrado correctamente';
                     $error = 1;
                 }else{
@@ -2399,6 +2629,15 @@ class Activo extends BaseController
                                     $model->saveDetalleValActivo($array);
                                 }
 
+                          //log del sistema
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+
+
+                        $accion = 'El usuario '.$user->usuario_us. ' modificó la valoración de activo: '.$input[0]['id'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         $msg = 'Modificado correctamente';           
 
                         return $this->getResponse(
@@ -2439,6 +2678,14 @@ class Activo extends BaseController
                        
                         $model->update($input[0]['id'],$data);
                         $model->updateDetalleAspecto($input[0]['id']);
+                         //log del sistema
+                         $modelUser = new Muser();
+                         $user = $modelUser->getUserbyId($input['user']);
+ 
+                         $accion = 'El usuario '.$user->usuario_us. ' eliminó la valoración de activo: '.$input[0]['id'];
+ 
+                         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -2551,6 +2798,16 @@ class Activo extends BaseController
             $valida = $model -> validarCatActivo($input[0]);
             if(!$valida){
                 $result = $model->saveCatActivo($input);
+
+                  //log del sistema
+                  $modelUser = new Muser();
+                  $user = $modelUser->getUserbyId($input['user']);
+
+
+                  $accion = 'El usuario '.$user->usuario_us. ' creó la categoría de activo: '.$input[0]['categoria'];
+
+                  log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -2594,6 +2851,15 @@ class Activo extends BaseController
              }
             $result = $model->updateCatActivo($input);
         
+             //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó la categoría de activo: '.$input[0]['categoria'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -2627,6 +2893,14 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+                        //log del sistema
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+
+                        $accion = 'El usuario '.$user->usuario_us. ' eliminó la categoría  de activo: '.$found['categoria'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -2719,6 +2993,16 @@ class Activo extends BaseController
             $valida = $model -> validarUbiActivo($input);
             if(!$valida){
                 $result = $model->saveUbiActivo($input);
+
+                 //log del sistema
+                 $modelUser = new Muser();
+                 $user = $modelUser->getUserbyId($input['user']);
+
+
+                 $accion = 'El usuario '.$user->usuario_us. ' creó la ubicación de activo: '.$input[0]['desc_ubi'];
+
+                 log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -2763,7 +3047,16 @@ class Activo extends BaseController
                 );
             }
             $result = $model->updateUbiActivo($input);
-        
+            
+              //log del sistema
+              $modelUser = new Muser();
+              $user = $modelUser->getUserbyId($input['user']);
+
+
+              $accion = 'El usuario '.$user->usuario_us. ' modificó la ubicación de activo: '.$input[0]['desc_ubi'];
+
+              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -2798,6 +3091,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                          //log del sistema
+                          $modelUser = new Muser();
+                          $user = $modelUser->getUserbyId($input['user']);
+  
+                          $accion = 'El usuario '.$user->usuario_us. ' eliminó la ubicación  de activo: '.$found['descripcion'];
+  
+                          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+  
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -2938,6 +3240,16 @@ class Activo extends BaseController
             $valida = $model -> validaEstado($input[0]['estado']);
             if(!$valida){
                 $result = $model->saveEstado($input);
+
+                  //log del sistema
+                  $modelUser = new Muser();
+                  $user = $modelUser->getUserbyId($input['user']);
+ 
+ 
+                  $accion = 'El usuario '.$user->usuario_us. ' creó el estado: '.$input[0]['estado'];
+ 
+                  log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -2981,6 +3293,15 @@ class Activo extends BaseController
             }
             $result = $model->updateEstado($input);
         
+              //log del sistema
+              $modelUser = new Muser();
+              $user = $modelUser->getUserbyId($input['user']);
+
+
+              $accion = 'El usuario '.$user->usuario_us. ' modificó el estado: '.$input[0]['estado'];
+
+              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse([
                 'msg' => 'Modificado correctamente',
                
@@ -3014,6 +3335,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                          //log del sistema
+                          $modelUser = new Muser();
+                          $user = $modelUser->getUserbyId($input['id']);
+  
+                          $accion = 'El usuario '.$user->usuario_us. ' eliminó el estado: '.$found['estado'];
+  
+                          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+  
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -3088,6 +3418,16 @@ class Activo extends BaseController
             $valida = $model -> validaPrioridad($input[0]['prioridad']);
             if(!$valida){
                 $result = $model->savePrioridad($input);
+
+                  //log del sistema
+              $modelUser = new Muser();
+              $user = $modelUser->getUserbyId($input['user']);
+
+
+              $accion = 'El usuario '.$user->usuario_us. ' creó la prioridad: '.$input[0]['prioidad'];
+
+              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
@@ -3129,6 +3469,17 @@ class Activo extends BaseController
                     ResponseInterface::HTTP_OK
                 );
             }
+
+              //log del sistema
+              $modelUser = new Muser();
+              $user = $modelUser->getUserbyId($input['user']);
+
+
+              $accion = 'El usuario '.$user->usuario_us. ' modificó la prioridad: '.$input[0]['prioidad'];
+
+              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
             $result = $model->updatePrioridad($input);
         
             return $this->getResponse([
@@ -3165,6 +3516,15 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+
+                          //log del sistema
+                          $modelUser = new Muser();
+                          $user = $modelUser->getUserbyId($input['id']);
+  
+                          $accion = 'El usuario '.$user->usuario_us. ' eliminó la prioridad: '.$found['prioridad'];
+  
+                          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+  
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -3240,6 +3600,15 @@ class Activo extends BaseController
                 $valida = $model -> validaAlerta_seguimiento($input[0]['alerta']);
                 if(!$valida){
                     $result = $model->saveAlerta_seguimiento($input);
+                      //log del sistema
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+
+
+                    $accion = 'El usuario '.$user->usuario_us. ' creó la alerta de seguimiento: '.$input[0]['alerta'];
+
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     $msg = 'Registrado correctamente';
                     $error = 1;
                 }else{
@@ -3283,6 +3652,15 @@ class Activo extends BaseController
             }
             $result = $model->updateAlerta_seguimiento($input);
         
+             //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+
+
+             $accion = 'El usuario '.$user->usuario_us. ' modificó la alerta de seguimiento: '.$input[0]['alerta'];
+
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse([
                 'msg' => 'Modificado correctamente',
                
@@ -3317,6 +3695,14 @@ class Activo extends BaseController
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+                          //log del sistema
+                          $modelUser = new Muser();
+                          $user = $modelUser->getUserbyId($input['id']);
+  
+                          $accion = 'El usuario '.$user->usuario_us. ' eliminó la alerta de seguimiento: '.$found['alerta'];
+  
+                          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+  
                         return $this->getResponse(
                             [
                                 'error' => false,
@@ -3497,6 +3883,15 @@ public function updatePlanAccion(){
         }
         $model->updatePlanAccion($input);
     
+         //log del sistema
+         $modelUser = new Muser();
+         $user = $modelUser->getUserbyId($input['user']);
+
+
+         $accion = 'El usuario '.$user->usuario_us. ' modificó el plan de acción: '.$input[0]['plan_accion'];
+
+         log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
         return $this->getResponse([
             'msg' => 'Actualizado correctamente',
             'error' => 1
@@ -3565,6 +3960,14 @@ public function deletePlanAccion(){
         $data['date_deleted'] = null;
         $data['id_user_deleted'] = null;
         $model->update($input[0]['id'],$data);
+          //log del sistema
+          $modelUser = new Muser();
+          $user = $modelUser->getUserbyId($input['user']);
+
+          $accion = 'El usuario '.$user->usuario_us. ' eliminó el plan de acción: '.$found['plan_accion'];
+
+          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
         return $this->getResponse(
             [  
                 'error' => true,
@@ -3646,6 +4049,17 @@ public function addActividadPlan(){
         $model = new MriesgoPlanAccion();
     
         $result = $model->saveActividadPlan($input);
+
+           //log del sistema
+           $modelUser = new Muser();
+           $user = $modelUser->getUserbyId($input['user']);
+  
+  
+           $accion = 'El usuario '.$user->usuario_us. ' creó la actividad: '.$input[0]['descripcion'];
+  
+           log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
         $msg = 'Actividad registrada correctamente';
         $error = 1;
 

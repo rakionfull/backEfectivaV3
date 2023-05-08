@@ -461,6 +461,15 @@ class EvaluacionRiesgoController extends BaseController
                     }
                     }
                     
+                     //log del sistema
+                     $modelUser = new Muser();
+                     $user = $modelUser->getUserbyId($input['user']);
+             
+             
+                     $accion = 'El usuario '.$user->usuario_us. ' creó el control: '.$input[0]['control'];
+             
+                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     $msg = 'Registrado correctamente';
                     $error = 1;
                     $idcontrol=$result;
@@ -545,7 +554,14 @@ class EvaluacionRiesgoController extends BaseController
                         $this->updateRiesgosControlados($value);
                     }
 
-                    
+                     //log del sistema
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                
+                
+                        $accion = 'El usuario '.$user->usuario_us. ' modificó el control: '.$input[0]['control'];
+                
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
                     $msg = 'Modificado correctamente';
                     $error = 1;
@@ -607,6 +623,15 @@ class EvaluacionRiesgoController extends BaseController
                     }
                     //$this->updateRiesgosControlados($value);
                 }
+                 //log del sistema
+                 $modelUser = new Muser();
+                 $user = $modelUser->getUserbyId($input['user']);
+         
+         
+                 $accion = 'El usuario '.$user->usuario_us. ' creó el plan de acción: '.$input[0]['plan_accion'];
+         
+                 log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 $msg = 'Plan Registrado Correctamente';
                 $error = 1;
             }else{
@@ -652,6 +677,8 @@ class EvaluacionRiesgoController extends BaseController
         
             $model = new MriesgoPlanAccion();
             $model2 = new MRegistroControles();
+
+            
             $result = $model->updateActividadPlan($input);
         
             //despues de actualizar debo llamar a todas las actividades
@@ -694,6 +721,15 @@ class EvaluacionRiesgoController extends BaseController
                    
                 }
 
+                  //log del sistema
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+            
+            
+                    $accion = 'El usuario '.$user->usuario_us. ' la actividad se ejecutó correctamente el riesgo: '.$input[0]['descripcion'];
+            
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+                    
                 //$resultado  = $this->updateRiesgosControlados(75);
                 return $this->getResponse([
                     'msg' => 'El plan de accion esta culminado, se ha aplicado el control',
@@ -702,6 +738,16 @@ class EvaluacionRiesgoController extends BaseController
                     // 'riesgos' => $array_riesgos
                 ]);
             }else{
+
+                  //log del sistema
+             $modelUser = new Muser();
+             $user = $modelUser->getUserbyId($input['user']);
+     
+     
+             $accion = 'El usuario '.$user->usuario_us. ' creó la actividad: '.$input[0]['descripcion'];
+     
+             log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 return $this->getResponse([
                     'msg' => 'Actividad actualizada correctamente',
                     'data' => $actividades,

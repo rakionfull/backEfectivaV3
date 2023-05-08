@@ -276,7 +276,7 @@ class MRegistroControles extends Model
         return  $query;
     }
     public function updateDtealle_Control($data){
-;
+
        
         $sql = "CALL modificar_detalle_control(?,?,?)";
 

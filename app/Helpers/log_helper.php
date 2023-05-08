@@ -42,17 +42,14 @@ if(!function_exists('log_sistema')){
     $texto = $accion;
     $id_afectado=0;
     if($accion == 'login'){
-        $texto = "El usuario: ".$username." a iniciado sesión";
+        $texto = "El usuario: ".$username." a iniciado sesión exitosamente";
     }
     if($accion == 'logout'){
         $texto = "El usuario: ".$username." a cerrado sesión correctamente desde el sistema";
     }
-    // if($accion == 'change_pass'){
-    //   $texto = "El usuario: ".$username." ah realizado cambio de clave";
-    // }
-    // if($accion == 'change_pass2'){
-    //   $texto = "El usuario: ".$username." ah realizado cambio de clave al usuario: ".$id2;
-    // }
+    if($accion == 'logout2'){
+      $texto = "El usuario: ".$username." deslogeo por inactividad";
+  }
     $array = [
         'terminal' => $terminal,
         'ip_addres' => $ip,

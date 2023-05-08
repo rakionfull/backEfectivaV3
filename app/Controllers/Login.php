@@ -80,7 +80,16 @@ class Login extends BaseController
                                     2 min'];
                                     $error = ['password' => 'Se ha intentado '.$configuracion[0]['intentos'].' veces, el usuario se deshabilitará. Por favor contactar con su administrador
                                     del sistema'];
+
+                                    $user = $modelsUser->getUserByDatos($input['username']);
+                                    $accion='El usuario: '.$input['username'].' falló al ingresar al sistema (credenciales incorrectas), el usuario se bloqueó';
+                                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$input['username']);
+
                                 }else{
+                                    $user = $modelsUser->getUserByDatos($input['username']);
+                                    $accion='El usuario: '.$input['username'].' falló al ingresar al sistema (credenciales incorrectas), intento '.$intento->intentos_us ;
+                                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$input['username']);
+
                                     $error = $this->validator->getErrors();
                                 }
                             
@@ -96,7 +105,11 @@ class Login extends BaseController
                         }else{
                             // $error = new  \stdClass;
                             $modelsUser -> setIntento($input['username'],0);
-                        
+
+                            $user = $modelsUser->getUserByDatos($input['username']);
+                            $accion='El usuario: '.$input['username'].' intentó ingresar al sistema, pero su usuario esta bloqueado';
+                            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$input['username']);
+
                             // $error->password = 'El usuario esta dabilitado por 2 min';
                             $error = ['password' => 'El usuario esta Bloqueado, Contactar con su administrador de sistema'];
                             return $this->getResponse(
@@ -131,81 +144,81 @@ class Login extends BaseController
    
     public function change_pass(){
 
-    try {
-        $input = $this->getRequestInput($this->request);
-      
-        $resultado =  validacionPassword($input);
-        if($resultado == 1){
-            
-                //guardo la nueva clave
-            $userModel = new Muser();
-            if(isset($input['id_us'])){
-                $existe_pass = veriPass($input['passw'],$input['id_us']);
-              
-                if(!$existe_pass){
-                    $datos = array(
-                        //'pass_cl' =>password_hash($input['passw'], PASSWORD_DEFAULT),
-                        'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
-                        'id_us' =>$input['id_us'],
-                    );
-                    $userModel->savePass($datos);
-                    $result=$userModel->changePass($input['id_us']);
-                    log_acciones('change_pass2',$input['terminal'],$input['ip'],$input['id'],$input['id_us'],$input['username']);
-                    $response = [
-                        'dato' => $result,
-                    ];
-                }else{
-                    $response = [
-                        'error' => 'Ya ha utilizado esta contraseña, debe elegir otra',
-                        // 'error' =>  'esto .'.$existe_pass,
-                    ];
-                }
-            }else{
-                $existe_pass = veriPass($input['passw'],$input['id']);
-                if(!$existe_pass){
-                    $datos = array(
-                        //'pass_cl' => hashPass($input['passw']),
-                        'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
-                        'id_us' =>$input['id'],
-                    );
-                    $userModel->savePass($datos);
-                    $result=$userModel->changePass($input['id']);
-                    log_acciones('change_pass',$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
-                    $response = [
-                        'dato' => $result,
-                    ];
-                }else{
-                    $response = [
-                        'error' => 'Ya ha utilizado esta contraseña, debe elegir otra',
-                        // 'error' =>  'esto .'.$existe_pass,
-                    ];
-                }
-            }
-           
-
-           
-        }else{
-            $response = [
-                'error' => $resultado,
-                
-            ];
-        }
-          
-       
-        // }else{
-            
-        //}
+        try {
+            $input = $this->getRequestInput($this->request);
         
-       
-        return $this->respond($response, ResponseInterface::HTTP_OK);
-    } catch (\Throwable $ex) {
-        return $this->getResponse(
-            [
-                'error' => $ex->getMessage(),
-            ],
-            ResponseInterface::HTTP_OK
-        );
-    }
+            $resultado =  validacionPassword($input);
+            if($resultado == 1){
+                
+                    //guardo la nueva clave
+                $userModel = new Muser();
+                if(isset($input['id_us'])){
+                    $existe_pass = veriPass($input['passw'],$input['id_us']);
+                
+                    if(!$existe_pass){
+                        $datos = array(
+                            //'pass_cl' =>password_hash($input['passw'], PASSWORD_DEFAULT),
+                            'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
+                            'id_us' =>$input['id_us'],
+                        );
+                        $userModel->savePass($datos);
+                        $result=$userModel->changePass($input['id_us']);
+                        log_acciones('change_pass2',$input['terminal'],$input['ip'],$input['id'],$input['id_us'],$input['username']);
+                        $response = [
+                            'dato' => $result,
+                        ];
+                    }else{
+                        $response = [
+                            'error' => 'Ya ha utilizado esta contraseña, debe elegir otra',
+                            // 'error' =>  'esto .'.$existe_pass,
+                        ];
+                    }
+                }else{
+                    $existe_pass = veriPass($input['passw'],$input['id']);
+                    if(!$existe_pass){
+                        $datos = array(
+                            //'pass_cl' => hashPass($input['passw']),
+                            'pass_cl' => bin2hex($this->encrypter->encrypt($input['passw'])),
+                            'id_us' =>$input['id'],
+                        );
+                        $userModel->savePass($datos);
+                        $result=$userModel->changePass($input['id']);
+                        log_acciones('change_pass',$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
+                        $response = [
+                            'dato' => $result,
+                        ];
+                    }else{
+                        $response = [
+                            'error' => 'Ya ha utilizado esta contraseña, debe elegir otra',
+                            // 'error' =>  'esto .'.$existe_pass,
+                        ];
+                    }
+                }
+            
+
+            
+            }else{
+                $response = [
+                    'error' => $resultado,
+                    
+                ];
+            }
+            
+        
+            // }else{
+                
+            //}
+            
+        
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+        } catch (\Throwable $ex) {
+            return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+            );
+        }
        
     }
     private function getJWTForUser(string $username,string $ip,string $terminal ,int $responseCode = ResponseInterface::HTTP_OK) 
@@ -326,7 +339,12 @@ class Login extends BaseController
     public function logout($id_us){
         $modelSesion = new Msesiones();
         $input = $this->getRequestInput($this->request);
-        log_sistema('logout',$input['terminal'],$input['ip'],$id_us,$input['username']);
+        if($input['valor']['valor'] == 1){
+            log_sistema('logout',$input['terminal'],$input['ip'],$id_us,$input['username']);
+        }else{
+            log_sistema('logout2',$input['terminal'],$input['ip'],$id_us,$input['username']);
+        }
+       
         $result=$modelSesion->updateLoged($id_us);
         
         $response = [
