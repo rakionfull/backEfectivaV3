@@ -121,5 +121,12 @@ class MValoracionRiesgo extends Model
         ]);
         return $query->getResultArray();;
     }
+    public function getByDescriptionProbabilidadImpacto($data){
+        $query = $this->db->query("call sp_get_valoracion_by_probabilidad_impacto(?,?)",[
+            $data['probabilidad'],
+            $data['impacto']
+        ]);
+        return $query->getResultArray();;
+    }
     
 }
