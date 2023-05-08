@@ -107,24 +107,32 @@ class ValoracionRiesgoController extends BaseController
     {
         $input = $this->getRequestInput($this->request);
         $model = new MValoracionRiesgo();
+       
         $found = $model->find($input[0]['id']);
-        $this->db->transBegin();
+        // $this->db->transBegin();
         try{
             if($found){
                 try {
-                    $result = $model->delete($input[0]['id']);
-                    
+                    // $result = $model->delete($input[0]['id']);
+                    $result = $model-> deleteValoracionRiesgo('valoracion_riesgo',$input[0]['id']);
                     if($result){
-                        $this->db->transRollback();
+                       // $this->db->transRollback();
                         $data['date_deleted'] = date("Y-m-d H:i:s");
                         $data['id_user_deleted'] = $input['user'];
                         $data['is_deleted'] = 1;
                        
                         $model->update($input[0]['id'],$data);
+                        // return $this->getResponse(
+                        //     [
+                        //         'error' => false,
+                        //         'msg' =>  'Eliminado correctamente'
+                        //     ]
+                        // );
+                    }else{
                         return $this->getResponse(
                             [
-                                'error' => false,
-                                'msg' =>  'Eliminado correctamente'
+                                'error' => true,
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                             ]
                         );
                     }
@@ -138,7 +146,7 @@ class ValoracionRiesgoController extends BaseController
                     );
                 }
             }
-            $this->db->transCommit();
+            //$this->db->transCommit();
 
         } catch (Exception $ex) {
             $input['is_deleted'] = 0;

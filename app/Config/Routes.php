@@ -44,14 +44,14 @@ $routes->get('/newcaptcha', 'Login::newCaptcha');
 // http://localhost:8080/captcha
 $routes->post('/validaCaptcha', 'Login::validaCaptcha');
 
-$routes->post('/deletePrueba', 'Activo::deletePrueba');
+//$routes->post('/deletePrueba', 'Activo::deletePrueba');
 // http://localhost:8080/register
 // $routes->post('/register', 'Register::register', ['filter' => 'authFilter']);
 // $routes->post('/register2', 'Register::register');
 
 
   $routes->get('Task','Task::mensaje');
-
+  $routes->POST('http_request','curlController::http_request');
 // $routes->post('deletePerfil', 'Home::deletePerfil');
     // $routes->post('deleteNivelRiesgo/(:num)', 'NivelRiesgoController::destroy/$1', ['filter' => 'authFilter']);
 
