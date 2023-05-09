@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Muser;
 use App\Models\TipoAmenaza;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -63,6 +64,13 @@ class TipoAmenazaController extends BaseController
             );
         }
         $result = $model->store($input);
+
+        $modelUser = new Muser();
+        $user = $modelUser->getUserbyId($input['id_user_added']);
+        $accion = 'El usuario '.$user->usuario_us. ' creó el tipo de amenaza: '.$input['tipo'];
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
         return $this->getResponse(
             [
                 'error' => false,
@@ -107,6 +115,11 @@ class TipoAmenazaController extends BaseController
                 );
             }
             $model->edit($id,$input);
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el tipo de amenaza: '.$input['tipo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+        
             return $this->getResponse(
                 [
                     'error' => false,
@@ -135,6 +148,13 @@ class TipoAmenazaController extends BaseController
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el tipo de amenaza: '.$found['tipo'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+                    
                     return $this->getResponse(
                         [
                             'error' => false,

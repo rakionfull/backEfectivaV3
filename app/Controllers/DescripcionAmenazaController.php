@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\DescripcionAmenaza;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -62,6 +63,13 @@ class DescripcionAmenazaController extends BaseController
             );
         }
         $result = $model->store($input);
+
+        $modelUser = new Muser();
+        $user = $modelUser->getUserbyId($input['id_user_added']);
+        $accion = 'El usuario '.$user->usuario_us. ' creó la descripción de amenaza: '.$input['amenaza'];
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -86,6 +94,12 @@ class DescripcionAmenazaController extends BaseController
             }
             $model->edit($id,$input);
         
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la descripción de amenaza: '.$input['amenaza'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -106,14 +120,21 @@ class DescripcionAmenazaController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new DescripcionAmenaza();
-        $model->find($id);
+        $found = $model->find($id);
 
         try {
-            if($model){
+            if($found){
                 if($model->delete($id)){
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la descripción de amenaza: '.$found['amenaza'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
                     return $this->getResponse(
                         [
                             'error' => false,

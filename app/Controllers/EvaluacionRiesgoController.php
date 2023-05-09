@@ -160,6 +160,12 @@ class EvaluacionRiesgoController extends BaseController
                         $modelERC->store($data);
                     }
                 }
+
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['id_user_added']);
+                $accion = 'El usuario '.$user->usuario_us. ' creó la evaluacion de riesgo: '.$input['riesgo'];
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                 return $this->getResponse(
                     [
                         'error' => false,
@@ -223,6 +229,12 @@ class EvaluacionRiesgoController extends BaseController
                         }
                     }
                 }
+
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['id_user_updated']);
+                $accion = 'El usuario '.$user->usuario_us. ' modificó la evaluacion de riesgo: '.$input['riesgo'];
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                 return $this->getResponse(
                     [
                         'error' => false,
@@ -263,6 +275,13 @@ class EvaluacionRiesgoController extends BaseController
                         'is_deleted' => '1'
                     ]);
                     $modelERC->where('id_evaluacion_riesgo',$id)->delete();
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la evaluacion de riesgo: '.$found['riesgo'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -367,6 +386,11 @@ class EvaluacionRiesgoController extends BaseController
 
             $model = new EvaluacionRiesgo();
             $result = $model->save_historial($input);
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_added']);
+            $accion = 'El usuario '.$user->usuario_us. ' creó historial de evaluacion de riesgo: '.$input['riesgo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
             if($result){
                 return $this->getResponse(
                     [

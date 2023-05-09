@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Muser;
 use App\Models\NivelRiesgo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -97,6 +98,11 @@ class NivelRiesgoController extends BaseController
             );
         }
         $result = $model->store($input);
+        $modelUser = new Muser();
+        $user = $modelUser->getUserbyId($input['id_user_added']);
+        $accion = 'El usuario '.$user->usuario_us. ' creó el nivel de riesgo: '.$input['descripcion'];
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -162,6 +168,11 @@ class NivelRiesgoController extends BaseController
                 );
             }
             $model->edit($id,$input);
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el nivel de riesgo: '.$input['descripcion'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+        
             return $this->getResponse(
                 [
                     'error' => false,
@@ -193,6 +204,14 @@ class NivelRiesgoController extends BaseController
                     // $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $result = $model->store($input);
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el nivel de riesgo: '.$found['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,

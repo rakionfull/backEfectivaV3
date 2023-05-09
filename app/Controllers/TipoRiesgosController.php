@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Muser;
 use App\Models\TipoRiesgo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -44,6 +45,8 @@ class TipoRiesgosController extends BaseController
         }
     }
     public function store(){
+        $this->db->transBegin();
+
         try {
             $rules = [
                 'tipo_riesgo' => 'required',
@@ -83,7 +86,14 @@ class TipoRiesgosController extends BaseController
                     ]
                 );
             }
-           $model->store($input);
+            $model->store($input);
+
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_added']);
+            $accion = 'El usuario '.$user->usuario_us. ' creó el tipo de riesgo: '.$input['tipo_riesgo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            $this->db->transCommit();
+           
             return $this->getResponse(
                 [
                     'error' => false,
@@ -91,6 +101,7 @@ class TipoRiesgosController extends BaseController
                 ]
             );
         } catch (\Throwable $th) {
+            $this->db->rollback();
             return $this->getResponse(
                 [
                     'error' => true,
@@ -102,6 +113,8 @@ class TipoRiesgosController extends BaseController
     }
 
     public function update(){
+        $this->db->transBegin();
+
         try {
             $input = $this->getRequestInput($this->request);
             $model = new TipoRiesgo();
@@ -115,6 +128,12 @@ class TipoRiesgosController extends BaseController
                 );
             }
             $model->edit($input);
+            
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el tipo de riesgo: '.$input['tipo_riesgo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            $this->db->transCommit();
             return $this->getResponse(
                 [
                     'error' => false,
@@ -122,6 +141,8 @@ class TipoRiesgosController extends BaseController
                 ]
             );
         } catch (\Throwable $th) {
+            $this->db->rollback();
+
             return $this->getResponse(
                 [
                     'error' => true,
@@ -136,14 +157,20 @@ class TipoRiesgosController extends BaseController
         $input = $this->getRequestInput($this->request);
         $this->db->transBegin();
         $model = new TipoRiesgo();
-        $model->find($id);
+        $found = $model->find($id);
         try {
-            if($model){
+            if($found){
                 // Si se puede eliminar por llave foranea
                 if($model->delete($id)){
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el tipo de riesgo: '.$found['tipo_riesgo'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                     return $this->getResponse(
                         [
                             'error' => false,

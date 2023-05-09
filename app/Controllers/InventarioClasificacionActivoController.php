@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\EvaluacionRiesgo;
 use App\Models\InventarioClasificacionActivo;
+use App\Models\Muser;
 use App\Models\MValoracionActivo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -287,6 +288,13 @@ class InventarioClasificacionActivoController extends BaseController
                 );
             }
             $result = $model->store($input);
+
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_added']);
+            $accion = 'El usuario '.$user->usuario_us. ' creó el inventario de clasificación y activos: '.$input['activo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
             if($result){
                 return $this->getResponse(
                     [
@@ -345,6 +353,12 @@ class InventarioClasificacionActivoController extends BaseController
 
             $result = $model->edit($id,$input);
             
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el inventario de clasificación y activos: '.$input['activo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
             if($result){
                 return $this->getResponse(
                     [
@@ -373,15 +387,21 @@ class InventarioClasificacionActivoController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new InventarioClasificacionActivo();
-        $model->find($id);
+        $found = $model->find($id);
         $this->db->transBegin();
         try {
 
-            if($model){
+            if($found){
                 if($model->delete($id)){
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el inventario de clasificación y activos: '.$found['activo'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -432,6 +452,11 @@ class InventarioClasificacionActivoController extends BaseController
                 $model->store_historial($id,$ica);
             }
             $result = $model->update_estado_ica($id,$input);
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el inventario de clasificación y activos: '.$ica['activo'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
             return $this->getResponse(
                 [
                     'error' => false,

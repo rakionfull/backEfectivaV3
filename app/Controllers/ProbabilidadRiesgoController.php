@@ -179,6 +179,11 @@ class ProbabilidadRiesgoController extends BaseController
                     $model->updateScene($input,1);
                 }
     
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['id_user_added']);
+                $accion = 'El usuario '.$user->usuario_us. ' creó la probabilidad: '.$input['descripcion'];
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 return $this->getResponse(
                     [
                         'error' => false,
@@ -281,6 +286,11 @@ class ProbabilidadRiesgoController extends BaseController
                     }else{
                         $model->updateScene($input,2);
                     }
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_added']);
+                    $accion = 'El usuario '.$user->usuario_us. ' creó la probabilidad: '.$input['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -360,6 +370,10 @@ class ProbabilidadRiesgoController extends BaseController
                 $model->updateScene($input,1);
 
             }
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la probabilidad: '.$input['descripcion'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
             return $this->getResponse(
                 [
@@ -402,6 +416,10 @@ class ProbabilidadRiesgoController extends BaseController
             }else{
                 $model->updateScene($input,2);
             }
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la probabilidad: '.$input['descripcion'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
             return $this->getResponse(
                 [
@@ -443,6 +461,11 @@ class ProbabilidadRiesgoController extends BaseController
                     if($registrosImpacto == 0 && $registrosProbabilidad == 0){
                         $model->updateScene($input,null);
                     }
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la probabilidad: '.$found['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,

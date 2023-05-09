@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Muser;
 use App\Models\MValoracionRiesgo;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -45,6 +46,15 @@ class ValoracionRiesgoController extends BaseController
                 $result = $model->saveValoracionRiesgo($input);
                 $msg = 'Registrado correctamente';
                 $error = 1;
+
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+                
+                $accion = 'El usuario '.$user->usuario_us. ' creó la valoración: '.$input[0]['valor'];
+
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
             }else{
                 $msg = 'Valoracion de riesgo ya registrada';
                 $error = 0;
@@ -84,6 +94,14 @@ class ValoracionRiesgoController extends BaseController
             }
             $result = $model->updateValoracionRiesgo($input);
         
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['user']);
+            
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la valoración: '.$input[0]['valor'];
+
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -120,7 +138,13 @@ class ValoracionRiesgoController extends BaseController
                         $data['date_deleted'] = date("Y-m-d H:i:s");
                         $data['id_user_deleted'] = $input['user'];
                         $data['is_deleted'] = 1;
-                       
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' eliminó la valoracion: '.$found['valor'];
+          
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+          
                         $model->update($input[0]['id'],$data);
                         // return $this->getResponse(
                         //     [

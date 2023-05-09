@@ -158,6 +158,12 @@ class ImpactoRiesgoController extends BaseController
                         $modelProbabilidad->updateScene($input,1);
                     }
         
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_added']);
+                    $accion = 'El usuario '.$user->usuario_us. ' creó el impacto: '.$input['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+                    
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -260,7 +266,12 @@ class ImpactoRiesgoController extends BaseController
                     }else{
                         $modelProbabilidad->updateScene($input,2);
                     }
-                    
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_added']);
+                    $accion = 'El usuario '.$user->usuario_us. ' creó el impacto: '.$input['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -340,6 +351,12 @@ class ImpactoRiesgoController extends BaseController
                 $modelProbabilidad->updateScene($input,1);
             }
 
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el impacto: '.$input['descripcion'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -382,6 +399,11 @@ class ImpactoRiesgoController extends BaseController
                 $modelProbabilidad->updateScene($input,2);
             }
 
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó el impacto: '.$input['descripcion'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
             return $this->getResponse(
                 [
                     'error' => false,
@@ -401,11 +423,11 @@ class ImpactoRiesgoController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new ImpactoRiesgo();
-        $model->find($id);
+        $found = $model->find($id);
         $this->db->transBegin();
 
         try {
-            if($model){
+            if($found){
                 $result = $model->deleteImpactoRiesgo('impacto_riesgo',$id);
                 // if($model->delete($id)){
                     if($result){
@@ -420,6 +442,12 @@ class ImpactoRiesgoController extends BaseController
                     if($registrosProbabilidad == 0 && $registrosImpacto == 0){
                         $modelProbabilidad->updateScene($input,null);
                     }
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el impacto: '.$found['descripcion'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,

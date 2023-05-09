@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\DescripcionVulnerabilidad;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -65,6 +66,13 @@ class DescripcionVulnerabilidadController extends BaseController
             );
         }
         $result = $model->store($input);
+
+        $modelUser = new Muser();
+        $user = $modelUser->getUserbyId($input['id_user_added']);
+        $accion = 'El usuario '.$user->usuario_us. ' creó la descripción de vulnerabilidad: '.$input['vulnerabilidad'];
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
         return $this->getResponse(
             [
                 'msg' =>  $result
@@ -88,6 +96,10 @@ class DescripcionVulnerabilidadController extends BaseController
                 );
             }
             $model->edit($id,$input);
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la descripción de vulnerabilidad: '.$input['vulnerabilidad'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
         
             return $this->getResponse(
                 [
@@ -110,17 +122,23 @@ class DescripcionVulnerabilidadController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new DescripcionVulnerabilidad();
-        $model->find($id);
+        $found = $model->find($id);
 
         $this->db->transBegin();
 
         try {
-            if($model){
+            if($found){
                 // Si se puede eliminar por llave foranea
                 if($model->delete($id)){
                     $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la descripción de vulnerabilidad: '.$found['vulnerabilidad'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     return $this->getResponse(
                         [
                             'error' => false,

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CategoriasVulnerabilidad;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -54,6 +55,13 @@ class CategoriasVulnerabilidadController extends BaseController
 
         $model = new CategoriasVulnerabilidad();
         $result = $model->store($input);
+
+        $modelUser = new Muser();
+        $user = $modelUser->getUserbyId($input['id_user_added']);
+        $accion = 'El usuario '.$user->usuario_us. ' creó la categoría de vulnerabilidad: '.$input['categoria'];
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
+
         return $this->getResponse(
             [
                 'error' => false,
@@ -100,7 +108,11 @@ class CategoriasVulnerabilidadController extends BaseController
                 );
             }
             $model->edit($id,$input);
-            
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['id_user_updated']);
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la categoría de vulnerabilidad: '.$input['categoria'];
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+        
             return $this->getResponse(
                 [
                     'error' => false,
@@ -131,6 +143,11 @@ class CategoriasVulnerabilidadController extends BaseController
                     // $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['id_user_deleted']);
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la categoría de vulnerabilidad: '.$found['categoria'];
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+    
                     // return $this->getResponse(
                     //     [
                     //         'error' => false,
