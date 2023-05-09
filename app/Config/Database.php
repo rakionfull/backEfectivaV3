@@ -3,6 +3,7 @@
 namespace Config;
 
 use CodeIgniter\Database\Config;
+use App\Controllers\curlController;
 
 /**
  * Database Configuration
@@ -30,25 +31,8 @@ class Database extends Config
      *
      * @var array
      */
-    // public $default = [
-    //     'DSN'      => '',
-    //     'hostname' => 'DESKTOP-GL47C5P\SQLEXPRESS',
-    //     'username' => 'mpantac',
-    //     'password' => 'kayleap500',
-    //     'database' => 'bd_efectiva',
-    //     'DBDriver' => 'SQLSRV',
-    //     'DBPrefix' => '',
-    //     'pConnect' => false,
-    //     'DBDebug'  => (ENVIRONMENT !== 'production'),
-    //     'charset'  => 'utf8',
-    //     'DBCollat' => 'utf8_general_ci',
-    //     'swapPre'  => '',
-    //     'encrypt'  => false,
-    //     'compress' => false,
-    //     'strictOn' => false,
-    //     'failover' => [],
-    //     'port'     => 1433,
-    // ];
+    
+    //aqui hacemos el retorno de las variables
 
     public $default = [
         'DSN'      => '',
@@ -69,25 +53,7 @@ class Database extends Config
         'failover' => [],
         'port'     => 3306,
     ];
-    // public $default = [
-    //     'DSN'      => '',
-    //     'hostname' => '216.246.46.194',
-    //     'username' => 'oebjedyp_valtx',
-    //     'password' => 'v=2*WCz5M4Va',
-    //     'database' => 'oebjedyp_bd_efe_riesgossi',
-    //     'DBDriver' => 'MySQLi',
-    //     'DBPrefix' => '',
-    //     'pConnect' => false,
-    //     'DBDebug'  => (ENVIRONMENT !== 'production'),
-    //     'charset'  => 'utf8',
-    //     'DBCollat' => 'utf8_general_ci',
-    //     'swapPre'  => '',
-    //     'encrypt'  => false,
-    //     'compress' => false,
-    //     'strictOn' => false,
-    //     'failover' => [],
-    //     'port'     => 3306,
-    // ];
+    
     /**
      * This database connection is used when
      * running PHPUnit database tests.
@@ -125,9 +91,25 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
-        $this->default['hostname'] = getenv('database.default.hostname');
-        $this->default['database'] = getenv('database.default.database');
-        $this->default['username'] = getenv('database.default.username');
-        $this->default['password'] = getenv('database.default.password');
+        $datos = new curlController();
+
+        $REST_API = "http://10.167.27.65/WsCifrado/api/Cifrado/ArmarConnectionStrings";
+        $strAplicativoWs = "aQBuAHQAcgBhAG4AZQB0AA==";
+        $strUsr = "6fmog/yLNgnIAdKgdXP57bV0SZ9KwkguEDonTvt77AE=";
+        $strPsw = "opSbDSEsSqKv/z8USMEJ6SJu7+ESITUd597s4pljQw4=";
+        
+
+        $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
+
+        $bd = explode("|", $variables);
+        // $this->default['hostname'] = getenv('database.default.hostname');
+        // $this->default['database'] = getenv('database.default.database');
+        // $this->default['username'] = getenv('database.default.username');
+        // $this->default['password'] = getenv('database.default.password');
+
+        $this->default['hostname'] = 'localhost';
+        $this->default['database'] = 'bd_efectiva1';
+        $this->default['username'] = $bd[0];
+        $this->default['password'] = $bd[1];
     }
 }

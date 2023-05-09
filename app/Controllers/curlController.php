@@ -11,23 +11,29 @@ class curlController extends BaseController
 {
     use ResponseTrait;
     
-    public function http_request(){
+    public function http_request($API_REST,$strAplicativoWs_param,$strUsr_param,$strPsw_param){
        // try {
-            $captcha = new Curl();
-            $REST_API = "http://10.167.19.56/WsCifrado/api/Cifrado/ArmarConnectionStrings";
-          
-            $request_data = [
-                "AplicativoKey" => 'dwBlAGIAXwBzAGcAaQByAA==',
-                @"Usuario" => "kGKt8csoGKqw9tNXX5cOBENruiSg0JrdNW61yHsavZw=",
-                @"Password" => "A5zFh9C9JCD0kSfc2Xv9ghDrYPrIhPQnB4fdhftQNCs="
-            ];
-            $response = $captcha->perform_http_request('POST', $REST_API , $request_data);
+            $curl = new Curl();
+            $REST_API = $API_REST;
+            $REST_API = "http://10.167.27.65/WsCifrado/api/Cifrado/ArmarConnectionStrings";
+
+            $request_data = [];
+                     
+            $strUsr = urlencode($strUsr_param);
+            $strPsw = urlencode($strPsw_param);
+            $strAplicativoWs = $strAplicativoWs_param;
+            $strConexion = "@Usuario|@Password";
+
+            //  $response = $REST_API."?strConexion=".$strConexion."&strAplicativoWs=".$strAplicativoWs."&strUsr=".$strUsr."&strPsw=".$strPsw;
+            $response = $curl->perform_http_request('POST', $REST_API.
+            "?strConexion=".$strConexion.
+            "&strAplicativoWs=".$strAplicativoWs.
+            "&strUsr=".$strUsr.
+            "&strPsw=".$strPsw,
+            $request_data);
     
-            var_dump ($request_data);
-        // } catch (\Throwable $th) {
-        //     var_dump('error');
-        //     var_dump($th);
-        // }
+            return  $response;
+       
       
     }
 }

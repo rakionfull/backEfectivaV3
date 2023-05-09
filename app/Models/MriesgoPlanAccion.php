@@ -408,26 +408,26 @@ class MriesgoPlanAccion extends Model
             $sql = "CALL agregar_actividades_plan(?,?,?,?,?,?,?,?,?,?,?,?)";
 
             $query = $this->db->query($sql, [
-                $data['idempresa'],
-                $data['idarea'],
-                $data['idunidad'],
-                $data['idposicion'],
-                $data['idusuario'],
-                $data['descripcion'],
-                $data['fecha_inicio'],
-                $data['fecha_fin'],
-                $data['idalerta'],
-                $data['progreso'],
+                $data[0]['idempresa'],
+                $data[0]['idarea'],
+                $data[0]['idunidad'],
+                $data[0]['idposicion'],
+                $data[0]['idusuario'],
+                $data[0]['descripcion'],
+                $data[0]['fecha_inicio'],
+                $data[0]['fecha_fin'],
+                $data[0]['idalerta'],
+                $data[0]['progreso'],
                 $data['user'],
-                $data['idplanaccion'],
+                $data[0]['idplanaccion'],
                
             ]);
-            $last_id = $this->db->query("SELECT id as maxid FROM actividades_plan where id_planes={$data['idplanaccion']} order by id DESC LIMIT 1;");
+            $last_id = $this->db->query("SELECT id as maxid FROM actividades_plan where id_planes={$data[0]['idplanaccion']} order by id DESC LIMIT 1;");
             $last_id_plan= $last_id->getRow()->maxid;
             $mUser = new Muser();
-            $user = $mUser->getUserbyId($data['idusuario']);
+            $user = $mUser->getUserbyId($data[0]['idusuario']);
             $bcc = array();
-            $valor = $this->sendMailActividad($data['idusuario'],$last_id_plan,$user->email_us, $data['user'],$bcc);
+            $valor = $this->sendMailActividad($data[0]['idusuario'],$last_id_plan,$user->email_us, $data['user'],$bcc);
 
         return $valor;
     }

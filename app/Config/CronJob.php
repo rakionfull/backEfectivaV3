@@ -339,6 +339,8 @@ class CronJob extends \Daycry\CronJob\Config\CronJob
      
        
         })->everyMinute();
+        //->daily('7:00 am')
+
        
     }
 }

@@ -19,7 +19,7 @@ class Curl
                 'query'  => $data,
                 'headers' => [
                     'User-Agent' => 'testing/1.0',
-                    'Accept'     => 'application/json',
+                    'Accept'     => 'text/plain',
                     //'Authorization'      => 'Bearer '.$token,
                 ]
             ];
@@ -32,7 +32,7 @@ class Curl
                 'query' => $data,
                 'headers' => [
                     'User-Agent' => 'testing/1.0',
-                    'Accept'     => 'application/json',
+                    'Accept'     => 'text/plain',
                    // 'Authorization'      => 'Bearer '.$token,
                 ]
             ];
@@ -45,7 +45,7 @@ class Curl
                 'query' => $data,
                 'headers' => [
                     'User-Agent' => 'testing/1.0',
-                    'Accept'     => 'application/json',
+                    'Accept'     => 'text/plain',
                     //'Authorization'      => 'Bearer '.$token,
                 ]
             ];
@@ -58,7 +58,7 @@ class Curl
                 'query' => $data,
                 'headers' => [
                     'User-Agent' => 'testing/1.0',
-                    'Accept'     => 'application/json',
+                    'Accept'     => 'text/plain',
                     //'Authorization'      => 'Bearer '.$token,
                 ]
             ];
@@ -76,8 +76,8 @@ class Curl
         
     //  echo $response->getStatusCode();
 
-    // echo $response->getBody();
-    // echo $response->header('Content-Type');
+    //echo $response->getBody();
+    //echo $response->header('Content-Type');
     return json_decode($response->getBody());
   }
 }
