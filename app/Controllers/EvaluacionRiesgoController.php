@@ -24,11 +24,19 @@ class EvaluacionRiesgoController extends BaseController
     use ResponseTrait;
 
     public function index($id){
+        $input = $this->getRequestInput($this->request);
+
         try {
             $model = new EvaluacionRiesgo();
             $response = [
                 'data' =>  $model->getAll($id),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+                $accion = 'El usuario '.$user->usuario_us. ' exportó la informacion de evaluación de riesgos';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(
@@ -40,11 +48,18 @@ class EvaluacionRiesgoController extends BaseController
         }
     }
     public function getListHistorial($id){
+        $input = $this->getRequestInput($this->request);
         try {
             $model = new EvaluacionRiesgo();
             $response = [
                 'data' =>  $model->getAllHistoricos($id),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+                $accion = 'El usuario '.$user->usuario_us. ' exportó la informacion historica de evaluación de riesgos';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(
