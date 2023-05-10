@@ -25,6 +25,7 @@ use App\Models\Mestado;
 use App\Models\Mprioridad;
 use App\Models\Malerta_seguimiento;
 use App\Models\EvaluacionRiesgosControles;
+use App\Models\EvaluacionRiesgo;
 
 
 
@@ -3870,19 +3871,54 @@ public function updatePlanAccion(){
         $input = $this->getRequestInput($this->request);
     
         $model = new MriesgoPlanAccion();
-        $found = $model->validaPlanAccionModify($input);
+        $riesgo = new EvaluacionRiesgosControles();
+        $found = $model->find($input[0]['id']);
+        //$found = $model->validaPlanAccionModify($input);
 
-        if(count($found) > 0){
-            return $this->getResponse(
-                [
-                    'error' =>0,
-                    'msg' =>'Plan de accion ya registrado'
-                ],
-                ResponseInterface::HTTP_OK
-            );
-        }
-        $model->updatePlanAccion($input);
+        //if(count($found) > 0){
+            // return $this->getResponse(
+            //     [
+            //         'error' =>0,
+            //         'msg' =>'Plan de accion ya registrado'
+            //     ],
+            //     ResponseInterface::HTTP_OK
+            // );
+        //}
+      
     
+
+        $modelERC = new EvaluacionRiesgo();
+                  
+        $riesgos1 = explode("-", $found['id_riesgo']);
+        $control1 = explode("-", $found['id_control']);
+       
+      //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
+        foreach ($control1 as $key => $value) {
+            foreach ($riesgos1 as $key => $value2) {
+                $modelERC->delete_evaluacion_riesgo_controles2($value2,$value,$input['user']);
+            }
+        }
+
+        $model->updatePlanAccion($input);
+
+        $riesgos = explode("-", $input[0]['id_riesgo']);
+        $controles = explode("-", $input[0]['id_control']);
+        //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
+        //todas las actividades
+        foreach ($riesgos as $key => $value) {
+            foreach ($controles as $key => $value2) {
+                $data = [
+                    'id_evaluacion_riesgo' => $value,
+                    'id_control' => $value2,
+                    'id_user_added' => $input['user'],
+                   
+                ];
+                $riesgo->store($data);
+              
+            }
+            //$this->updateRiesgosControlados($value);
+        }
+
          //log del sistema
          $modelUser = new Muser();
          $user = $modelUser->getUserbyId($input['user']);
@@ -3901,8 +3937,8 @@ public function updatePlanAccion(){
         
         return $this->getResponse(
             [
-                 //'error' => $ex->getMessage(),
-                'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
+                 'error' => $ex->getMessage(),
+                //'error' =>'No se pudo editar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema',
             ]
         , ResponseInterface::HTTP_OK);
     }
@@ -3927,7 +3963,24 @@ public function deletePlanAccion(){
                     $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
                    
+
+
                     $model->update($input[0]['id'],$data);
+
+                    //actualizamos sus respectivos riesgos y controles en delete
+                    $modelERC = new EvaluacionRiesgo();
+                  
+                    $riesgos = explode("-", $found['id_riesgo']);
+                    $control = explode("-", $found['id_control']);
+                   
+                  //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
+                    foreach ($control as $key => $value) {
+                        foreach ($riesgos as $key => $value2) {
+                            $modelERC->delete_evaluacion_riesgo_controles2($value2,$value,$input['user']);
+                        }
+                    }
+                    
+
                     return $this->getResponse(
                         [
                             'error' => false,
@@ -4390,5 +4443,20 @@ public function getUnidadadesByEmpresaByArea(){
     }
        
 }
-
+public function countEstadoPlanes(){
+    try {
+        $model = new MriesgoPlanAccion();
+        $response = [
+            'data' =>  $model->countEstadoPlanes(),
+        ];
+        return $this->respond($response, ResponseInterface::HTTP_OK);
+    } catch (Exception $ex) {
+        return $this->getResponse(
+                [
+                    'error' => $ex->getMessage(),
+                ],
+                ResponseInterface::HTTP_OK
+            );
+    }
+}
 }

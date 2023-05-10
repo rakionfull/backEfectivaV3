@@ -422,7 +422,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
    $routes->post('updateActividadPlan', 'EvaluacionRiesgoController::updateActividadPlan',['filter' => 'authFilter']);
    $routes->delete('deleteActividadPlan', 'Activo::deleteActividadPlan',['filter' => 'authFilter']);
 
-
+   $routes->get('countEstadoPlanes','Activo::countEstadoPlanes',['filter' => 'authFilter']);
    
        //  CRUD INVENTARIO CLASIFICACION ACTIVO
       $routes->get('listInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::index/$1');

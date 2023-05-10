@@ -101,7 +101,9 @@ class InventarioClasificacionActivo extends Model
                 $mUser = new Muser();
                 $user = $mUser->getUserbyId($data['id_user_added']);
                 $usersbyarea = $mUser->getUserByArea($data['idarea']);
-                $bcc = array();
+                $bcc = array(
+                  
+                );
                 foreach ($usersbyarea as $item) {
                     array_push($bcc,$item['email_us']);
                 }

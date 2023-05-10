@@ -284,4 +284,16 @@ class EvaluacionRiesgo extends Model
         }
         return false;
     }
+    public function delete_evaluacion_riesgo_controles2($id_riesgo,$id_control,$user){
+        $sql = "call sp_delete_evaluacion_riesgo_controles2(?,?,?)";
+        $result = $this->db->query($sql,[
+            $id_riesgo,
+            $id_control,
+            $user
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
+    }
 }

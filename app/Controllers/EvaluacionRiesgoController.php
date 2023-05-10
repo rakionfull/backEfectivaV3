@@ -533,6 +533,7 @@ class EvaluacionRiesgoController extends BaseController
 
       
             $model = new MRegistroControles();
+            $modelER = new EvaluacionRiesgo();
             $modelERC = new EvaluacionRiesgosControles();
             $found = $model->validateRegitroControlModify($input);
             if(count($found) > 0){
@@ -563,7 +564,14 @@ class EvaluacionRiesgoController extends BaseController
                     //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
                     //todas las actividades
                     //tengo que actualizar los riesgos para que ejecuten los nuevos
-                    //$model->deleteRiesgoControles($input[0]['id']);
+                  //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
+
+                  foreach ($riesgos as $key => $value2) {
+                            $modelER->delete_evaluacion_riesgo_controles2($value2,$input[0]['id'],$input['user']);
+                    }
+
+                    //los volvemos a registrar
+
                     foreach ($riesgos as $key => $value) {
                        
                             $data = [

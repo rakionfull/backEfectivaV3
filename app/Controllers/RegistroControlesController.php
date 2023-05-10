@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\MRegistroControles;
+use App\Models\EvaluacionRiesgosControles;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -413,20 +414,28 @@ class RegistroControlesController extends BaseController
    
       
         $input = $this->getRequestInput($this->request);
+        
         $model = new MRegistroControles();
-        $model->find($input['id']);
         $this->db->transBegin();
+        $model->find($input['id']);
+        
         try {
             if($model){
                 if($model->delete($input['id'])){
                     $this->db->transRollback();
-                    $input['is_deleted'] = 1;
+                    $data['is_deleted'] = 1;
                     $data['date_deleted'] = date("Y-m-d H:i:s");
                     $data['id_user_deleted'] = $input['user'];
-                    $model->update($input['id'],$input);
+                    $model->update($input['id'],$data);
                     //actualizar aqui el detalle decontrol + riesgo
 
                     $model->deleteRiesgoControles($input['id']);
+
+                    $modelERC = new EvaluacionRiesgosControles();
+                    $modelERC->where('id_control',$input['id'])->update(null,[
+                        'is_deleted' => '1'
+                    ]);
+                    $modelERC->where('id_control',$input['id'])->delete();
 
                     return $this->getResponse(
                         [

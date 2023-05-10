@@ -36,10 +36,10 @@ class Database extends Config
 
     public $default = [
         'DSN'      => '',
-        'hostname' => '',
-        'username' => '',
+        'hostname' => 'localhost',
+        'username' => 'root',
         'password' => '',
-        'database' => '',
+        'database' => 'bd_efectiva1',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -99,17 +99,18 @@ class Database extends Config
         $strPsw = "opSbDSEsSqKv/z8USMEJ6SJu7+ESITUd597s4pljQw4=";
         
 
-        $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
+    //     $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
 
-        $bd = explode("|", $variables);
+    //    $bd = explode("|", $variables);
+
         // $this->default['hostname'] = getenv('database.default.hostname');
         // $this->default['database'] = getenv('database.default.database');
         // $this->default['username'] = getenv('database.default.username');
         // $this->default['password'] = getenv('database.default.password');
 
-        $this->default['hostname'] = 'localhost';
-        $this->default['database'] = 'bd_efectiva1';
-        $this->default['username'] = $bd[0];
-        $this->default['password'] = $bd[1];
+        // $this->default['hostname'] = 'localhost';
+        // $this->default['database'] = 'bd_efectiva1';
+        // $this->default['username'] = $bd[0];
+        // $this->default['password'] = $bd[1];
     }
 }

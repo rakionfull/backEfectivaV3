@@ -15,8 +15,7 @@ class curlController extends BaseController
        // try {
             $curl = new Curl();
             $REST_API = $API_REST;
-            $REST_API = "http://10.167.27.65/WsCifrado/api/Cifrado/ArmarConnectionStrings";
-
+         
             $request_data = [];
                      
             $strUsr = urlencode($strUsr_param);
