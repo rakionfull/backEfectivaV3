@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\MRegistroControles;
+use App\Models\Muser;
 use App\Models\EvaluacionRiesgosControles;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -416,33 +417,45 @@ class RegistroControlesController extends BaseController
         $input = $this->getRequestInput($this->request);
         
         $model = new MRegistroControles();
-        $this->db->transBegin();
-        $model->find($input['id']);
+        $modelERC = new EvaluacionRiesgosControles();
+        //$this->db->transBegin();
+        $found = $model->find($input['id']);
         
         try {
-            if($model){
-                if($model->delete($input['id'])){
-                    $this->db->transRollback();
+            if($found){
+                $result = $modelERC->deleteRiesgoControl('registro_controles',$input['id']);
+                //$model->delete($input['id'])
+                if($result){
+                    //$this->db->transRollback();
                     $data['is_deleted'] = 1;
                     $data['date_deleted'] = date("Y-m-d H:i:s");
                     $data['id_user_deleted'] = $input['user'];
+
                     $model->update($input['id'],$data);
                     //actualizar aqui el detalle decontrol + riesgo
 
-                    $model->deleteRiesgoControles($input['id']);
+                    //$model->deleteRiesgoControles($input['id']);
 
-                    $modelERC = new EvaluacionRiesgosControles();
                     $modelERC->where('id_control',$input['id'])->update(null,[
                         'is_deleted' => '1'
                     ]);
                     $modelERC->where('id_control',$input['id'])->delete();
 
-                    return $this->getResponse(
-                        [
-                            'error' => false,
-                            'msg' =>  'Control eliminado'
-                        ]
-                    );
+                      //aqui va el log del sistema
+                      $modelUser = new Muser();
+                      $user = $modelUser->getUserbyId($input['user']);
+                      
+                      $accion = 'El usuario '.$user->usuario_us. ' eliminó la control: '.$found['nom_control'];
+
+                      log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+
+                    // return $this->getResponse(
+                    //     [
+                    //         'error' => false,
+                    //         'msg' =>  'Control eliminado correctamente'
+                    //     ]
+                    // );
                 }else{
                     $input['is_deleted'] = 0;
                     $input['date_deleted'] = null;
@@ -453,6 +466,7 @@ class RegistroControlesController extends BaseController
                             
                             'error' => true,
                             'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                            //'msg' => $result
                         ]
                     );
                 }
@@ -464,7 +478,7 @@ class RegistroControlesController extends BaseController
                     ]
                 );
             }
-            $this->db->transCommit();
+            //$this->db->transCommit();
            
         } catch (\Throwable $th) {
             $input['is_deleted'] = 0;

@@ -366,7 +366,7 @@ public function getUserByActivo(){
     public function getUserByArea($id_area){
 
         $query = $this->db->query("CALL getUserByArea($id_area)");
-    return $query->getResultArray();
+        return $query->getResultArray();
     }
 /*
     public function getUserNombreByActivo(){

@@ -155,7 +155,9 @@ class EvaluacionRiesgoController extends BaseController
                             'id_evaluacion_riesgo' => $id,
                             'id_control' => $control,
                             'id_user_added' => $input['id_user_added'],
-                            'date_add' => $input['date_add']
+                            'date_add' => $input['date_add'],
+                            'id_evaluacion_riesgo' => $id,
+                            'id_control' => $control,
                         ];
                         $modelERC->store($data);
                     }
@@ -222,7 +224,9 @@ class EvaluacionRiesgoController extends BaseController
                                     'id_evaluacion_riesgo' => $id,
                                     'id_control' => $control,
                                     'id_user_added' => $input['id_user_updated'],
-                                    'date_add' => $input['date_modify']
+                                    'date_add' => $input['date_modify'],
+                                    'id_evaluacion_riesgo' => $id,
+                                    'id_control' => $control,
                                 ];
                                 $modelERC->store($data);
                             }
@@ -262,15 +266,18 @@ class EvaluacionRiesgoController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new EvaluacionRiesgo();
+        $modelERC = new EvaluacionRiesgosControles();
         $found = $model->find($id);
-        $this->db->transBegin();
+        //$this->db->transBegin();
         try {
             if($found){
-                if($model->delete($id)){
-                    $this->db->transRollback();
+                $result = $modelERC->deleteRiesgoControl('evaluacion_riesgo',$input['id']);
+                //$model->delete($id)
+                if($result){
+                    //$this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
-                    $modelERC = new EvaluacionRiesgosControles();
+                   
                     $modelERC->where('id_evaluacion_riesgo',$id)->update(null,[
                         'is_deleted' => '1'
                     ]);
@@ -278,16 +285,16 @@ class EvaluacionRiesgoController extends BaseController
 
                     $modelUser = new Muser();
                     $user = $modelUser->getUserbyId($input['id_user_deleted']);
-                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la evaluacion de riesgo: '.$found['riesgo'];
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la evaluación de riesgo: '.$found['riesgo'];
                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
     
 
-                    return $this->getResponse(
-                        [
-                            'error' => false,
-                            'msg' =>  'Evaluacion de riesgo eliminado'
-                        ]
-                    );
+                    // return $this->getResponse(
+                    //     [
+                    //         'error' => false,
+                    //         'msg' =>  'Evaluacion de riesgo eliminado'
+                    //     ]
+                    // );
                 }else{
                     $input['is_deleted'] = 0;
                     $input['date_deleted'] = null;
@@ -308,7 +315,7 @@ class EvaluacionRiesgoController extends BaseController
                     ]
                 ); 
             }
-            $this->db->transCommit();
+            //$this->db->transCommit();
            
         } catch (\Throwable $th) {
             $input['estado'] = 1;
@@ -476,8 +483,11 @@ class EvaluacionRiesgoController extends BaseController
                                 'id_evaluacion_riesgo' => $value,
                                 'id_control' => $result,
                                 'id_user_added' => $input['user'],
+                                // 'id_evaluacion_riesgo' => $value,
+                                // 'id_control' => $result,
                             
                             ];
+
                             $modelERC->store($data);
                         
                         
@@ -578,6 +588,8 @@ class EvaluacionRiesgoController extends BaseController
                                 'id_evaluacion_riesgo' => $value,
                                 'id_control' => $input[0]['id'],
                                 'id_user_added' => $input['user'],
+                                'id_evaluacion_riesgo' => $value,
+                                'id_control' => $input[0]['id'],
                             
                             ];
                             $modelERC->store($data);
@@ -648,6 +660,8 @@ class EvaluacionRiesgoController extends BaseController
                             'id_evaluacion_riesgo' => $value,
                             'id_control' => $value2,
                             'id_user_added' => $input['user'],
+                            'id_evaluacion_riesgo' => $value,
+                            'id_control' => $value2,
                            
                         ];
                         $riesgo->store($data);

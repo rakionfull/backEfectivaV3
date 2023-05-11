@@ -47,22 +47,19 @@ class Email extends BaseConfig
      *
      * @var string
      */
-    //public $SMTPHost = 'smtp.gmail.com';
-    public $SMTPHost = 'smtprelay.grupoefe.pe';
+    public $SMTPHost = 'smtp.gmail.com';
+    //public $SMTPHost = '';
     /**
      * SMTP Username
      *
      * @var string
      */
-     public $SMTPUser = 'enviosefectiva@efectiva.com.pe';
-     //public $SMTPUser = 'youkai.miguel@gmail.com';
-    /*
-     * SMTP Password
-     *
+     //public $SMTPUser = '';
+     public $SMTPUser = 'youkai.miguel@gmail.com';
+    /**
      * @var string
      */
-    public $SMTPPass = '';
-    //public $SMTPPass = 'rrtblhmaeikftqix';
+    public $SMTPPass = 'rrtblhmaeikftqix';
     
     /**
      * SMTP Port
@@ -70,7 +67,7 @@ class Email extends BaseConfig
      * @var int
      */
     //public $SMTPPort = 257;
-    public $SMTPPort = 25;
+    public $SMTPPort = 587;
     /**
      * SMTP Timeout (in seconds)
      *

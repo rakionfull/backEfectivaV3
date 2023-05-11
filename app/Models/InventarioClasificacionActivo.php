@@ -206,7 +206,7 @@ class InventarioClasificacionActivo extends Model
                 $id
             ])->getResult();
             if(count($result)>0){
-                log_message('info','Aquie sta');
+                //log_message('info','Aquie sta');
                 $email = \Config\Services::email();
                 $email->setTo($mail);
                 if(count($bcc)>0){

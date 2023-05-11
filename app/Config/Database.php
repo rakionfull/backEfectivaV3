@@ -36,10 +36,10 @@ class Database extends Config
 
     public $default = [
         'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => 'root',
+        'hostname' => '',
+        'username' => '',
         'password' => '',
-        'database' => 'bd_efectiva1',
+        'database' => '',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -94,23 +94,23 @@ class Database extends Config
         $datos = new curlController();
 
         $REST_API = "http://10.167.27.65/WsCifrado/api/Cifrado/ArmarConnectionStrings";
-        $strAplicativoWs = "aQBuAHQAcgBhAG4AZQB0AA==";
-        $strUsr = "6fmog/yLNgnIAdKgdXP57bV0SZ9KwkguEDonTvt77AE=";
-        $strPsw = "opSbDSEsSqKv/z8USMEJ6SJu7+ESITUd597s4pljQw4=";
+        $strAplicativoWs = "dwBzAF8AZwBlAHMAdABpAG8AbgBSAGkAZQBzAGcAbwBTAEkAQwA=";
+        $strUsr = "vP1hWDVMHTSS1mXjTI5F5qSgjU6IK9frP9QIGZobYvY=";
+        $strPsw = "Ibi+C12O22jClKpD6kkV8BVBYhusz/IlpGnVmnPqgWI=";
         
 
-    //     $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
+        $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
 
-    //    $bd = explode("|", $variables);
-
+       $bd = explode("|", $variables);
+        //ws_gestionRiesgoSIC
         // $this->default['hostname'] = getenv('database.default.hostname');
         // $this->default['database'] = getenv('database.default.database');
         // $this->default['username'] = getenv('database.default.username');
         // $this->default['password'] = getenv('database.default.password');
 
-        // $this->default['hostname'] = 'localhost';
-        // $this->default['database'] = 'bd_efectiva1';
-        // $this->default['username'] = $bd[0];
-        // $this->default['password'] = $bd[1];
+        $this->default['hostname'] = 'localhost';
+        $this->default['database'] = 'bd_efectiva1';
+        $this->default['username'] = $bd[0];
+        $this->default['password'] = $bd[1];
     }
 }

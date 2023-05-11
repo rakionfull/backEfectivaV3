@@ -1214,8 +1214,9 @@ class Activo extends BaseController
 
         $input = $this->getRequestInput($this->request);
         $model = new MclasInformacion();
-        $found = $model->find($input[0]['id']);
         $this->db->transBegin();
+        $found = $model->find($input[0]['id']);
+        
         try{
             if($found){
                 if($model->delete($input[0]['id'])){
@@ -3911,6 +3912,8 @@ public function updatePlanAccion(){
                     'id_evaluacion_riesgo' => $value,
                     'id_control' => $value2,
                     'id_user_added' => $input['user'],
+                    'id_evaluacion_riesgo' => $value,
+                    'id_control' => $value2,
                    
                 ];
                 $riesgo->store($data);
@@ -3950,15 +3953,43 @@ public function deletePlanAccion(){
     
     $input = $this->getRequestInput($this->request);
     $model = new MriesgoPlanAccion();
-    $this->db->transBegin();
+    //$this->db->transBegin();
     $found = $model->find($input[0]['id']);
    
     try{
         if($found){
+
             try {
-                $result = $model->delete($input[0]['id']);
-                if($result){
-                    $this->db->transRollback();
+                
+                $riesgos = explode("-", $found['id_riesgo']);
+                $control = explode("-", $found['id_control']);
+               
+              //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
+              $valor1 = false;
+              $valor2 = false;
+                foreach ($control as $key => $value) {
+                    if(!$valor1){
+                        $result1 = $model->deleteRiesgoControl('registro_controles',$input['id']);
+                        if($result1){
+                            $valor1 = true;
+                        }
+                    }
+                   
+                }
+                foreach ($riesgos as $key => $value2) {
+                    if(!$valor2){
+                        $result2 = $model->deleteRiesgoControl('evaluacion_riesgo',$input['id']);
+                        if($result2){
+                            $valor1 = true;
+                        }
+                    }
+                }
+               
+              
+
+               // $result = $model->delete($input[0]['id']);
+                if($valor1 && $valor2){
+                    //$this->db->transRollback();
                     $data['date_deleted'] = date("Y-m-d H:i:s");
                     $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
@@ -3981,12 +4012,12 @@ public function deletePlanAccion(){
                     }
                     
 
-                    return $this->getResponse(
-                        [
-                            'error' => false,
-                            'msg' =>  'Eliminado correctamente'
-                        ]
-                    );
+                    // return $this->getResponse(
+                    //     [
+                    //         'error' => false,
+                    //         'msg' =>  'Eliminado correctamente'
+                    //     ]
+                    // );
                 }
                
             } catch (Exception $ex) {
@@ -4006,7 +4037,7 @@ public function deletePlanAccion(){
                 ]
             );
         }
-        $this->db->transCommit();
+        //$this->db->transCommit();
 
     } catch (Exception $ex) {
         $data['is_deleted'] = 0;
