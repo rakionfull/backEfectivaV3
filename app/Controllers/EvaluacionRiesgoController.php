@@ -286,7 +286,7 @@ class EvaluacionRiesgoController extends BaseController
         //$this->db->transBegin();
         try {
             if($found){
-                $result = $modelERC->deleteRiesgoControl('evaluacion_riesgo',$input['id']);
+                $result = $modelERC->deleteRiesgoControl('evaluacion_riesgo',$id);
                 //$model->delete($id)
                 if($result){
                     //$this->db->transRollback();

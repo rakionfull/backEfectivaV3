@@ -3906,21 +3906,24 @@ public function updatePlanAccion(){
         $controles = explode("-", $input[0]['id_control']);
         //recorremos y agregamos , Recordar que no se puede aplicar el control y el riesgo hasta que se ejecute
         //todas las actividades
-        foreach ($riesgos as $key => $value) {
-            foreach ($controles as $key => $value2) {
-                $data = [
-                    'id_evaluacion_riesgo' => $value,
-                    'id_control' => $value2,
-                    'id_user_added' => $input['user'],
-                    'id_evaluacion_riesgo' => $value,
-                    'id_control' => $value2,
-                   
-                ];
-                $riesgo->store($data);
-              
+        if(count($riesgos)>0 &&  count($controles)>0){
+            foreach ($riesgos as $key => $value) {
+                foreach ($controles as $key => $value2) {
+                    $data = [
+                        'id_evaluacion_riesgo' => $value,
+                        'id_control' => $value2,
+                        'id_user_added' => $input['user'],
+                        'id_evaluacion_riesgo' => $value,
+                        'id_control' => $value2,
+                       
+                    ];
+                    $riesgo->store($data);
+                  
+                }
+                //$this->updateRiesgosControlados($value);
             }
-            //$this->updateRiesgosControlados($value);
         }
+       
 
          //log del sistema
          $modelUser = new Muser();
@@ -3953,7 +3956,8 @@ public function deletePlanAccion(){
     
     $input = $this->getRequestInput($this->request);
     $model = new MriesgoPlanAccion();
-    //$this->db->transBegin();
+    $modelERC = new EvaluacionRiesgosControles();
+    $this->db->transBegin();
     $found = $model->find($input[0]['id']);
    
     try{
@@ -3961,35 +3965,42 @@ public function deletePlanAccion(){
 
             try {
                 
-                $riesgos = explode("-", $found['id_riesgo']);
-                $control = explode("-", $found['id_control']);
+            //     $riesgos = explode("-", $found['id_riesgo']);
+            //     $control = explode("-", $found['id_control']);
                
-              //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
-              $valor1 = false;
-              $valor2 = false;
-                foreach ($control as $key => $value) {
-                    if(!$valor1){
-                        $result1 = $model->deleteRiesgoControl('registro_controles',$input['id']);
-                        if($result1){
-                            $valor1 = true;
-                        }
-                    }
+            //   //cambiamos estado a os controles con su riesgo de sp_delete_evaluacion_riesgo_controles2
+            //   $valor1 = 0;
+              //$valor2 = false;
+                // foreach ($control as $key => $value) {
+                    
+                //     if($valor1 ==0){
+                //         $result1 = $modelERC->deleteRiesgoControl('registro_controles',$value);
+                //         if($result1){
+                //             $valor1 = 1;
+                //         }
+                //     }
                    
-                }
-                foreach ($riesgos as $key => $value2) {
-                    if(!$valor2){
-                        $result2 = $model->deleteRiesgoControl('evaluacion_riesgo',$input['id']);
-                        if($result2){
-                            $valor1 = true;
-                        }
-                    }
-                }
-               
+                // }
+                // foreach ($riesgos as $key => $value2) {
+                //     if(!$valor2){
+                //         $result2 = $modelERC->deleteRiesgoControl('evaluacion_riesgo',$value2);
+                //         if($result2){
+                //             $valor1 = true;
+                //         }
+                //     }
+                // }
+                // return $this->getResponse(
+                //     [
+                //         'error1' => $valor1,
+                //         //'error2' => $valor2,
+                //         'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                //     ]
+                // );
               
 
                // $result = $model->delete($input[0]['id']);
-                if($valor1 && $valor2){
-                    //$this->db->transRollback();
+                if($model->delete($input[0]['id'])){
+                    $this->db->transRollback();
                     $data['date_deleted'] = date("Y-m-d H:i:s");
                     $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
@@ -4012,12 +4023,27 @@ public function deletePlanAccion(){
                     }
                     
 
-                    // return $this->getResponse(
-                    //     [
-                    //         'error' => false,
-                    //         'msg' =>  'Eliminado correctamente'
-                    //     ]
-                    // );
+                      //log del sistema
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó el plan de acción: '.$found['plan_accion'];
+
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
+                    return $this->getResponse(
+                        [
+                            'error' => false,
+                            'msg' =>  'Eliminado correctamente'
+                        ]
+                    );
+                }else{
+                    return $this->getResponse(
+                        [
+                            'error' => true,
+                            'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                        ]
+                    );
                 }
                
             } catch (Exception $ex) {
@@ -4037,21 +4063,14 @@ public function deletePlanAccion(){
                 ]
             );
         }
-        //$this->db->transCommit();
+        $this->db->transCommit();
 
     } catch (Exception $ex) {
         $data['is_deleted'] = 0;
         $data['date_deleted'] = null;
         $data['id_user_deleted'] = null;
         $model->update($input[0]['id'],$data);
-          //log del sistema
-          $modelUser = new Muser();
-          $user = $modelUser->getUserbyId($input['user']);
-
-          $accion = 'El usuario '.$user->usuario_us. ' eliminó el plan de acción: '.$found['plan_accion'];
-
-          log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
-
+        
         return $this->getResponse(
             [  
                 'error' => true,

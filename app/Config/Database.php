@@ -88,6 +88,7 @@ class Database extends Config
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
+
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
@@ -103,10 +104,7 @@ class Database extends Config
 
         // $bd = explode("|", $variables);
         //ws_gestionRiesgoSIC
-        // $this->default['hostname'] = getenv('database.default.hostname');
-        // $this->default['database'] = getenv('database.default.database');
-        // $this->default['username'] = getenv('database.default.username');
-        // $this->default['password'] = getenv('database.default.password');
+       
 
         $this->default['hostname'] = 'localhost';
         $this->default['database'] = 'bd_efectiva1';
