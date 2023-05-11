@@ -3,6 +3,8 @@
         echo 'Proceder a Revisar';
     }else if($data->ica_estado == '3'){
         echo 'Corregir las observaciones';
+    }else if($data->ica_estado == '4'){
+        echo 'Aprobado';
     }
     ?>
 </h1>
