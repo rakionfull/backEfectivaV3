@@ -1,6 +1,7 @@
 <?php
 use App\Models\MconfigPass;
 use App\Models\Mlog;
+use App\Models\Muser;
 
 
 if(!function_exists('log_acciones')){
@@ -9,17 +10,14 @@ if(!function_exists('log_acciones')){
     $modelLog = new Mlog();
     $texto = $accion;
     $id_afectado=0;
-    // if($accion == 'login'){
-    //     $texto = "El usuario: ".$username." a iniciado sesión";
-    // }
-    // if($accion == 'logout'){
-    //     $texto = "El usuario: ".$username." a cerrado sesión correstamente desde el sistema";
-    // }
+    $modelUser = new Muser();
+    $user = $modelUser->getUserbyId($id2);
+    
     if($accion == 'change_pass'){
-      $texto = "El usuario: ".$username." ah realizado cambio de clave";
+      $texto = "El usuario: ".$username." realizó cambio de clave";
     }
     if($accion == 'change_pass2'){
-      $texto = "El usuario: ".$username." ah realizado cambio de clave al usuario: ".$id2;
+      $texto = "El usuario: ".$username." realizó cambio de clave al usuario: ".$user->usuario_us;
     }
     $array = [
         'terminal' => $terminal,
@@ -42,13 +40,13 @@ if(!function_exists('log_sistema')){
     $texto = $accion;
     $id_afectado=0;
     if($accion == 'login'){
-        $texto = "El usuario: ".$username." a iniciado sesión exitosamente";
+        $texto = "El usuario: ".$username." inició sesión exitosamente";
     }
     if($accion == 'logout'){
-        $texto = "El usuario: ".$username." a cerrado sesión correctamente desde el sistema";
+        $texto = "El usuario: ".$username." cerró sesión correctamente desde el sistema";
     }
     if($accion == 'logout2'){
-      $texto = "El usuario: ".$username." deslogeo por inactividad";
+      $texto = "El usuario: ".$username." deslogeó por inactividad";
   }
     $array = [
         'terminal' => $terminal,

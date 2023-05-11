@@ -212,7 +212,7 @@ class Home extends BaseController
         $model->savePass($datos);
         $perfil = $modelPerfil -> getPerfilById($input['data']['perfil_us']);
         log_acciones(
-            'El usuario '.$input['username'].' ah creado el usuario: '.$input['data']['usuario_us'].' y se le asignó el perfil : '.$perfil->perfil
+            'El usuario '.$input['username'].' creó el usuario: '.$input['data']['usuario_us'].' y asignó el perfil : '.$perfil->perfil
             ,$input['terminal'],$input['ip'],$input['id'],$id,$input['username']);
 
         return $this->getResponse(
@@ -297,9 +297,9 @@ class Home extends BaseController
 
         $perfilAfter = $modelPerfil -> getPerfilById($input['data']['perfil_us']);
         $texto = '';
-        if($perfilBefore-> perfil != $perfilAfter-> perfil) $texto = ", Se modifico el perfil ".$perfilBefore -> perfil . " por ".$perfilAfter  -> perfil;
+        if($perfilBefore-> perfil != $perfilAfter-> perfil) $texto = ", Se cambió el perfil ".$perfilBefore -> perfil . " por el siguiente".$perfilAfter  -> perfil;
         log_acciones(
-            'El usuario '.$input['username'].' ah modificado los datos del usuario: '.$input['data']['usuario_us'].$texto
+            'El usuario '.$input['username'].' modificó los datos del usuario: '.$input['data']['usuario_us'].$texto
             ,$input['terminal'],$input['ip'],$input['id'],$id,$input['username']);
 
             
@@ -401,14 +401,14 @@ class Home extends BaseController
         $model = new Muser();
         $result = $model->updateEstadoUser($input['data']);
 
-        $estado = "Bloqueado";
+        $estado = "Bloqueó";
 
         if($input['data']['estado_us'] == 0){
-            $estado = "Desbloqueado";
+            $estado = "Desbloqueó";
         } 
        $user =  $model->getUserUpdate($input['data']['id_us']);
         log_acciones(
-            'El usuario '.$input['username'].' a '.$estado.' al usuario: '.$user->usuario_us
+            'El usuario '.$input['username'].' '.$estado.' al usuario: '.$user->usuario_us
             ,$input['terminal'],$input['ip'],$input['id'],$input['data']['id_us'],$input['username']);
             
         return $this->getResponse(
@@ -438,7 +438,7 @@ class Home extends BaseController
                        
                         $model->update($id,$data);
                         log_acciones(
-                            'El usuario '.$input['username'].' ah eliminado al usuario : '.$user->usuario_us
+                            'El usuario '.$input['username'].' eliminó al usuario : '.$user->usuario_us
                             ,$input['terminal'],$input['ip'],$input['id'],$id,$input['username']);
 
                         return $this->getResponse(
@@ -571,7 +571,7 @@ class Home extends BaseController
         }
 
         log_acciones(
-            'El usuario '.$input['username'].' ah creado el perfil : '.$input['data']['perfil']
+            'El usuario '.$input['username'].' creó el perfil : '.$input['data']['perfil']
             ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
 
         return $this->getResponse(
@@ -603,7 +603,7 @@ class Home extends BaseController
             );
         }
         log_acciones(
-            'El usuario '.$input['username'].' ah modificado el perfil : '.$input['data']['perfil']
+            'El usuario '.$input['username'].' modifcó el perfil : '.$input['data']['perfil']
             ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
        $model->updatePerfil($input['data']);
     //agregar validacion de perfil
@@ -644,7 +644,7 @@ class Home extends BaseController
                       $data['id_user_deleted'] = $input['id'];
                       $data['is_deleted'] = 1;
                        log_acciones(
-                        'El usuario '.$input['username'].' ah eliminado el perfil : '.$perfil->desc_perfil
+                        'El usuario '.$input['username'].' eliminó el perfil : '.$perfil->desc_perfil
                         ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
 
                       $model->update($input['data'],$data);
@@ -796,11 +796,11 @@ class Home extends BaseController
         $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
 
         $result = $model->updateDetPer($input['data'],'view_det');
-        $estado = 'Desactivo';
-        if($input['data']['estado']==1){$estado = 'Activo';}
+        $estado = 'revocó';
+        if($input['data']['estado']==1){$estado = 'asignó';}
         //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
         log_acciones(
-            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Ver en opcion '.$opcion->opcion
+            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Ver en opción '.$opcion->opcion
             ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
         return $this->getResponse(
             [
@@ -824,11 +824,11 @@ class Home extends BaseController
             $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
 
             $result = $model->updateDetPer($input['data'],'create_det');
-            $estado = 'Desactivo';
-            if($input['data']['estado']==1){$estado = 'Activo';}
+            $estado = 'revocó';
+            if($input['data']['estado']==1){$estado = 'asignó';}
             //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
             log_acciones(
-                'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Crear en opcion '.$opcion->opcion
+                'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Crear en opción '.$opcion->opcion
                 ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
             return $this->getResponse(
                 [
@@ -861,11 +861,11 @@ class Home extends BaseController
         $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
 
         $result = $model->updateDetPer($input['data'],'update_det');
-        $estado = 'Desactivo';
-        if($input['data']['estado']==1){$estado = 'Activo';}
+        $estado = 'revocó';
+        if($input['data']['estado']==1){$estado = 'asignó';}
         //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
         log_acciones(
-            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Editar en opcion '.$opcion->opcion
+            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Editar en opción '.$opcion->opcion
             ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
         return $this->getResponse(
             [
@@ -890,11 +890,11 @@ class Home extends BaseController
         $opcion = $model->getPerfilOpcion($detalle-> tabla,$detalle->id);
 
         $result = $model->updateDetPer($input['data'],'delete_det');
-        $estado = 'Desactivo';
-        if($input['data']['estado']==1){$estado = 'Activo';}
+        $estado = 'revocó';
+        if($input['data']['estado']==1){$estado = 'asignó';}
         //acion para guardar el log dle detealle perfil, opcion X agregada a perfil X
         log_acciones(
-            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Eliminar en  opcion '.$opcion->opcion
+            'El usuario '.$input['username'].' '.$estado.' al perfil:'.$detalle->perfil.' : Eliminar en opción '.$opcion->opcion
             ,$input['terminal'],$input['ip'],$input['id'],0,$input['username']);
         return $this->getResponse(
             [

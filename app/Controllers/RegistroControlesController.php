@@ -445,7 +445,7 @@ class RegistroControlesController extends BaseController
                       $modelUser = new Muser();
                       $user = $modelUser->getUserbyId($input['user']);
                       
-                      $accion = 'El usuario '.$user->usuario_us. ' eliminó la control: '.$found['nom_control'];
+                      $accion = 'El usuario '.$user->usuario_us. ' eliminó el control: '.$found['nom_control'];
 
                       log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
