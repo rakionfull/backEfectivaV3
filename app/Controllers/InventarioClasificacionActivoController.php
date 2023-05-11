@@ -88,11 +88,19 @@ class InventarioClasificacionActivoController extends BaseController
         } 
     }
     public function getAllHistoricos($id){
+        $input = $this->getRequestInput($this->request);
+
         try {
             $model = new InventarioClasificacionActivo();
             $response = [
                 'data' =>  $model->getAllHistoricos($id),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+                $accion = 'El usuario '.$user->usuario_us. ' exportó la información historia de inventario de clasificación y activos';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(
@@ -104,11 +112,18 @@ class InventarioClasificacionActivoController extends BaseController
         }
     }
     public function getAllHistoricosByUser($user_id,$id){
+        $input = $this->getRequestInput($this->request);
         try {
             $model = new InventarioClasificacionActivo();
             $response = [
                 'data' =>  $model->getAllHistoricosByUser($user_id,$id),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($user_id);
+                $accion = 'El usuario '.$user->usuario_us. ' exportó la información historia de inventario de clasificación y activos por usuario';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(
@@ -156,11 +171,19 @@ class InventarioClasificacionActivoController extends BaseController
         }
     }
     public function index($id){
+        $input = $this->getRequestInput($this->request);
+
         try {
             $model = new InventarioClasificacionActivo();
             $response = [
                 'data' =>  $model->getAll($id),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($input['user']);
+                $accion = 'El usuario '.$user->usuario_us. ' exportó la informacion de inventario de clasificación y activo';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(
@@ -189,11 +212,20 @@ class InventarioClasificacionActivoController extends BaseController
     }
 
     public function getByUser($user_id,$empresa){
+        $input = $this->getRequestInput($this->request);
+
         try {
             $model = new InventarioClasificacionActivo();
             $response = [
                 'data' =>  $model->getByUser($user_id,$empresa),
             ];
+            if($input['accion'] == "exportar"){
+                $modelUser = new Muser();
+                $user = $modelUser->getUserbyId($user_id);
+                $accion = 'El usuario '.$user->usuario_us. ' exporto la informacion de inventario de clasificación y activo por usuario';
+                log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+            }
+    
             return $this->respond($response, ResponseInterface::HTTP_OK);
         } catch (Exception $ex) {
             return $this->getResponse(

@@ -100,7 +100,7 @@ class InventarioClasificacionActivo extends Model
                 //recuperar el correo del usuario?
                 $mUser = new Muser();
                 $user = $mUser->getUserbyId($data['id_user_added']);
-                $usersbyarea = $mUser->getUserByArea($data['idarea']);
+                $usersbyarea = $mUser->getUserByAreaBCC($data['idarea']);
                 $bcc = array(
                   
                 );
@@ -185,7 +185,7 @@ class InventarioClasificacionActivo extends Model
                     // return $data;
                     // send email area seguridad informacion
                     $user = $mUser->getUserbyId($data['id_user_added']);
-                    $usersbyarea = $mUser->getUserByArea($data['idarea']);
+                    $usersbyarea = $mUser->getUserByAreaBCC($data['idarea']);
                     $bcc = array();
                     foreach ($usersbyarea as $item) {
                         array_push($bcc,$item['email_us']);

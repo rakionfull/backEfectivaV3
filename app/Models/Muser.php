@@ -368,6 +368,11 @@ public function getUserByActivo(){
         $query = $this->db->query("CALL getUserByArea($id_area)");
         return $query->getResultArray();
     }
+    public function getUserByAreaBCC($id_area){
+
+        $query = $this->db->query("CALL getUserByAreaBCC($id_area)");
+    return $query->getResultArray();
+    }
 /*
     public function getUserNombreByActivo(){
 

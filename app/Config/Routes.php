@@ -425,11 +425,11 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
    $routes->get('countEstadoPlanes','Activo::countEstadoPlanes',['filter' => 'authFilter']);
    
        //  CRUD INVENTARIO CLASIFICACION ACTIVO
-      $routes->get('listInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::index/$1');
-      $routes->get('getAllHistoricos/(:num)','InventarioClasificacionActivoController::getAllHistoricos/$1');
-      $routes->get('getAllHistoricosByUser/(:num)/(:num)','InventarioClasificacionActivoController::getAllHistoricosByUser/$1/$2');
+      $routes->post('listInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::index/$1');
+      $routes->post('getAllHistoricos/(:num)','InventarioClasificacionActivoController::getAllHistoricos/$1');
+      $routes->post('getAllHistoricosByUser/(:num)/(:num)','InventarioClasificacionActivoController::getAllHistoricosByUser/$1/$2');
       $routes->get('getInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::show/$1');
-      $routes->get('getInventarioClasificacionActivoUser/(:num)/(:num)','InventarioClasificacionActivoController::getByUser/$1/$2');
+      $routes->post('getInventarioClasificacionActivoUser/(:num)/(:num)','InventarioClasificacionActivoController::getByUser/$1/$2');
       $routes->post('addInventarioClasificacionActivo','InventarioClasificacionActivoController::store');
       $routes->post('updateInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::update/$1');
       $routes->post('deleteInventarioClasificacionActivo/(:num)','InventarioClasificacionActivoController::destroy/$1');
@@ -439,8 +439,8 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
   
 
       // CRUD EVALUACION RIESGO
-      $routes->get('listEvaluacionRiesgos/(:num)','EvaluacionRiesgoController::index/$1',['filter' => 'authFilter']);
-      $routes->get('getListHistorial/(:num)','EvaluacionRiesgoController::getListHistorial/$1',['filter' => 'authFilter']);
+      $routes->post('listEvaluacionRiesgos/(:num)','EvaluacionRiesgoController::index/$1',['filter' => 'authFilter']);
+      $routes->post('getListHistorial/(:num)','EvaluacionRiesgoController::getListHistorial/$1',['filter' => 'authFilter']);
       $routes->get('getEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::show/$1',['filter' => 'authFilter']);
       $routes->get('countvalores','EvaluacionRiesgoController::countvalores',['filter' => 'authFilter']);
       $routes->post('addEvaluacionRiesgo','EvaluacionRiesgoController::store',['filter' => 'authFilter']);

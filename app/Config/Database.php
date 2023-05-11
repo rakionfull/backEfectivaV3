@@ -39,7 +39,11 @@ class Database extends Config
         'hostname' => '',
         'username' => '',
         'password' => '',
+<<<<<<< HEAD
         'database' => '',
+=======
+        'database' => 'bd_efectiva_7',
+>>>>>>> 451fdf9ce14a93e0f63501bc846a973a0ccab158
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
