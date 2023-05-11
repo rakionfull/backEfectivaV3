@@ -39,11 +39,7 @@ class Database extends Config
         'hostname' => '',
         'username' => '',
         'password' => '',
-<<<<<<< HEAD
         'database' => '',
-=======
-        'database' => 'bd_efectiva_7',
->>>>>>> 451fdf9ce14a93e0f63501bc846a973a0ccab158
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -103,9 +99,9 @@ class Database extends Config
         $strPsw = "Ibi+C12O22jClKpD6kkV8BVBYhusz/IlpGnVmnPqgWI=";
         
 
-        $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
+        // $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
 
-       $bd = explode("|", $variables);
+        // $bd = explode("|", $variables);
         //ws_gestionRiesgoSIC
         // $this->default['hostname'] = getenv('database.default.hostname');
         // $this->default['database'] = getenv('database.default.database');
@@ -114,7 +110,9 @@ class Database extends Config
 
         $this->default['hostname'] = 'localhost';
         $this->default['database'] = 'bd_efectiva1';
-        $this->default['username'] = $bd[0];
-        $this->default['password'] = $bd[1];
+        // $this->default['username'] = $bd[0];
+        // $this->default['password'] = $bd[1];
+        $this->default['username'] = 'root';
+        $this->default['password'] = '';
     }
 }
