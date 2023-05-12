@@ -408,7 +408,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
 
    //    RIESGO PLAN DE ACCIÓN
 
-   $routes->get('getPlanAccion', 'Activo::getPlanAccion',['filter' => 'authFilter']);
+   $routes->get('getPlanAccion/(:num)', 'Activo::getPlanAccion/$1',['filter' => 'authFilter']);
   $routes->post('addPlanAccion', 'EvaluacionRiesgoController::addPlanAccion',['filter' => 'authFilter']);
    $routes->post('updatePlanAccion', 'Activo::updatePlanAccion',['filter' => 'authFilter']);
    $routes->delete('deletePlanAccion', 'Activo::deletePlanAccion',['filter' => 'authFilter']);
@@ -436,6 +436,8 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
       $routes->post('getvaloracionesporvalor','InventarioClasificacionActivoController::getValorByValoraciones');
       $routes->post('listByValoraciones','InventarioClasificacionActivoController::listByValoraciones');
       $routes->post('updateStatus/(:num)','InventarioClasificacionActivoController::updateStatus/$1');
+
+      $routes->get('reloadValoracion','InventarioClasificacionActivoController::reloadValoracion');
   
 
       // CRUD EVALUACION RIESGO

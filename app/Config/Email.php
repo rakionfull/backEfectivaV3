@@ -47,62 +47,33 @@ class Email extends BaseConfig
      *
      * @var string
      */
-    public $SMTPHost = 'smtp.gmail.com';
-    //public $SMTPHost = '';
+    //public $SMTPHost = 'smtp.gmail.com';
+    public $SMTPHost;
     /**
      * SMTP Username
      *
      * @var string
      */
-     //public $SMTPUser = '';
-     public $SMTPUser = 'youkai.miguel@gmail.com';
+     public $SMTPUser ;
+    // public $SMTPUser = 'youkai.miguel@gmail.com';
     /**
      * @var string
      */
+    public $SMTPPass ;
     //public $SMTPPass = 'rrtblhmaeikftqix';
-    public $SMTPPass = 'rrtblhmaeikftqix';
     /**
      * SMTP Port
      *
      * @var int
      */
-    //public $SMTPPort = 257;
-    public $SMTPPort = 587;
+    public $SMTPPort;
+    //public $SMTPPort = 587;
     /**
      * SMTP Timeout (in seconds)
      *
      * @var int
      */
     public $SMTPTimeout = 5;
-
-
-    // public $SMTPHost = 'bh8952.banahosting.com';
-
-    // /**
-    //  * SMTP Username
-    //  *
-    //  * @var string
-    //  */
-    // //public $SMTPUser = 'walon.sk8@gmail.com';
-    //  //public $SMTPUser = 'youkai.miguel@gmail.com';
-    //  public $SMTPUser = 'desarrolloefectiva@valtx.pe';
-    // /**
-    //  * SMTP Password
-    //  *
-    //  * @var string
-    //  */
-    // //public $SMTPPass = 'bswkqjpclmbaxktj';
-    // //public $SMTPPass = 'rrtblhmaeikftqix';
-    // public $SMTPPass = 'Valtx@2023';
-    
-    // /**
-    //  * SMTP Port
-    //  *
-    //  * @var int
-    //  */
-    // //public $SMTPPort = 587;
-    // public $SMTPPort = 465;
-    // /**
 
     /**
      * Enable persistent SMTP connections

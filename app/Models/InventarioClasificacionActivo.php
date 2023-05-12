@@ -206,14 +206,23 @@ class InventarioClasificacionActivo extends Model
                 $id
             ])->getResult();
             if(count($result)>0){
-                //log_message('info','Aquie sta');
+                $modelUser = new Muser;
+                $datos_correo = $modelUser -> getDatosCorreo();
+                $config['SMTPHost'] =  $datos_correo->smtp_server;
+                $config['SMTPUser'] = $datos_correo->email_server;
+                $config['SMTPPass']  = $datos_correo->pass_server;
+                $config['SMTPPort'] = $datos_correo->puerto_server;
+                
+              
+
                 $email = \Config\Services::email();
+                $email->initialize($config);
                 $email->setTo($mail);
                 if(count($bcc)>0){
                     $email->setBCC($bcc);
                 }
-                $email->setFrom('jbazant@valtx.pe', 'Inventario Clasificacion Activo registrado');
-                $email->setSubject('Inventario Clasificacion Activo registrado');
+                $email->setFrom($datos_correo->send_email, $datos_correo->descripcion);
+                $email->setSubject('Inventario y clasificación de activo');
                 $email->setMessage(
                    view('mail/register_inventario_clasificacion_activo',[
                     'data'=>$result[0]
@@ -310,6 +319,18 @@ class InventarioClasificacionActivo extends Model
             $data['idempresa']
         ]);
         return $query->getResultArray();
+    }
+
+    public function getAllInventario(){
+        $sql = "call sp_list_inventario_clasificacion_activo_all()";
+        $result = $this->db->query($sql,[])->getResultArray();
+        return $result;
+    }
+
+    public function updateVals($data,$id){
+        $sql = "call sp_update_vals(?,?)";
+        $result = $this->db->query($sql,[$data,$id]);
+        return true;
     }
  
 }

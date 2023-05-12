@@ -3754,12 +3754,12 @@ class Activo extends BaseController
     
     
     
- public function getPlanAccion(){
+ public function getPlanAccion($empresa){
     
     try {
         $model = new MriesgoPlanAccion();
             $response = [
-                'data' =>  $model->getPlanAccion()
+                'data' =>  $model->getPlanAccion($empresa)
             ];
             return $this->respond($response, ResponseInterface::HTTP_OK);
     

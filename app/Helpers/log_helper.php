@@ -46,7 +46,7 @@ if(!function_exists('log_sistema')){
         $texto = "El usuario: ".$username." cerró sesión correctamente desde el sistema";
     }
     if($accion == 'logout2'){
-      $texto = "El usuario: ".$username." deslogeó por inactividad";
+      $texto = "El usuario: ".$username." deslogueó por inactividad";
   }
     $array = [
         'terminal' => $terminal,

@@ -297,7 +297,7 @@ class Home extends BaseController
 
         $perfilAfter = $modelPerfil -> getPerfilById($input['data']['perfil_us']);
         $texto = '';
-        if($perfilBefore-> perfil != $perfilAfter-> perfil) $texto = ", Se cambió el perfil ".$perfilBefore -> perfil . " por el siguiente".$perfilAfter  -> perfil;
+        if($perfilBefore-> perfil != $perfilAfter-> perfil) $texto = ", Se cambió el perfil ".$perfilBefore -> perfil . " por el siguiente ".$perfilAfter  -> perfil;
         log_acciones(
             'El usuario '.$input['username'].' modificó los datos del usuario: '.$input['data']['usuario_us'].$texto
             ,$input['terminal'],$input['ip'],$input['id'],$id,$input['username']);
@@ -908,9 +908,17 @@ class Home extends BaseController
     public function dataUser()
     {
    
+        $input = $this->getRequestInput($this->request);
         $model = new Muser();
             
-            
+        
+        $user = $model->getUserbyId($input['id']);
+  
+  
+        $accion = 'El usuario '.$user->usuario_us. ' exportó la información de usuarios';
+
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
                 return $this->getResponse(
                     [
                         //'campos' =>  $model->getCamposUser(),
@@ -923,7 +931,18 @@ class Home extends BaseController
     }
 
     public function detallePerfil(){
+        $input = $this->getRequestInput($this->request);
         $model = new Mperfil();
+
+        $modelUser = new Muser();
+
+        $user = $modelUser->getUserbyId($input['id']);
+  
+  
+        $accion = 'El usuario '.$user->usuario_us. ' exportó la información de detalle de perfiles ';
+
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+
         return $this->getResponse([
             'datos' => $model->getDetallePerfil()
         ]);
@@ -932,7 +951,13 @@ class Home extends BaseController
     {
         $input = $this->getRequestInput($this->request);
         $model = new Muser();
-            
+
+           $user = $model->getUserbyId($input['id']);
+  
+  
+           $accion = 'El usuario '.$user->usuario_us. ' exportó la información de reporte de seguridad ';
+  
+           log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
             
                 return $this->getResponse(
                     [
@@ -948,7 +973,13 @@ class Home extends BaseController
     {
         $input = $this->getRequestInput($this->request);
         $model = new Muser();
-            
+        $user = $model->getUserbyId($input['id']);
+  
+  
+        $accion = 'El usuario '.$user->usuario_us. ' exportó la información de reporte de movimientos del sistema ';
+
+        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
+         
             
                 return $this->getResponse(
                     [

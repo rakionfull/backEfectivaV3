@@ -127,12 +127,12 @@ class MriesgoPlanAccion extends Model
         
         return $query->getResultArray();
     }
-    public function getPlanAccion(){
+    public function getPlanAccion($empresa){
 
      
-        $sql = "CALL listar_plan_accion()";
+        $sql = "CALL listar_plan_accion(?)";
 
-        $query = $this->db->query($sql, [ ]);
+        $query = $this->db->query($sql, [ $empresa]);
         return $query->getResultArray();
     }
     public function sendMail($iduser,$idplan,$mail,$idregistrador,$bcc = array()){
@@ -143,48 +143,50 @@ class MriesgoPlanAccion extends Model
                 $iduser,$idplan
             ])->getResult();
             if(count($result)>0){
-                log_message('info','Aquie sta en pplan de accion');
-                //primero debo actualizarel envio de correo en la tabla plan_correo
-
-                // $fecha_alerta = date("Y-m-d", strtotime($result['fecha_inicio'])); 
-                // $fecha_actual = date("Y-m-d");
-                // // echo $fecha_actual;
-                // // echo $fecha_alerta;
-                // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
-                $fecha_actual = date("Y-m-d H:i:s");
-
-
-
-                $email = \Config\Services::email();
-                $email->setTo($mail);
-                if(count($bcc)>0){
-                    $email->setBCC($bcc);
-                }
-                $email->setFrom('jbazant@valtx.pe', 'Plan de acción');
-                $email->setSubject('Alerta de registro de plan de acción');
-                $fecha_ini = strtotime($result[0]->fecha_inicio); 
-                $fecha_fin = strtotime($result[0]->fecha_fin); 
-               
-                $email->setMessage(
-                    view('mail/plan_accion_registrado',[
-                                                
-                        'fullname' => $result[0]->nombres_us.' '.$result[0]->apepat_us.' '.$result[0]->apemat_us,
-                        'plan' => $result[0]->plan_accion,
-                        'estado' => 'Plan regitrado correctamente',
-                        'inicio' =>  date("d-m-Y",  $fecha_ini),
-                        'fin' =>  date("d-m-Y",  $fecha_fin),
-                        'alerta' => $result[0]->alerta
+                
+                    $fecha_actual = date("Y-m-d H:i:s");
+                
+                    $modelUser = new Muser;
+                    $datos_correo = $modelUser -> getDatosCorreo();
+                    $config['SMTPHost'] =  $datos_correo->smtp_server;
+                    $config['SMTPUser'] = $datos_correo->email_server;
+                    $config['SMTPPass']  = $datos_correo->pass_server;
+                    $config['SMTPPort'] = $datos_correo->puerto_server;
                     
-                    ])
-                );
-                $valor = $email->send();
-                if($valor){
-                    // se ejecuta el registro de la alerta por primeravez
-                    $insert = $this -> insertCorreoPlan($idplan,$fecha_actual,$idregistrador);
-                    //cambiamos a en proceso
-                    //$update = $this -> updateEstadoPLan($idplan);
-                }
-                return $email;
+                  
+    
+                    $email = \Config\Services::email();
+                    $email->initialize($config);
+
+                    $email->setTo($mail);
+                    if(count($bcc)>0){
+                        $email->setBCC($bcc);
+                    }
+                    $email->setFrom($datos_correo->send_email, $datos_correo->descripcion);
+                    $email->setSubject('Plan de acción');
+                    $fecha_ini = strtotime($result[0]->fecha_inicio); 
+                    $fecha_fin = strtotime($result[0]->fecha_fin); 
+                
+                    $email->setMessage(
+                        view('mail/plan_accion_registrado',[
+                                                    
+                            'fullname' => $result[0]->nombres_us.' '.$result[0]->apepat_us.' '.$result[0]->apemat_us,
+                            'plan' => $result[0]->plan_accion,
+                            'estado' => 'Plan regitrado correctamente',
+                            'inicio' =>  date("d-m-Y",  $fecha_ini),
+                            'fin' =>  date("d-m-Y",  $fecha_fin),
+                            'alerta' => $result[0]->alerta
+                        
+                        ])
+                    );
+                    $valor = $email->send();
+                    if($valor){
+                        // se ejecuta el registro de la alerta por primeravez
+                        $insert = $this -> insertCorreoPlan($idplan,$fecha_actual,$idregistrador);
+                        //cambiamos a en proceso
+                        //$update = $this -> updateEstadoPLan($idplan);
+                    }
+                    return $email;
             }
             return false;
             //return $iduser.$idplan.$email;
@@ -203,25 +205,26 @@ class MriesgoPlanAccion extends Model
                 $iduser,$idactividad
             ])->getResult();
             if(count($result)>0){
-               // log_message('info','Aquie sta en actividad del plan');
-                //primero debo actualizarel envio de correo en la tabla plan_correo
+                 $fecha_actual = date("Y-m-d H:i:s");
 
-                // $fecha_alerta = date("Y-m-d", strtotime($result['fecha_inicio'])); 
-                // $fecha_actual = date("Y-m-d");
-                // // echo $fecha_actual;
-                // // echo $fecha_alerta;
-                // $fecha_fin = date("Y-m-d", strtotime($result['fecha_fin']));
-                $fecha_actual = date("Y-m-d H:i:s");
+                 $modelUser = new Muser;
+                 $datos_correo = $modelUser -> getDatosCorreo();
+                 $config['SMTPHost'] =  $datos_correo->smtp_server;
+                 $config['SMTPUser'] = $datos_correo->email_server;
+                 $config['SMTPPass']  = $datos_correo->pass_server;
+                 $config['SMTPPort'] = $datos_correo->puerto_server;
+                 
+               
+ 
+                 $email = \Config\Services::email();
+                 $email->initialize($config);
 
-
-
-                $email = \Config\Services::email();
                 $email->setTo($mail);
                 if(count($bcc)>0){
                     $email->setBCC($bcc);
                 }
-                $email->setFrom('jbazant@valtx.pe', 'Actividad');
-                $email->setSubject('Alerta de registro de actividad');
+                 $email->setFrom($datos_correo->send_email, $datos_correo->descripcion);
+                $email->setSubject('Actividad');
                 $fecha_ini = strtotime($result[0]->fecha_inicio); 
                 $fecha_fin = strtotime($result[0]->fecha_fin); 
                 $email->setMessage(

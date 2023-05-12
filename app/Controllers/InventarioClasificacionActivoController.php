@@ -505,4 +505,103 @@ class InventarioClasificacionActivoController extends BaseController
         
         }
     }
+
+    public function reloadValoracion(){
+        try {
+            $input = $this->getRequestInput($this->request);
+            $model = new InventarioClasificacionActivo();
+            $modelValoracion = new MValoracionActivo();
+          
+            //aqui aplicamos la lógica
+            //primero traemos todas las valoraciones los id respectivos
+
+            
+            
+            $inventario = $model -> getAllInventario();  //traigo todos los inventario de activos
+           $array = "";
+
+            foreach ($inventario as $key => $value) {
+                $valores = $modelValoracion -> getValoracionDetalle($value['id_val']); // traigo todos los datos valoracion con detalle
+                // foreach ($valores as $key => $value) {
+                //     $array = '[{
+                //         "idaspecto" : "'.$value['id_aspecto'].'"
+                //         "idaspecto" : "'.$value['aspecto'].'"
+                //         "idaspecto" : "'.$value['valoracion'].'"
+                //     }]';
+                // }
+                for ($i=0; $i < count($valores); $i++) { 
+                    if($i == 0){
+                        $array = $array.
+                            '[{ "idaspecto" : "'.$valores[$i]['id_aspecto'].'","aspecto" : "'.$valores[$i]['aspecto'].'","valoracion" : "'.$valores[$i]['valoracion'].'"},';
+                    }else{
+                        if($i == (count($valores) - 1)){
+                            $array = $array.
+                            '{"idaspecto" : "'.$valores[$i]['id_aspecto'].'","aspecto" : "'.$valores[$i]['aspecto'].'","valoracion" : "'.$valores[$i]['valoracion'].'"}]';
+                        }else{
+                            $array = $array.
+                            '{"idaspecto" : "'.$valores[$i]['id_aspecto'].'","aspecto" : "'.$valores[$i]['aspecto'].'","valoracion" : "'.$valores[$i]['valoracion'].'"},';
+                        }
+                       
+                    }
+                   
+                    
+
+                }
+                
+                //hacemos update al inventario
+                $result = $model -> updateVals($array,$value['id_ica']);
+                $data = [
+                    'idempresa'=> $value['idempresa'],
+                    'idarea' => $value['idarea'],
+                    'idunidad' => $value['idunidades'],
+                    'idmacroproceso' => $value['idmacroproceso'],
+                    'idproceso' => $value['idproceso'] ,
+                    'activo' => $value['activo'] ,
+                    'desc_activo' => $value['desc_activo'],
+                    'idtipo_activo' => $value['idtipo_activo'],
+                    'idcategoria_activo' => $value['idcategoria_activo'],
+                    'idubicacion' => $value['idubicacion'],
+                    'idpropietario' => $value['idpropietario'],
+                    'idcustodio' => $value['idcustodio'],
+                    'idvalor' => $value['idvalor'],
+                    'estado' => $value['estado'],
+                    'comentario' =>  $value['comentario'],
+                    'id_user_added' => $input['user'] ,
+                    'date_add' => date("Y-m-d H:i:s"),
+                    'estado_2' => $value['id_val'],
+                    'valores' => $array,
+                ];
+               
+             
+               
+            
+                //insertamos en la tabla historial
+                $model ->store_historial($value['id_ica'],$data);
+                $array = "";
+            }
+            $response = [
+                
+                
+                'data' => $result
+            ];
+            //recorremos los 2 arreglos y asignamos el array que se enviara
+            // [{"idaspecto":"2","aspecto":"Confidencialidad","valoracion":"1"},
+            // {"idaspecto":"3","aspecto":"Integridad","valoracion":"1"},
+            // {"idaspecto":"4","aspecto":"Disponibilidad","valoracion":"1"}]
+            
+           // [{ "idaspecto" : "2","aspecto" : "Confidencialidad","valoracion" : "1"},
+           //{"idaspecto" : "3","aspecto" : "Integridad","valoracion" : "1"},
+           //{"idaspecto" : "4","aspecto" : "Disponibilidad","valoracion" : "2"}]
+
+            return $this->respond($response, ResponseInterface::HTTP_OK);
+
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        } 
+    }
 }

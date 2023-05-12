@@ -415,6 +415,10 @@ public function getUserByActivo(){
         return $query->getResultArray();
     }
    
+    public function getDatosCorreo(){
+        $query = $this->db->query("CALL getDatosCorreo()");
+        return $query->getRow();
+    }
 
 }
 

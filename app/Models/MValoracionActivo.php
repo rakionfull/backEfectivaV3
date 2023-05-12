@@ -252,6 +252,13 @@ class MValoracionActivo extends Model
         }
   
     }
+
+
+    public function getValoracionDetalle($id_val){
+        $sql = "call sp_valoracion_detalle_all(?)";
+        $query = $this->db->query($sql,[$id_val]);
+        return $query->getResultArray();
+    }
      
 
 }

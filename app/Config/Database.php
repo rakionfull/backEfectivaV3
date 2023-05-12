@@ -107,7 +107,7 @@ class Database extends Config
        
 
         $this->default['hostname'] = 'localhost';
-        $this->default['database'] = 'bd_efectiva1';
+        $this->default['database'] = 'bd_efectiva2';
         // $this->default['username'] = $bd[0];
         // $this->default['password'] = $bd[1];
         $this->default['username'] = 'root';
