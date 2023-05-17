@@ -1,0 +1,26 @@
+[
+    {
+        "name": "closure_ac1c620dad58600398ce24db8a60575e",
+        "type": "closure",
+        "action": "{}",
+        "environment": "[]",
+        "start_at": "2023-05-15 14:13:29",
+        "end_at": "2023-05-15 14:13:29",
+        "duration": "00:00:00",
+        "output": "",
+        "error": "null",
+        "test_time": null
+    },
+    {
+        "name": "closure_ac1c620dad58600398ce24db8a60575e",
+        "type": "closure",
+        "action": "{}",
+        "environment": "[]",
+        "start_at": "2023-05-15 14:10:46",
+        "end_at": "2023-05-15 14:10:46",
+        "duration": "00:00:00",
+        "output": "",
+        "error": "null",
+        "test_time": null
+    }
+]

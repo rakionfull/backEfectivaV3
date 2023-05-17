@@ -68,7 +68,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function store($data){
-        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_add_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $data['idempresa'],
             $data['idarea'],
@@ -90,6 +90,7 @@ class InventarioClasificacionActivo extends Model
             $data['estado_2'],
             $data['valores'],
             $data['idvaloracion_activo'],
+            $data['clasi_info'],
         ]);
         if($result){
             $sql = "call sp_get_last_id";
@@ -116,7 +117,7 @@ class InventarioClasificacionActivo extends Model
         return false;
     }
     public function store_historial($id_ica,$data){
-        $sql = "call sp_add_inventario_clasificacion_activo_historial(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_add_inventario_clasificacion_activo_historial(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $id_ica,
             $data['idempresa'],
@@ -137,7 +138,8 @@ class InventarioClasificacionActivo extends Model
             $data['id_user_added'],
             $data['date_add'],
             $data['estado_2'],
-            $data['valores']
+            $data['valores'],
+            $data['clasi_info'],
         ]);
         if($result){
             return true;
@@ -146,7 +148,7 @@ class InventarioClasificacionActivo extends Model
     }
 
     public function edit($id,$data){
-        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "call sp_edit_inventario_clasificacion_activo(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->db->query($sql,[
             $id,
             $data['idempresa'],
@@ -169,7 +171,8 @@ class InventarioClasificacionActivo extends Model
             $data['observacion'],
             $data['estado_2'],
             $data['valores'],
-            $data['idvaloracion_activo']
+            $data['idvaloracion_activo'],
+            $data['clasi_info'],
         ]);
         if($result){
             $mUser = new Muser();
@@ -333,4 +336,53 @@ class InventarioClasificacionActivo extends Model
         return true;
     }
  
+    public function deleteInventarioClasificacionActivo($valor,$id){ 
+        $sql = "CALL eliminar_general(?)";
+        // $valor = 'macroproceso';
+        $query = $this->db->query($sql, [$valor]);
+        // aqui obtenermos los nombres de las tablas ralacionadas
+        $tablas = $query->getResultArray();
+        $resultado=false;
+        $cont_tablas=0;
+        // $id=20;
+        foreach ($tablas as $key => $value) {
+          
+            $sql2 = "CALL consulta_eliminar_general(?,?,?)";
+          
+
+            $query2 = $this->db->query($sql2,[
+                $valor,
+                $value['TABLE_NAME'],
+                $id
+            ]);
+            $resultado = $query2->getResultArray();
+            if($resultado){
+               
+                $cont = 0;
+                foreach ($resultado as $key => $value) {
+                    if($value['is_deleted'] == 1){
+                       
+                        $cont++;
+                    }
+
+                 }
+                if($cont == count($resultado)){
+               
+                    $cont_tablas ++ ;
+                }
+            }else{
+                $cont_tablas ++ ;
+            }
+         
+           
+        }
+        if($cont_tablas == count($tablas)){
+            return true;
+       
+        }else{
+            return false;
+       
+        }
+
+    }
 }

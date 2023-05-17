@@ -1,7 +1,0 @@
-vendor
-tests/_support/cronJob/*
-!tests/_support/index.html
-build
-.php-cs-fixer.cache
-.phpunit.result.cache
-composer.lock

@@ -99,9 +99,4 @@ define("CIPER","AES-256-CTR");
 
 define("DIGEST","SHA256");
 
-// define("correo1","mpantac@unprg.edu.pe");
-// define("correo2","mpantac@unprg.edu.pe");
-// define("correo3","mpantac@unprg.edu.pe");
-//define("BD_GLOBAL",descry("dasdadasd"));
-// define("CORREO","asdasdadadasd");
 define("JWT_SECRET","21sds5adfjsdbfhbnbmvjyFDHFTERWEFDVcvcvpooiu879");

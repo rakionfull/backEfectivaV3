@@ -26,6 +26,7 @@
 <p> Categoría de activo: <?php echo $data->categoria_activo; ?></p>
 <p> Ubicación de activo: <?php echo $data->ubicacion_direccion; ?></p>
 <p> Valor de activo: <?php echo $data->valor; ?></p>
+<p> Clasificación de la información: <?php echo $data->clasificacion; ?></p>
 <p> Comentario: <?php echo $data->ica_comentario; ?></p>
 <?php
     if($data->ica_estado == '3'){

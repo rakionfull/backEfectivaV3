@@ -4221,7 +4221,7 @@ public function deleteActividadPlan(){
         $input = $this->getRequestInput($this->request);       
         $model = new MriesgoPlanAccion();    
         
-       // $result = $model->deleteActividadesPlan($input);
+        $result = $model->deleteActividadesPlan($input);
        
             return $this->getResponse([
                 'msg' => 'Actividad eliminado correctamente',
@@ -4509,4 +4509,24 @@ public function countEstadoPlanes(){
             );
     }
 }
+    public function getClasInfoByActivo(){
+
+        try {
+            $model = new MclasInformacion();
+                $response = [
+                    'data' =>  $model->getClasInfoByActivo()
+                ];
+                return $this->respond($response, ResponseInterface::HTTP_OK);
+        
+        } catch (Exception $ex) {
+            return $this->getResponse(
+                    [
+                        'error' => $ex->getMessage(),
+                    ],
+                    ResponseInterface::HTTP_OK
+                );
+        }
+
+        
+    }
 }

@@ -91,5 +91,17 @@ class MclasInformacion extends Model
          ]);
         return $query;
     }
+
+    public function getClasInfoByActivo(){
+
+      
+        // $query = $this->db->query("EXEC listarclasinfo");
+        $sql = "CALL listarclasinfoByActivo()";
+
+        $query = $this->db->query($sql, [
+        
+        ]);
+        return $query->getResultArray();
+    }
  
 }

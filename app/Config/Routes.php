@@ -124,6 +124,7 @@ $routes->group('/api',['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('addClasInformacion', 'Activo::addClasInformacion',['filter' => 'authFilter']);
     $routes->post('updateClasInformacion', 'Activo::updateClasInformacion',['filter' => 'authFilter']);
     $routes->delete('deleteClasInfo', 'Activo::deleteClasInfo',['filter' => 'authFilter']);
+    $routes->get('getClasInfoByActivo', 'Activo::getClasInfoByActivo',['filter' => 'authFilter']);
 
     //CRUD Aspectos de Seguridad
     $routes->post('validarApectoSeg', 'Activo::validarApectoSeg',['filter' => 'authFilter']);

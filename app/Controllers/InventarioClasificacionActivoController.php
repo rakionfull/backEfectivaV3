@@ -420,12 +420,14 @@ class InventarioClasificacionActivoController extends BaseController
         $input = $this->getRequestInput($this->request);
         $model = new InventarioClasificacionActivo();
         $found = $model->find($id);
-        $this->db->transBegin();
+        // $this->db->transBegin();
         try {
 
             if($found){
-                if($model->delete($id)){
-                    $this->db->transRollback();
+                // $model->delete($id)
+                $result = $model -> deleteInventarioClasificacionActivo('inventario_clasificacion_activo',$id);
+                if($result){
+                    // $this->db->transRollback();
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
 
@@ -434,12 +436,12 @@ class InventarioClasificacionActivoController extends BaseController
                     $accion = 'El usuario '.$user->usuario_us. ' eliminó el inventario de clasificación y activos: '.$found['activo'];
                     log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
             
-                    return $this->getResponse(
-                        [
-                            'error' => false,
-                            'msg' =>  'Inventario de clasificacion de activo eliminado'
-                        ]
-                    );
+                    // return $this->getResponse(
+                    //     [
+                    //         'error' => false,
+                    //         'msg' =>  'Inventario de clasificacion de activo eliminado'
+                    //     ]
+                    // );
                 }else{
                     $input['is_deleted'] = 0;
                     $input['date_deleted'] = null;
@@ -460,7 +462,7 @@ class InventarioClasificacionActivoController extends BaseController
                     ]
                 );
             }
-            $this->db->transCommit();
+            // $this->db->transCommit();
         } catch (\Throwable $th) {
             $input['is_deleted'] = 0;
             $input['date_deleted'] = null;

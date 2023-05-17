@@ -1,0 +1,14 @@
+[
+    {
+        "name": "closure_fdd7ed1415493f184dec77f3b8c670f0",
+        "type": "closure",
+        "action": "{}",
+        "environment": "[]",
+        "start_at": "2023-05-15 14:24:55",
+        "end_at": "2023-05-15 14:25:05",
+        "duration": "00:00:10",
+        "output": "Es hora de la alerta con datos de la actividad",
+        "error": "null",
+        "test_time": null
+    }
+]

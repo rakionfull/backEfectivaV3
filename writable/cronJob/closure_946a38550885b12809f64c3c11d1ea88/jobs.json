@@ -1,0 +1,26 @@
+[
+    {
+        "name": "closure_946a38550885b12809f64c3c11d1ea88",
+        "type": "closure",
+        "action": "{}",
+        "environment": "[]",
+        "start_at": "2023-05-15 14:23:00",
+        "end_at": "2023-05-15 14:23:06",
+        "duration": "00:00:05",
+        "output": "object(stdClass)#66 (4) {\n  [\"id\"]=>\n  string(2) \"43\"\n  [\"idplan\"]=>\n  string(2) \"16\"\n  [\"fecha_envio\"]=>\n  string(19) \"2023-05-14 11:55:00\"\n  [\"idusuario\"]=>\n  string(1) \"1\"\n}\nEs hora de la alerta con envios anteriores del plan de accion",
+        "error": "null",
+        "test_time": null
+    },
+    {
+        "name": "closure_946a38550885b12809f64c3c11d1ea88",
+        "type": "closure",
+        "action": "{}",
+        "environment": "[]",
+        "start_at": "2023-05-15 14:21:52",
+        "end_at": "2023-05-15 14:21:52",
+        "duration": "00:00:00",
+        "output": "object(stdClass)#66 (4) {\n  [\"id\"]=>\n  string(2) \"43\"\n  [\"idplan\"]=>\n  string(2) \"16\"\n  [\"fecha_envio\"]=>\n  string(19) \"2023-05-11 11:55:00\"\n  [\"idusuario\"]=>\n  string(1) \"1\"\n}\n",
+        "error": "null",
+        "test_time": null
+    }
+]
