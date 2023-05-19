@@ -97,7 +97,8 @@ function evaluar($array){
                if($cont < count($valores)){
               
                     for ($i=0; $i < count($valores) ; $i++) { 
-                        if(strtoupper($array[$i]['valor']) == strtoupper($valores[$i]['caracteristica'])){
+                        //if(strtoupper($array[$i]['valor']) == strtoupper($valores[$i]['caracteristica'])){
+                        if(($array[$i]['idCC']) == ($valores[$i]['ID_CC'])){
                           //$resultado_final = $valores[$i]['calificacion'];
                           $resultado_final = [
                             'id_evaluacion' =>$valores[$i]['id'],

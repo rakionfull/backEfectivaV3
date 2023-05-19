@@ -194,9 +194,10 @@ class NivelRiesgoController extends BaseController
     public function destroy($id){
         $input = $this->getRequestInput($this->request);
         $model = new NivelRiesgo();
+
         $found = $model->find($id);
         
-        $this->db->transBegin();
+        //$this->db->transBegin();
         try {
             if($found){
                 $result = $model->deleteNivelRiesgo('nivel_riesgo',$id);
@@ -205,7 +206,7 @@ class NivelRiesgoController extends BaseController
                     $input['is_deleted'] = 1;
                     $model->update($id,$input);
 
-                    $result = $model->store($input);
+                    //$result = $model->store($input);
                     $modelUser = new Muser();
                     $user = $modelUser->getUserbyId($input['id_user_deleted']);
                     $accion = 'El usuario '.$user->usuario_us. ' eliminó el nivel de riesgo: '.$found['descripcion'];
@@ -230,6 +231,7 @@ class NivelRiesgoController extends BaseController
                         ]
                     );
                 }
+               
             }else{
                 return $this->getResponse(
                     [
@@ -238,13 +240,13 @@ class NivelRiesgoController extends BaseController
                     ]
                 );
             }
-            $this->db->transCommit();
-            return $this->getResponse(
-                [
-                    'error' => false,
-                    'msg' =>  'Nivel de riesgo eliminado'
-                ]
-            );
+            //$this->db->transCommit();
+            // return $this->getResponse(
+            //     [
+            //         'error' => false,
+            //         'msg' =>  'Nivel de riesgo eliminado'
+            //     ]
+            // );
         } catch (\Throwable $th) {
             $input['is_deleted'] = 0;
             $input['date_deleted'] = null;
@@ -253,9 +255,11 @@ class NivelRiesgoController extends BaseController
             return $this->getResponse(
                 [
                     'error' => true,
+                    // 'error2' => $th->getMessage(),
                     'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                 ]
             );
         }
+           
     }
 }

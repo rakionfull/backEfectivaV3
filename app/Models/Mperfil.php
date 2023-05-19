@@ -77,7 +77,7 @@ class Mperfil extends Model
     */
     public function validaPerfil($data) {
         $sql = "CALL obtenerPerfilPorNombre(?)";
-        $result = $this->db->query($sql, [$data]);
+        $query = $this->db->query($sql, [$data]);
         $result = $query->getRow();
     
         if ($result) {

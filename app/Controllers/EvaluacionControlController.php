@@ -109,7 +109,7 @@ class EvaluacionControlController extends BaseController
                     $msg = 'Registrado correctamente';
                     $error = 1;
             }else{
-                $msg = 'Evaluación de control ya registrado';
+                $msg = 'Evaluación de control ya registrada';
                 $error = 0;
             }
            

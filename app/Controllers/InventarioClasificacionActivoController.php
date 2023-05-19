@@ -241,7 +241,7 @@ class InventarioClasificacionActivoController extends BaseController
             $rules = [
                 'idempresa' => 'required',
                 'idarea' => 'required',
-                'idunidad' => 'required',
+                'idunidades' => 'required',
                 'idmacroproceso' => 'required',
                 'idproceso' => 'required',
                 'activo' => 'required',
@@ -262,7 +262,7 @@ class InventarioClasificacionActivoController extends BaseController
                 'idarea' => [
                     'required' => 'Debe ingresar el area',
                 ],
-                'idunidad' => [
+                'idunidades' => [
                     'required' => 'Debe ingresar la unidad',
                 ],
                 'idmacroproceso' => [
@@ -319,6 +319,7 @@ class InventarioClasificacionActivoController extends BaseController
                     ]
                 );
             }
+
             $result = $model->store($input);
 
             $modelUser = new Muser();
@@ -340,6 +341,7 @@ class InventarioClasificacionActivoController extends BaseController
                     [
                         'error' => true,
                         'msg' =>  'Ocurrio un error',
+                        'msg2' => $result
                        
                     ]
                 );
@@ -555,7 +557,7 @@ class InventarioClasificacionActivoController extends BaseController
                 $data = [
                     'idempresa'=> $value['idempresa'],
                     'idarea' => $value['idarea'],
-                    'idunidad' => $value['idunidades'],
+                    'idunidades' => $value['idunidades'],
                     'idmacroproceso' => $value['idmacroproceso'],
                     'idproceso' => $value['idproceso'] ,
                     'activo' => $value['activo'] ,

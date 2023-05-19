@@ -72,7 +72,7 @@ class InventarioClasificacionActivo extends Model
         $result = $this->db->query($sql,[
             $data['idempresa'],
             $data['idarea'],
-            $data['idunidad'],
+            $data['idunidades'],
             $data['idmacroproceso'],
             $data['idproceso'],
             $data['activo'],
@@ -88,9 +88,9 @@ class InventarioClasificacionActivo extends Model
             $data['id_user_added'],
             $data['date_add'],
             $data['estado_2'],
-            $data['valores'],
+            $data['vals'],
             $data['idvaloracion_activo'],
-            $data['clasi_info'],
+            $data['idclasificacion_informacion'],
         ]);
         if($result){
             $sql = "call sp_get_last_id";
@@ -122,7 +122,7 @@ class InventarioClasificacionActivo extends Model
             $id_ica,
             $data['idempresa'],
             $data['idarea'],
-            $data['idunidad'],
+            $data['idunidades'],
             $data['idmacroproceso'],
             $data['idproceso'],
             $data['activo'],
@@ -138,8 +138,8 @@ class InventarioClasificacionActivo extends Model
             $data['id_user_added'],
             $data['date_add'],
             $data['estado_2'],
-            $data['valores'],
-            $data['clasi_info'],
+            $data['vals'],
+            $data['idclasificacion_informacion'],
         ]);
         if($result){
             return true;
@@ -153,7 +153,7 @@ class InventarioClasificacionActivo extends Model
             $id,
             $data['idempresa'],
             $data['idarea'],
-            $data['idunidad'],
+            $data['idunidades'],
             $data['idmacroproceso'],
             $data['idproceso'],
             $data['activo'],
@@ -170,9 +170,9 @@ class InventarioClasificacionActivo extends Model
             $data['date_modify'],
             $data['observacion'],
             $data['estado_2'],
-            $data['valores'],
+            $data['vals'],
             $data['idvaloracion_activo'],
-            $data['clasi_info'],
+            $data['idclasificacion_informacion'],
         ]);
         if($result){
             $mUser = new Muser();
@@ -304,6 +304,23 @@ class InventarioClasificacionActivo extends Model
                     $mUser = new Muser();
                     $user = $mUser->getUserbyId($ica[0]['id_user_added']);
                     $this->sendMail($id,$user->email_us);
+                }
+                //aqui agegare logica
+                if($ica[0]['estado'] == '2'){
+                    // return $data;
+                    //recuperar el correo del usuario?
+                    $mUser = new Muser();
+                    $user = $mUser->getUserbyId($ica[0]['id_user_added']);
+                    $usersbyarea = $mUser->getUserByAreaBCC($ica[0]['idarea']);
+                    $bcc = array(
+                      
+                    );
+                    foreach ($usersbyarea as $item) {
+                        array_push($bcc,$item['email_us']);
+                    }
+    
+                    $response = $this->sendMail($id,$user->email_us,$bcc);
+                    return $response;
                 }
                 return true;
             }

@@ -127,6 +127,9 @@ class Home extends BaseController
     }
     public function addUser()
     {
+        $model = new MconfigPass();
+        $result = $model->getConfigPass();
+        
         $rules = [
             'docident_us' => 'required|min_length[8]|max_length[8]|is_unique[tb_users.docident_us]',
             'nombres_us' => 'required|min_length[2]|max_length[50]',
@@ -134,7 +137,7 @@ class Home extends BaseController
             'apemat_us' => 'required|min_length[2]|max_length[50]',
             'email_us' => 'min_length[2]|max_length[50]|valid_email',
             'usuario_us' => 'required|min_length[5]|max_length[50]|is_unique[tb_users.usuario_us]',
-            'passw' => 'required|min_length[8]|validatePass[passw]',
+            'passw' => 'required|min_length['.$result[0]['tama_min'].']|max_length['.$result[0]['tama_max'].']|validatePass[passw]',
             'perfil_us' => 'required',
             'estado_us' => 'required',
         ];
@@ -180,7 +183,8 @@ class Home extends BaseController
             ],
             'passw' => [
                 'required' => 'Debe ingresar Contraseña',     
-                'min_length' => 'La clave debe tener como mínimo 8 carácteres',  
+                'min_length' => 'La clave debe tener como mínimo '.$result[0]['tama_min'].' carácteres',  
+                'max_length' => 'La clave debe tener como máximo '.$result[0]['tama_max'].' carácteres',  
                 'validatePass' => 'La clave debe contener 1 May, 1 Min , 1 Núm y 1 Caract. especial',  
             ]
         ];
@@ -637,7 +641,7 @@ class Home extends BaseController
           if($found){
               try {
                   $result = $model->delete($input['data']);
-                    $this->db->transRollback();
+                    //$this->db->transRollback();
                   if($result){
                       $this->db->transRollback();
                       $data['date_deleted'] = date("Y-m-d H:i:s");

@@ -103,15 +103,15 @@ class Database extends Config
         // $variables = $datos->http_request($REST_API,$strAplicativoWs,$strUsr,$strPsw);
 
         // $bd = explode("|", $variables);
-        //ws_gestionRiesgoSIC
+      
        
 
         $this->default['hostname'] = 'localhost';
         $this->default['database'] = 'bd_efectiva_testeo2';
         $this->default['username'] = 'root';
-         $this->default['password'] = '';
+        $this->default['password'] = '';
         // $this->default['username'] = $bd[0];
-        //  $this->default['password'] = $bd[1];
+        // $this->default['password'] = $bd[1];
        
     }
 }

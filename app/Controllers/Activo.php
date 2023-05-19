@@ -363,7 +363,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Arera ya registrada';
+                $msg = 'Área ya registrada';
                 $error = 0;
             }
             
@@ -707,7 +707,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Valor de Activo ya registrada';
+                $msg = 'Valor de Activo ya registrado';
                 $error = 0;
             }
             return $this->getResponse(
@@ -744,7 +744,7 @@ class Activo extends BaseController
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Valor de activo ya registrada'
+                        'msg' =>'Valor de activo ya registrado'
                     ],
                     ResponseInterface::HTTP_OK
                 );
@@ -780,7 +780,9 @@ class Activo extends BaseController
     {
         $input = $this->getRequestInput($this->request);
         $model = new Mvaloractivo();
+       
         $found = $model->find($input[0]['id']);
+        $this->db->transBegin();
         try{
             if($found){
                 try {
@@ -806,12 +808,21 @@ class Activo extends BaseController
                                 'msg' =>  'Eliminado correctamente'
                             ]
                         );
+                    }else{
+                        return $this->getResponse(
+                            [
+                                'error' => true,
+                                // 'error2' => $ex->getMessage(),
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                            ]
+                        );
                     }
                    
                 } catch (Exception $ex) {
                     return $this->getResponse(
                         [
                             'error' => true,
+                            // 'error2' => $ex->getMessage(),
                             'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                         ]
                     );
@@ -830,10 +841,11 @@ class Activo extends BaseController
             $data['is_deleted'] = 0;
             $data['date_deleted'] = null;
             $data['id_user_deleted'] = null;
-            $model->update($input['id'],$data);
+            $model->update($input[0]['id'],$data);
             return $this->getResponse(
                 [
                     'error' => true,
+                    // 'error2' => $ex->getMessage(),
                     'msg' => 'No se puede eliminar el registro porque esta siendo usado en algún proceso.',
                 ]
             );
@@ -911,7 +923,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Tipo de Activo ya registrada';
+                $msg = 'Tipo de Activo ya registrado';
                 $error = 0;
             }
             return $this->getResponse(
@@ -966,7 +978,7 @@ class Activo extends BaseController
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Tipo de activo ya registrada'
+                        'msg' =>'Tipo de activo ya registrado'
                     ],
                     ResponseInterface::HTTP_OK
                 );
@@ -1141,7 +1153,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Clasificaicon de información ya registrada';
+                $msg = 'Clasificación de información ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -1381,7 +1393,7 @@ class Activo extends BaseController
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Aspecto de seguridad ya registrada'
+                        'msg' =>'Aspecto de seguridad ya registrado'
                     ],
                     ResponseInterface::HTTP_OK
                 );
@@ -2312,7 +2324,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Posicion ya registrada';
+                $msg = 'Posición ya registrada';
                 $error = 0;
             }
             return $this->getResponse(
@@ -2345,7 +2357,7 @@ class Activo extends BaseController
                     return $this->getResponse(
                         [
                             'error' =>true,
-                            'msg' =>'Posición ya registrado'
+                            'msg' =>'Posición ya registrada'
                         ],
                         ResponseInterface::HTTP_OK
                     );
@@ -2569,7 +2581,7 @@ class Activo extends BaseController
              $user = $modelUser->getUserbyId($input['user']);
 
 
-             $accion = 'El usuario '.$user->usuario_us. ' creó la valoración de activo: '.$input[0]['id'];
+             $accion = 'El usuario '.$user->usuario_us. ' creó la valoración de activo: '.$input[0]['id_valor_val'];
 
              log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
@@ -2667,13 +2679,14 @@ class Activo extends BaseController
         $input = $this->getRequestInput($this->request);
         $model = new MValoracionActivo();
         $found = $model->find($input[0]['id']);
-        $this->db->transBegin();
+        // $this->db->transBegin();
         try{
             if($found){
                 try {
-                    $result = $model->delete($input[0]['id']);
+                    // $result = $model->delete($input[0]['id']);
+                    $result =$model-> deleteValoracionActivo('valoracion_activo',$input[0]['id']);
                     if($result){
-                        $this->db->transRollback();
+                        // $this->db->transRollback();
                         $data['date_deleted'] = date("Y-m-d H:i:s");
                         $data['id_user_deleted'] = $input['user'];
                         $data['is_deleted'] = 1;
@@ -2692,6 +2705,13 @@ class Activo extends BaseController
                             [
                                 'error' => false,
                                 'msg' =>  'Eliminado correctamente'
+                            ]
+                        );
+                    }else{
+                        return $this->getResponse(
+                            [
+                                'error' => true,
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                             ]
                         );
                     }
@@ -2813,7 +2833,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Categoria ya registrada';
+                $msg = 'Categoría ya registrada';
                 $error = 0;
             }
             
@@ -2907,6 +2927,13 @@ class Activo extends BaseController
                             [
                                 'error' => false,
                                 'msg' =>  'Eliminado correctamente'
+                            ]
+                        );
+                    }else{
+                        return $this->getResponse(
+                            [
+                                'error' => true,
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                             ]
                         );
                     }
@@ -3008,7 +3035,7 @@ class Activo extends BaseController
                 $msg = 'Registrado correctamente';
                 $error = 1;
             }else{
-                $msg = 'Ubicacion de activo registrado ya registrada';
+                $msg = 'Ubicación de activo ya registrada';
                 $error = 0;
             }
             
@@ -3043,7 +3070,7 @@ class Activo extends BaseController
                 return $this->getResponse(
                     [
                         'error' =>true,
-                        'msg' =>'Ubicacion de activo ya registrado'
+                        'msg' =>'Ubicación de activo ya registrada'
                     ],
                     ResponseInterface::HTTP_OK
                 );
@@ -3106,6 +3133,13 @@ class Activo extends BaseController
                             [
                                 'error' => false,
                                 'msg' =>  'Eliminado correctamente'
+                            ]
+                        );
+                    }else{
+                        return $this->getResponse(
+                            [
+                                'error' => true,
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                             ]
                         );
                     }
@@ -3426,7 +3460,7 @@ class Activo extends BaseController
               $user = $modelUser->getUserbyId($input['user']);
 
 
-              $accion = 'El usuario '.$user->usuario_us. ' creó la prioridad: '.$input[0]['prioidad'];
+              $accion = 'El usuario '.$user->usuario_us. ' creó la prioridad: '.$input[0]['prioridad'];
 
               log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
@@ -3477,7 +3511,7 @@ class Activo extends BaseController
               $user = $modelUser->getUserbyId($input['user']);
 
 
-              $accion = 'El usuario '.$user->usuario_us. ' modificó la prioridad: '.$input[0]['prioidad'];
+              $accion = 'El usuario '.$user->usuario_us. ' modificó la prioridad: '.$input[0]['prioridad'];
 
               log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
 
