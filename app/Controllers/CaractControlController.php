@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\MCaractControl;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -66,6 +67,12 @@ class CaractControlController extends BaseController
                     $valida2 = $model -> validaCaractControl2($input);
                     if(!$valida2){
                         $result = $model->saveCaractControl($input);
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' agregó la característica de control: '.$input[0]['caracteristica'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                         $msg = 'Registrado correctamente';
                         $error = 1;
                     }else{
@@ -75,6 +82,12 @@ class CaractControlController extends BaseController
                    
                 }else{
                     $result = $model->saveCaractControl($input);
+                    $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' agregó la característica de control: '.$input[0]['caracteristica'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     $msg = 'Registrado correctamente';
                     $error = 1;
                 }
@@ -128,6 +141,12 @@ class CaractControlController extends BaseController
                         );
                     }else{
                         $result = $model->updateCaractControl($input);
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' modificó la característica de control: '.$input[0]['caracteristica'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                         return $this->getResponse(
                             [
                                 'error' =>false,
@@ -138,6 +157,12 @@ class CaractControlController extends BaseController
 
                 }else{
                     $result = $model->updateCaractControl($input);
+                    $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' modificó la característica de control: '.$input[0]['caracteristica'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     return $this->getResponse(
                         [
                             'error' =>false,
@@ -179,6 +204,12 @@ class CaractControlController extends BaseController
                     $model->update($input[0]['id_op'],$data);
                     $model->updateGeneral($input,$data);
                    // $result = $model->where('idOpcion',1)->update($input[0]['id']);
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' eliminó la característica de control: '.$found['caracteristica'];
+
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     return $this->getResponse(
                         [
                             'error' => false,

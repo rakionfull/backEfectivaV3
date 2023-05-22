@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\MAplicacionProbabilidad;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -46,6 +47,12 @@ class AplicacionProbabilidadController extends BaseController
                 $valida2 = $model -> validaAplicacionProbabilidad2($input[0]);
                 if(!$valida2){
                     $result = $model->saveAplicacionProbabilidad($input);
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+                    
+                    $accion = 'El usuario '.$user->usuario_us. ' agregó la aplicación de probabilidad: '.$input[0]['descripcion'];
+        
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     $msg = 'Registrado correctamente';
                     $error = 1;
                 }else{
@@ -102,8 +109,15 @@ class AplicacionProbabilidadController extends BaseController
                 }
             }
            
+           
+
             $result = $model->updateAplicacionProbabilidad($input);
-        
+            $modelUser = new Muser();
+            $user = $modelUser->getUserbyId($input['user']);
+            
+            $accion = 'El usuario '.$user->usuario_us. ' modificó la aplicación de probabilidad: '.$input[0]['descripcion'];
+
+            log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
             return $this->getResponse(
                 [
                     'msg' =>  'Modificado correctamente'
@@ -134,6 +148,12 @@ class AplicacionProbabilidadController extends BaseController
                     $this->db->transRollback();
                     $data['is_deleted'] = 1;
                     $model->update($input[0]['id'],$data);
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+                    
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la aplicación de probabilidad: '.$found['descripcion'];
+        
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     return $this->getResponse(
                         [
                             'error' => false,

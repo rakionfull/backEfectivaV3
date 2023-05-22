@@ -68,7 +68,7 @@ class MEvaluacionControl extends Model
         }
         
         $parte3=", EC.calificacion as Calificacion FROM detalle_evaluacion_control as DE inner join evaluacion_control2 as EC on
-         DE.IEC = EC.id inner join caracteristica_control as CC on CC.id=DE.ID_CC  where EC.is_deleted=0  GROUP BY EC.id;";
+         DE.IEC = EC.id inner join caracteristica_control as CC on CC.id=DE.ID_CC  where DE.is_deleted=0 and EC.is_deleted=0  GROUP BY EC.id;";
      
 
        // luego 
@@ -125,12 +125,19 @@ class MEvaluacionControl extends Model
             $data[0]['id']
         ]);
         
-        return $query;
+        return true;
     }
-    public function deleteDetalleEvaluacionControl($data){  
+    //esto es
+    public function deleteDetalleEvaluacionControl($data,$data2){  
         
-        $query= $this->db->query("delete from detalle_evaluacion_control where IEC='{$data[0]['id']}'") ;
-        return $query;
+        $sql = "CALL deleteDetalleEvaluacionControl(?,?,?)";
+        $query = $this->db->query($sql, [
+            $data[0]['id'],
+            $data2['id_user_deleted'],
+            $data2['is_deleted']
+        ]);
+        return true;
+      
     }
     public function deleteEvaluacionControl($data){
             

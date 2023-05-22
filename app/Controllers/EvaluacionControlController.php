@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\MEvaluacionControl;
 use App\Models\MRegistroControles;
+use App\Models\Muser;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -106,6 +107,12 @@ class EvaluacionControlController extends BaseController
                             $model->saveDetalleEvaluacionControl($array);
                         }
                     }
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+                    
+                    $accion = 'El usuario '.$user->usuario_us. ' agregó la evaluación de control: '.$input[0]['calificacion'];
+        
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     $msg = 'Registrado correctamente';
                     $error = 1;
             }else{
@@ -141,8 +148,13 @@ class EvaluacionControlController extends BaseController
             if(!$datos){
                     $result = $model->updateEvaluacionControl($input);
                     if($result){
-                        
-                        $delete=$model->deleteDetalleEvaluacionControl($input);
+                        $data['date_deleted'] = date("Y-m-d H:i:s");
+                        $data['id_user_deleted'] = $input['user'];
+                        $data['is_deleted'] = 1;
+                        //agregar el update de la tabla detalle
+    
+                      
+                        $delete=$model->deleteDetalleEvaluacionControl($input,$data);
                         if($delete){
                             foreach ($input[0]['valores'] as $key => $value) {
                                 $array = [
@@ -152,6 +164,12 @@ class EvaluacionControlController extends BaseController
                                 $model->saveDetalleEvaluacionControl($array);
                             }
                         }
+                        $modelUser = new Muser();
+                        $user = $modelUser->getUserbyId($input['user']);
+                        
+                        $accion = 'El usuario '.$user->usuario_us. ' modificó la evaluación de control: '.$input[0]['calificacion'];
+            
+                        log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                         $msg = 'Modificado correctamente';
                         $error = false;
                        
@@ -203,14 +221,27 @@ class EvaluacionControlController extends BaseController
         // }
         $input = $this->getRequestInput($this->request);
         $model = new MEvaluacionControl();
-        $found = $model->find($input[0]['id']);
         $this->db->transBegin();
+        $found = $model->find($input[0]['id']);
+       
         try{
             if($found){
                 if($model->delete($input[0]['id'])){
                     $this->db->transRollback();
+                    $data['date_deleted'] = date("Y-m-d H:i:s");
+                    $data['id_user_deleted'] = $input['user'];
                     $data['is_deleted'] = 1;
+
                     $model->update($input[0]['id'],$data);
+                    //agregar el update de la tabla detalle
+
+                    $model->deleteDetalleEvaluacionControl($input,$data);
+                    $modelUser = new Muser();
+                    $user = $modelUser->getUserbyId($input['user']);
+                    
+                    $accion = 'El usuario '.$user->usuario_us. ' eliminó la evaluación de control: '.$input[0]['calificacion'];
+        
+                    log_sistema($accion,$input['terminal'],$input['ip'],$user->id_us,$user->usuario_us);
                     return $this->getResponse(
                         [
                             'error' => false,

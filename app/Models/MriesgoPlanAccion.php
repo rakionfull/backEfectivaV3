@@ -480,9 +480,9 @@ class MriesgoPlanAccion extends Model
         return $query;
     }
     
-    public function countEstadoPlanes(){
-        $sql = "call sp_count_planes_by_valor()";
-        $result = $this->db->query($sql)->getResultArray();
+    public function countEstadoPlanes($idempresa){
+        $sql = "call sp_count_planes_by_valor(?)";
+        $result = $this->db->query($sql,[$idempresa])->getResultArray();
         return $result;
     }
 

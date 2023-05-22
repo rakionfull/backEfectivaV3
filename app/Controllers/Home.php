@@ -451,13 +451,15 @@ class Home extends BaseController
                                 'msg' =>  'Eliminado Correctamente'
                             ]
                         );
+                    }else{
+                        return $this->getResponse(
+                            [
+                                'error' => true,
+                                'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                            ]
+                        );
                     }
-                    // return $this->getResponse(
-                    //     [
-                    //         'error' => $result,
-                    //         'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
-                    //     ]
-                    // );
+                  
                 } catch (Exception $ex) {
                     return $this->getResponse(
                         [
@@ -659,12 +661,19 @@ class Home extends BaseController
                               'msg' =>  'Eliminado Correctamente'
                           ]
                       );
+                  }else{
+                    return $this->getResponse(
+                        [
+                            'error' => $ex->getMessage(),
+                            'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
+                        ]
+                    );
                   }
                
               } catch (Exception $ex) {
                   return $this->getResponse(
                       [
-                          'error' => $ex->getMessage(),
+                          'error' => true,
                           'msg' =>  'No se puede eliminar el registro porque esta siendo usado en algún proceso.'
                       ]
                   );

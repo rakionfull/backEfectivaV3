@@ -4527,11 +4527,11 @@ public function getUnidadadesByEmpresaByArea(){
     }
        
 }
-public function countEstadoPlanes(){
+public function countEstadoPlanes($idempresa){
     try {
         $model = new MriesgoPlanAccion();
         $response = [
-            'data' =>  $model->countEstadoPlanes(),
+            'data' =>  $model->countEstadoPlanes($idempresa),
         ];
         return $this->respond($response, ResponseInterface::HTTP_OK);
     } catch (Exception $ex) {
